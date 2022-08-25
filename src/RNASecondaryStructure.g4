@@ -22,15 +22,15 @@ grammar RNASecondaryStructure;
 
 // Grammar rules
 rna_format:
-    aas | ct | db |bpseq | fasta
+    aas | ct | db | bpseq | fasta
 ;
 
 aas:
-    sequence? structure
+    sequence? bonds
 ;
 
 db:
-    sequence? structure
+    sequence? dbStructure
 ;
 
 sequence:
@@ -38,14 +38,9 @@ sequence:
     | NUCLEOTIDE # sequenceEnd
 ;
 
-structure:
-	dbns # rnaDbn
-	| bonds # rnaAas
-;
-
-dbns:
-	DBN dbns #dbnsContinue
-	| DBN # dbsnEnd
+dbStructure:
+	DBN dbStructure #dbStructureContinue
+	| DBN # dbStructureEnd
 ;
 
 bonds:
@@ -98,7 +93,7 @@ bpseq_line:
 ;
 
 fasta:
-    // TODO Piero
+    sequence
 ;
 
 // Lexer tokens
