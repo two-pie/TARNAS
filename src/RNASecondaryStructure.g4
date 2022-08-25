@@ -1,17 +1,21 @@
-/**
-ANTLR 4 grammar for reading files containing RNA Secondary Structures
+/*
+ * ANTLR 4 grammar for reading files containing RNA Secondary Structures
  * in:
  *
- * Extended Dot-Bracket Notation (EDBN) Format  - with optional sequence of
+ * Dot-Bracket Notation (DBN) Format  - with optional sequence of
  *                                                nucleotides
  *
- * Arc-Annotated Sequence (AAS) Format - - with optional sequence of nucleotides
+ * Arc-Annotated Sequence (AAS) Format - with optional sequence of nucleotides
  *
  * Bpseq Format - with optional four initial lines
  *
  * Ct Format - with optional four initial lines
  *
+ * Fasta format - with optional sequence of nucleotides
+ *
  * @author Luca Tesei
+ * @author Piero Hierro
+ * @author Piermichele Rosati
  *
  */
 grammar RNASecondaryStructure;
