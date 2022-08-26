@@ -4,53 +4,37 @@ public class BpseqTranslator implements FormatTranslator{
 
 
     @Override
-    public String translateToDB(RNAsecondaryStructure rnaSecondaryStructure) {
-        if (rnaSecondaryStructure.format() != FormatType.BPSEQ)
-            throw new IllegalArgumentException();
-        StringBuilder db = new StringBuilder();
-        // add header
-        for(var line : rnaSecondaryStructure.header())
-            db.append('#').append(line);
-        db.append("\n");
-        // add sequence
-        db.append(rnaSecondaryStructure.sequence());
-        // add structure
-        db.append(rnaSecondaryStructure.structure());
-        return db.toString();
+    public String translateToDB(RNASecondaryStructure rnaSecondaryStructure) {
+        return "";
     }
 
     @Override
-    public String translateToDBNoSequence(RNAsecondaryStructure rnaSecondaryStructure) {
-        if (rnaSecondaryStructure.format() != FormatType.BPSEQ)
-            throw new IllegalArgumentException();
-        String db = rnaSecondaryStructure.sequence() +
-                // add structure
-                rnaSecondaryStructure.structure();
-        return db;
+    public String translateToDBNoSequence(RNASecondaryStructure rnaSecondaryStructure) {
+        return "";
     }
 
     @Override
-    public String translateToBPSEQ(RNAsecondaryStructure rnaSecondaryStructure) {
+    public String translateToBPSEQ(RNASecondaryStructure rnaSecondaryStructure) {
         return null;
     }
 
     @Override
-    public String translateToCT(RNAsecondaryStructure rnaSecondaryStructure) {
+    public String translateToCT(RNASecondaryStructure rnaSecondaryStructure) {
         return null;
     }
 
     @Override
-    public String translateToAAS(RNAsecondaryStructure rnaSecondaryStructure) {
+    public String translateToAAS(RNASecondaryStructure rnaSecondaryStructure) {
         return null;
     }
 
     @Override
-    public String translateToAASNoSequence(RNAsecondaryStructure rnaSecondaryStructure) {
+    public String translateToAASNoSequence(RNASecondaryStructure rnaSecondaryStructure) {
         return null;
     }
 
     @Override
-    public String translateToFASTA(RNAsecondaryStructure rnaSecondaryStructure) {
+    public String translateToFASTA(RNASecondaryStructure rnaSecondaryStructure) {
         return null;
     }
 }
