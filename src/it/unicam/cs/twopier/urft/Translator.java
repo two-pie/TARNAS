@@ -26,6 +26,7 @@ public class Translator {
     public String translateToDBNoSequence(RNAsecondaryStructure rnaSecondaryStructure, FormatType type) {
         if (this.cannotTranslateTo(rnaSecondaryStructure, type))
             throw new NoSupportedTranslationException();
+
         return "";
         //todo
     }
