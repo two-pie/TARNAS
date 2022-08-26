@@ -1,3 +1,5 @@
+package it.unicam.cs.twopier.urft;
+
 public enum FormatType {
     DB_NO_SEQUENCE(0),
     DB(1),

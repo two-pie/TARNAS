@@ -20,6 +20,10 @@
  */
 grammar RNASecondaryStructure;
 
+@header{
+package it.unicam.cs.twopier.target;
+}
+
 // Grammar rules
 rna_format:
     aas | ct | db | bpseq | fasta
@@ -30,7 +34,7 @@ aas:
 ;
 
 db:
-    sequence? dbStructure
+    ( HASH LINE1BPSEQ HASH LINE2BPSEQ HASH LINE3BPSEQ HASH LINE4BPSEQ )? sequence? db_structure
 ;
 
 sequence:
@@ -38,8 +42,8 @@ sequence:
     | NUCLEOTIDE # sequenceEnd
 ;
 
-dbStructure:
-	DBN dbStructure #dbStructureContinue
+db_structure:
+	DBN db_structure #dbStructureContinue
 	| DBN # dbStructureEnd
 ;
 
@@ -146,9 +150,9 @@ LINE4BPSEQ:
 	'Citation' .*? '\r'? '\n'
 ;
 
-LINE_COMMENT:
-	'#' .*? '\r'? '\n' -> skip
-; // Match "#" stuff '\n' and skip it
+HASH:
+    '#'
+;
 
 WS:
 	[ \t\r\n]+ -> skip

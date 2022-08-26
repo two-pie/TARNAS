@@ -1,3 +1,5 @@
+package it.unicam.cs.twopier.urft;
+
 public class Translator {
     boolean[][] translationMatrix;
 

@@ -1,3 +1,5 @@
+package it.unicam.cs.twopier.urft;
+
 public class Cleaner {
 
     public String mergeDBLines(RNAsecondaryStructure rnasecondaryStructure){
