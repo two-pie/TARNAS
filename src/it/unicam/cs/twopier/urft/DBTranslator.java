@@ -1,59 +1,57 @@
 package it.unicam.cs.twopier.urft;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DBTranslator implements FormatTranslator {
+public class DBTranslator implements RNAFormatTranslator {
 
     @Override
-    public RNAFile translateToDB(RNAFile rnaFile) {
+    public FormattedRNAFile translateToDB(RNAFile rnaFile) {
+        throw new NoSupportedTranslationException("Cannot convert to DB");
+    }
+
+    @Override
+    public FormattedRNAFile translateToDBNoSequence(RNAFile rnaFile) {
         return null;
     }
 
     @Override
-    public RNAFile translateToDBNoSequence(RNAFile rnaFile) {
-        return null;
-    }
-
-    @Override
-    public RNAFile translateToBPSEQ(RNAFile rnaFile) {
-        if (!rnaFile.formatType().equals(FormatType.BPSEQ))
+    public FormattedRNAFile translateToBPSEQ(RNAFile rnaFile) {
+        if (!rnaFile.formatType().equals(RNAFormatType.BPSEQ))
             throw new IllegalArgumentException("Wrong format: " + rnaFile.formatType());
-        StringBuilder bpseq = new StringBuilder();
         // clean and add header
-        List<String> headerLines = rnaFile.header()
+        List<String> header = rnaFile.header()
                 .stream()
                 .map(l -> l.substring(1)).toList();
-        for (var l : headerLines)
-            bpseq.append(l).append("\n");
         // read db structure and obtain pairing index
+        List<String> body = new ArrayList<>();
         for (int i = 0; i < rnaFile.structure().getSequence().length(); i++) {
-            bpseq.append((i + 1))
-                    .append(" ")
-                    .append(rnaFile.structure().getSequence().charAt(i))
-                    .append(" ")
-                    .append(rnaFile.structure().getP()[i])
-                    .append("\n");
+            String line = (i + 1) + " " +
+                    rnaFile.structure().getSequence().charAt(i) + " " +
+                    rnaFile.structure().getP()[i] + "\n";
+            body.add(line);
         }
-        return bpseq.toString();
+        return new FormattedRNAFile(header, body);
     }
 
     @Override
-    public RNAFile translateToCT(RNAFile rnaFile) {
+    public FormattedRNAFile translateToCT(RNAFile rnaFile) {
         return null;
     }
 
     @Override
-    public RNAFile translateToAAS(RNAFile rnaFile) {
+    public FormattedRNAFile translateToAAS(RNAFile rnaFile) {
         return null;
     }
 
     @Override
-    public RNAFile translateToAASNoSequence(RNAFile rnaFile) {
+    public FormattedRNAFile translateToAASNoSequence(RNAFile rnaFile) {
         return null;
     }
 
     @Override
-    public RNAFile translateToFASTA(RNAFile rnaFile) {
+    public FormattedRNAFile translateToFASTA(RNAFile rnaFile) {
         return null;
     }
+
 }

@@ -1,6 +1,6 @@
 package it.unicam.cs.twopier.urft;
 
-public class BpseqTranslator implements FormatTranslator{
+public class BpseqTranslator implements RNAFormatTranslator {
 
 
     @Override

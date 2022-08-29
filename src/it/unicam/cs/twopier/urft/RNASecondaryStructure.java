@@ -59,10 +59,13 @@ public class RNASecondaryStructure {
     // one array is sufficient to represent all weak bonds.
     protected int[] p;
 
+    private final String structure;
+
     /**
      * Create an empty secondary structure.
      */
-    public RNASecondaryStructure() {
+    public RNASecondaryStructure(String structure) {
+        this.structure = structure;
         this.sequence = null;
         this.size = -1;
         this.bonds = new ArrayList<WeakBond>();
@@ -74,6 +77,10 @@ public class RNASecondaryStructure {
      */
     public String getSequence() {
         return sequence;
+    }
+
+    public String getStructure() {
+        return this.structure;
     }
 
     /**
