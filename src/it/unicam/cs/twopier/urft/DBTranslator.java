@@ -17,17 +17,17 @@ public class DBTranslator implements RNAFormatTranslator {
 
     @Override
     public FormattedRNAFile translateToBPSEQ(RNAFile rnaFile) {
-        if (!rnaFile.formatType().equals(RNAFormatType.BPSEQ))
+        if (!rnaFile.formatType().equals(RNAFormatType.DB))
             throw new IllegalArgumentException("Wrong format: " + rnaFile.formatType());
         // clean and add header
-        List<String> header = rnaFile.header()
+        var header = rnaFile.header()
                 .stream()
                 .map(l -> l.substring(1)).toList();
         // read db structure and obtain pairing index
-        List<String> body = new ArrayList<>();
-        for (int i = 0; i < rnaFile.structure().getSequence().length(); i++) {
-            String line = (i + 1) + " " +
-                    rnaFile.structure().getSequence().charAt(i) + " " +
+        var body = new ArrayList<String>();
+        for (int i = 1; i <= rnaFile.structure().getSequence().length(); i++) {
+            var line = i + " " +
+                    rnaFile.structure().getSequence().charAt(i-1) + " " +
                     rnaFile.structure().getP()[i] + "\n";
             body.add(line);
         }
