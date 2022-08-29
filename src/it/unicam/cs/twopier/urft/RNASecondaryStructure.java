@@ -2,23 +2,23 @@ package it.unicam.cs.twopier.urft;
 
 /**
  * ASPRAlign - Algebraic Structural Pseudoknot RNA Alignment
- *
+ * <p>
  * Copyright (C) 2020 Luca Tesei, Michela Quadrini, Emanuela Merelli -
  * BioShape and Data Science Lab at the University of Camerino, Italy -
  * http://www.emanuelamerelli.eu/bigdata/
- *
+ * <p>
  * This file is part of ASPRAlign.
- *
+ * <p>
  * ASPRAlign is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
+ * <p>
  * ASPRAlign is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with ASPRAlign. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,7 +34,6 @@ import java.util.List;
  * 1 and end at the length of the primary sequence.
  *
  * @author Luca Tesei
- *
  */
 public class RNASecondaryStructure {
     // private and protected fields:
@@ -95,7 +94,6 @@ public class RNASecondaryStructure {
      * Add a bond to this structure.
      *
      * @param b the new bond to add
-     *
      * @throws RNAInputFileParserException if the indexes of the bonds are not
      *                                     correct w.r.t. the other bonds or the
      *                                     limits of the structure
@@ -158,7 +156,6 @@ public class RNASecondaryStructure {
      * Determine if this secondary structure is pseudoknotted.
      *
      * @return true, if there are at least two crossing WeakBonds in the structure
-     *
      */
     public boolean isPseudoknotted() {
         for (int i = 0; i < this.bonds.size(); i++)
@@ -213,5 +210,14 @@ public class RNASecondaryStructure {
                         break;
             }
         }
+    }
+
+    public int[] getP() {
+        this.p = new int[this.size + 1];
+        this.bonds.forEach(w -> {
+            p[w.getLeft()] = w.getRight();
+            p[w.getRight()] = w.getLeft();
+        });
+        return p;
     }
 }

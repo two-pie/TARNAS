@@ -2,18 +2,18 @@ package it.unicam.cs.twopier.urft;
 
 public interface FormatTranslator {
 
-    String translateToDB(RNASecondaryStructure rnaSecondaryStructure);
+    RNAFile translateToDB(RNAFile rnaFile);
 
-    String translateToDBNoSequence(RNASecondaryStructure rnaSecondaryStructure);
+    RNAFile translateToDBNoSequence(RNAFile rnaFile);
 
-    String translateToBPSEQ(RNASecondaryStructure rnaSecondaryStructure);
+    RNAFile translateToBPSEQ(RNAFile rnaFile);
 
-    String translateToCT(RNASecondaryStructure rnaSecondaryStructure);
+    RNAFile translateToCT(RNAFile rnaFile);
 
-    String translateToAAS(RNASecondaryStructure rnaSecondaryStructure);
+    RNAFile translateToAAS(RNAFile rnaFile);
 
-    String translateToAASNoSequence(RNASecondaryStructure rnaSecondaryStructure);
+    RNAFile translateToAASNoSequence(RNAFile rnaFile);
 
-    String translateToFASTA(RNASecondaryStructure rnaSecondaryStructure);
+    RNAFile translateToFASTA(RNAFile rnaFile);
 
 }
