@@ -1,11 +1,15 @@
 package it.unicam.cs.twopier.urft;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RNAFiles {
 
     static List<String> createDBBody(RNASecondaryStructure rnaSecondaryStructure) {
-
+        var body = new ArrayList<String>();
+        body.add(rnaSecondaryStructure.getSequence());
+        body.add(getDBBodyOf(rnaSecondaryStructure.size, rnaSecondaryStructure.p));
+        return body;
     }
 
     static List<String> createDBNoSequenceBody(RNASecondaryStructure rnaSecondaryStructure) {
@@ -29,6 +33,16 @@ public class RNAFiles {
     }
 
     static List<String> createCTBody(RNASecondaryStructure rnaSecondaryStructure) {
+        if (rnaSecondaryStructure.getSequence().isEmpty())
+            throw new NoSupportedTranslationException("Cannot translate to CT");
+        var body = new ArrayList<String>();
+        var rnaSequence = rnaSecondaryStructure.getSequence();
+        var p = rnaSecondaryStructure.getP();
+        for (int i = 1; i <= rnaSecondaryStructure.size; i++) {
+            var line = i + " " + rnaSequence.charAt(i - 1) + " " + (i - 1) + " " + (i + 1) + " " + p[i] + " " + i;
+            body.add(line);
+        }
+        return body;
     }
 
     static List<String> createAADBody(RNASecondaryStructure rnaSecondaryStructure) {
