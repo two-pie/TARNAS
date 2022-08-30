@@ -11,10 +11,8 @@ public class BpseqTranslator implements RNAFormatTranslator {
             throw new IllegalArgumentException();
         // add '# before each line of the header'
         var header = new ArrayList<>(rnaFile.header().stream().map(l -> "#" + l).toList());
-        var body = new ArrayList<String>();
         // fill the body
-        body.add(rnaFile.structure().getStructure());
-        body.add(rnaFile.structure().getSequence());
+        var body = RNAFiles.createDBBody(rnaFile.structure());
         // create and return the formatted file as object
         return new FormattedRNAFile(header,body);
     }
