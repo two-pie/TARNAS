@@ -1,4 +1,4 @@
-package it.unicam.cs.twopier.urft;
+package it.unicam.cs.twopier.tarnas;
 
 public enum RNAFormatType {
     DB_NO_SEQUENCE,

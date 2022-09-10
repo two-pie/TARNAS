@@ -1,4 +1,4 @@
-package it.unicam.cs.twopier.urft;
+package it.unicam.cs.twopier.tarnas;
 
 /**
  * Simple class whose objects contain a pair of indexes that identify a weak

@@ -13,9 +13,7 @@
  *
  * Fasta format - with optional sequence of nucleotides
  *
- * @author Luca Tesei
- * @author Piero Hierro
- * @author Piermichele Rosati
+ * @author Luca Tesei, Piero Hierro, Piermichele Rosati
  *
  */
 grammar RNASecondaryStructure;

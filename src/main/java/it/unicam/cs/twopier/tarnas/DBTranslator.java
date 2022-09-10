@@ -1,7 +1,6 @@
-package it.unicam.cs.twopier.urft;
+package it.unicam.cs.twopier.tarnas;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DBTranslator implements RNAFormatTranslator {
 
@@ -17,8 +16,8 @@ public class DBTranslator implements RNAFormatTranslator {
 
     @Override
     public FormattedRNAFile translateToBPSEQ(RNAFile rnaFile) {
-        if (!rnaFile.formatType().equals(RNAFormatType.DB))
-            throw new IllegalArgumentException("Wrong format: " + rnaFile.formatType());
+        //if (!rnaFile.formatType().equals(RNAFormatType.DB))
+         //   throw new IllegalArgumentException("Wrong format: " + rnaFile.formatType());
         // clean and add header
         var header = rnaFile.header()
                 .stream()
@@ -31,7 +30,7 @@ public class DBTranslator implements RNAFormatTranslator {
                     rnaFile.structure().getP()[i] + "\n";
             body.add(line);
         }
-        return new FormattedRNAFile(header, body);
+        return new FormattedRNAFile(header, body, RNAFormatType.BPSEQ);
     }
 
     @Override

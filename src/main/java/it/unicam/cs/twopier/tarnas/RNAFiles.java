@@ -1,4 +1,4 @@
-package it.unicam.cs.twopier.urft;
+package it.unicam.cs.twopier.tarnas;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class RNAFiles {
     }
 
     static List<String> createBPSEQBody(RNASecondaryStructure rnaSecondaryStructure) {
-
+        return null;
     }
 
     static List<String> createCTBody(RNASecondaryStructure rnaSecondaryStructure) {
@@ -46,11 +46,14 @@ public class RNAFiles {
     }
 
     static List<String> createAADBody(RNASecondaryStructure rnaSecondaryStructure) {
+        return null;
     }
 
     static List<String> createAASNoSequenceBody(RNASecondaryStructure rnaSecondaryStructure) {
+        return null;
     }
 
     static List<String> createFASTABody(RNASecondaryStructure rnaSecondaryStructure) {
+        return null;
     }
 }
