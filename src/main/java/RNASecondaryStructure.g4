@@ -32,7 +32,7 @@ aas:
 ;
 
 db:
-    ( HASH LINE1BPSEQ HASH LINE2BPSEQ HASH LINE3BPSEQ HASH LINE4BPSEQ )? sequence? db_structure
+    ( HASH LINE1BPSEQCT HASH LINE2BPSEQCT HASH LINE3BPSEQCT HASH LINE4BPSEQCT )? sequence? db_structure
 ;
 
 sequence:
@@ -55,7 +55,9 @@ bond:
 ;
 
 ct:
-	LINECT ct_structure
+    (
+       LINE1BPSEQCT LINE2BPSEQCT LINE3BPSEQCT LINE4BPSEQCT
+    )? LINE5CT
 ;
 
 ct_structure:
@@ -81,7 +83,7 @@ ct_line:
 
 
 bpseq:
-    ( LINE1BPSEQ LINE2BPSEQ LINE3BPSEQ LINE4BPSEQ )? bpseq_structure
+    ( LINE1BPSEQCT LINE2BPSEQCT LINE3BPSEQCT LINE4BPSEQCT )? bpseq_structure
 ;
 
 bpseq_structure:
@@ -123,29 +125,29 @@ DBN:
 	DBN_CODE+
 ;
 
-LINECT:
-	NONEWLINE*?
-	( 'ENERGY' | 'Energy' | 'dG' ) .*? '\r'? '\n'
-;
-
 fragment NONEWLINE:
 	~( '\r' | '\n' )
 ;
 
-LINE1BPSEQ:
+LINE1BPSEQCT:
 	'Filename' .*? '\r'? '\n'
 ;
 
-LINE2BPSEQ:
+LINE2BPSEQCT:
 	'Organism' .*? '\r'? '\n'
 ;
 
-LINE3BPSEQ:
+LINE3BPSEQCT:
 	'Accession' .*? '\r'? '\n'
 ;
 
-LINE4BPSEQ:
+LINE4BPSEQCT:
 	'Citation' .*? '\r'? '\n'
+;
+
+LINE5CT:
+	NONEWLINE*?
+	( 'ENERGY' | 'Energy' | 'dG' ) .*? '\r'? '\n'
 ;
 
 HASH:
