@@ -11,7 +11,7 @@
  *
  * Ct Format - with optional four initial lines
  *
- * Fasta format - with optional sequence of nucleotides
+ * Fasta format - with sequence of nucleotides
  *
  * @author Luca Tesei, Piero Hierro, Piermichele Rosati
  *

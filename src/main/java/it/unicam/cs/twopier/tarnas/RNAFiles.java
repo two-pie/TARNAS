@@ -3,8 +3,15 @@ package it.unicam.cs.twopier.tarnas;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 public class RNAFiles {
 
+    /**
+     * @param rnaSecondaryStructure
+     * @return
+     */
     static List<String> createDBBody(RNASecondaryStructure rnaSecondaryStructure) {
         var body = new ArrayList<String>();
         body.add(rnaSecondaryStructure.getSequence());
@@ -12,11 +19,20 @@ public class RNAFiles {
         return body;
     }
 
+    /**
+     * @param rnaSecondaryStructure
+     * @return
+     */
     static List<String> createDBNoSequenceBody(RNASecondaryStructure rnaSecondaryStructure) {
         // read db no sequence structure and obtain only structure
         return List.of(getDBBodyOf(rnaSecondaryStructure.size, rnaSecondaryStructure.p));
     }
 
+    /**
+     * @param size
+     * @param p
+     * @return
+     */
     private static String getDBBodyOf(int size, int[] p) {
         StringBuilder sb = new StringBuilder();
         sb.append(".".repeat(size - 1));
@@ -28,10 +44,26 @@ public class RNAFiles {
         return sb.toString();
     }
 
+    /**
+     * @param rnaSecondaryStructure
+     * @return
+     */
     static List<String> createBPSEQBody(RNASecondaryStructure rnaSecondaryStructure) {
-        return null;
+        // read db structure and obtain pairing index
+        var body = new ArrayList<String>();
+        for (int i = 1; i <= rnaSecondaryStructure.getSequence().length(); i++) {
+            var line = i + " " +
+                    rnaSecondaryStructure.getSequence().charAt(i - 1) + " " +
+                    rnaSecondaryStructure.getP()[i] + "\n";
+            body.add(line);
+        }
+        return body;
     }
 
+    /**
+     * @param rnaSecondaryStructure
+     * @return
+     */
     static List<String> createCTBody(RNASecondaryStructure rnaSecondaryStructure) {
         if (rnaSecondaryStructure.getSequence().isEmpty())
             throw new NoSupportedTranslationException("Cannot translate to CT");
@@ -45,15 +77,27 @@ public class RNAFiles {
         return body;
     }
 
+    /**
+     * @param rnaSecondaryStructure
+     * @return
+     */
     static List<String> createAADBody(RNASecondaryStructure rnaSecondaryStructure) {
         return null;
     }
 
+    /**
+     * @param rnaSecondaryStructure
+     * @return
+     */
     static List<String> createAASNoSequenceBody(RNASecondaryStructure rnaSecondaryStructure) {
         return null;
     }
 
+    /**
+     * @param rnaSecondaryStructure
+     * @return
+     */
     static List<String> createFASTABody(RNASecondaryStructure rnaSecondaryStructure) {
-        return null;
+        return List.of(rnaSecondaryStructure.getSequence());
     }
 }
