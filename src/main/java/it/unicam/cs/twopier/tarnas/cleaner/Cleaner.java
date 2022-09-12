@@ -1,4 +1,6 @@
-package it.unicam.cs.twopier.tarnas;
+package it.unicam.cs.twopier.tarnas.cleaner;
+
+import it.unicam.cs.twopier.tarnas.RNASecondaryStructure;
 
 public class Cleaner {
 

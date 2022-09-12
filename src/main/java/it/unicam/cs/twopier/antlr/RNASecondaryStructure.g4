@@ -19,7 +19,7 @@
 grammar RNASecondaryStructure;
 
 @header{
-package it.unicam.cs.twopier.target;
+package it.unicam.cs.twopier.antlr;
 }
 
 // Grammar rules
@@ -55,9 +55,9 @@ bond:
 ;
 
 ct:
-    (
+    ((
        LINE1BPSEQCT LINE2BPSEQCT LINE3BPSEQCT LINE4BPSEQCT
-    )? LINE5CT
+    ) | COMMENT+)? LINE5CT
 ;
 
 ct_structure:
@@ -83,7 +83,9 @@ ct_line:
 
 
 bpseq:
-    ( LINE1BPSEQCT LINE2BPSEQCT LINE3BPSEQCT LINE4BPSEQCT )? bpseq_structure
+    ((
+       LINE1BPSEQCT LINE2BPSEQCT LINE3BPSEQCT LINE4BPSEQCT
+     ) | COMMENT)? bpseq_structure
 ;
 
 bpseq_structure:
@@ -148,6 +150,10 @@ LINE4BPSEQCT:
 LINE5CT:
 	NONEWLINE*?
 	( 'ENERGY' | 'Energy' | 'dG' ) .*? '\r'? '\n'
+;
+
+COMMENT :
+    HASH .*? '\r'? '\n'
 ;
 
 HASH:

@@ -1,4 +1,4 @@
-package it.unicam.cs.twopier.tarnas;
+package it.unicam.cs.twopier.tarnas.rnafile;
 
 import java.io.Serial;
 

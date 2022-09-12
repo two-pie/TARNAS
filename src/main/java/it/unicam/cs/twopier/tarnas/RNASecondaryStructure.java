@@ -23,6 +23,8 @@ package it.unicam.cs.twopier.tarnas;
  * along with ASPRAlign. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import it.unicam.cs.twopier.tarnas.rnafile.RNAInputFileParserException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,14 +43,14 @@ public class RNASecondaryStructure {
     // primary structure, when null this secondary structure has only the structure
     // representation. It can be used to generate the structural RNA tree and it can
     // be aligned with another structure.
-    protected String sequence;
+    private final String sequence;
 
     // list of the weak bonds of this structure
-    protected List<WeakBond> bonds;
+    private final List<WeakBond> bonds;
 
     // length of the sequence; if this structure has no sequence a sub-approximation
     // is computed from the bonds
-    protected int size;
+    private int size;
 
     // accessory array to represent weak bonds with pointers; it is useful to
     // quickly access the indexes of the bonds in constant time. 0 value means null
@@ -57,7 +59,7 @@ public class RNASecondaryStructure {
     // p[i] = j and i > j, there is a weak bond (j,i); always p[i] != i. No more
     // than one pointer for each position is allowed in RNA secondary structures, so
     // one array is sufficient to represent all weak bonds.
-    protected int[] p;
+    private int[] p;
 
     /**
      * Create an empty secondary structure.
@@ -65,7 +67,7 @@ public class RNASecondaryStructure {
     public RNASecondaryStructure() {
         this.sequence = null;
         this.size = -1;
-        this.bonds = new ArrayList<WeakBond>();
+        this.bonds = new ArrayList<>();
         this.p = null;
     }
 

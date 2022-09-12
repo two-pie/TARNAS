@@ -1,5 +1,7 @@
 package it.unicam.cs.twopier.tarnas;
 
+import it.unicam.cs.twopier.tarnas.rnafile.RNAInputFileParserException;
+
 /**
  * Simple class whose objects contain a pair of indexes that identify a weak
  * bond in a secondary structure.
@@ -38,14 +40,14 @@ public class WeakBond implements Comparable<WeakBond> {
     /**
      * @return the left index
      */
-    protected int getLeft() {
+    public int getLeft() {
         return left;
     }
 
     /**
      * @return the right index
      */
-    protected int getRight() {
+    public int getRight() {
         return right;
     }
 
@@ -58,7 +60,7 @@ public class WeakBond implements Comparable<WeakBond> {
      * @throws IllegalArgumentException if the passed WeakBond is equal to this
      *                                  WeakBond
      */
-    protected boolean crossesWith(WeakBond wb) {
+    public boolean crossesWith(WeakBond wb) {
         if (wb == null)
             throw new NullPointerException("Passed Weak Bond was null");
         if (this.equals(wb))

@@ -1,4 +1,10 @@
-package it.unicam.cs.twopier.tarnas;
+package it.unicam.cs.twopier.tarnas.translator;
+
+import it.unicam.cs.twopier.tarnas.*;
+import it.unicam.cs.twopier.tarnas.rnafile.FormattedRNAFile;
+import it.unicam.cs.twopier.tarnas.rnafile.RNAFile;
+import it.unicam.cs.twopier.tarnas.rnafile.RNAFiles;
+import it.unicam.cs.twopier.tarnas.rnafile.RNAFormatType;
 
 import java.util.ArrayList;
 
