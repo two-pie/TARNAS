@@ -1,31 +1,39 @@
 package it.unicam.cs.twopier.tarnas.model.cleaner;
 
-import it.unicam.cs.twopier.tarnas.model.rnafile.FormattedRNAFile;
 import it.unicam.cs.twopier.tarnas.model.rnafile.RNAFile;
+import it.unicam.cs.twopier.tarnas.model.rnafile.RNAFiles;
 import it.unicam.cs.twopier.tarnas.model.rnafile.RNAFormatType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class Cleaner {
 
-    public FormattedRNAFile mergeDBLines(RNAFile rnaFile) {
-        if(rnaFile.format() != RNAFormatType.DB || rnaFile.format() != RNAFormatType.DB_NO_SEQUENCE)
-            throw new IllegalArgumentException();
-        return "";
-        //todo
+    public List<String> mergeDBLines(RNAFile rnaFile) {
+        return rnaFile.format() == RNAFormatType.DB ?
+                RNAFiles.createDBBody(rnaFile.structure()) :
+                RNAFiles.createDBNoSequenceBody(rnaFile.structure());
     }
 
-    public String removeLinesStartingWith(char symbol) {
-        return "";
-        //todo
+    public List<String> removeLinesStartingWith(RNAFile rnaFile, char symbol) {
+        return removeIf(rnaFile.header(), line -> !line.startsWith(Character.toString(symbol)));
     }
 
-    public String removeLinesContaining(String word) {
-        return "";
-        //todo
+    public List<String> removeLinesContaining(RNAFile rnaFile, String word) {
+        return removeIf(rnaFile.header(), line -> !line.contains(word));
     }
 
-    public String removeWhiteSpaces() {
-        return "";
-        //todo
+    public List<String> removeWhiteSpaces(RNAFile rnaFile) {
+        return removeIf(rnaFile.header(), line -> !line.isBlank());
+    }
+
+    private List<String> removeIf(List<String> header, Predicate<String> predicate){
+        var newHeader = new ArrayList<String>();
+        for (var line : header)
+            if (predicate.test(line))
+                newHeader.add(line);
+        return newHeader;
     }
 
 }
