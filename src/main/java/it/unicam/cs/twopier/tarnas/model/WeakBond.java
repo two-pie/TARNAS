@@ -1,6 +1,6 @@
-package it.unicam.cs.twopier.tarnas;
+package it.unicam.cs.twopier.tarnas.model;
 
-import it.unicam.cs.twopier.tarnas.rnafile.RNAInputFileParserException;
+import it.unicam.cs.twopier.tarnas.model.rnafile.RNAInputFileParserException;
 
 /**
  * Simple class whose objects contain a pair of indexes that identify a weak

@@ -1,4 +1,4 @@
-package it.unicam.cs.twopier.tarnas.translator;
+package it.unicam.cs.twopier.tarnas.model.translator;
 
 /**
  *

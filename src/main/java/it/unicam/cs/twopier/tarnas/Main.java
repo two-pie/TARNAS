@@ -1,8 +1,9 @@
 package it.unicam.cs.twopier.tarnas;
 
-import it.unicam.cs.twopier.tarnas.rnafile.RNAFile;
-import it.unicam.cs.twopier.tarnas.translator.DBTranslator;
-import it.unicam.cs.twopier.tarnas.translator.RNAFormatTranslator;
+import it.unicam.cs.twopier.tarnas.model.RNASecondaryStructure;
+import it.unicam.cs.twopier.tarnas.model.rnafile.RNAFile;
+import it.unicam.cs.twopier.tarnas.model.translator.DBTranslator;
+import it.unicam.cs.twopier.tarnas.model.translator.RNAFormatTranslator;
 
 import java.util.List;
 

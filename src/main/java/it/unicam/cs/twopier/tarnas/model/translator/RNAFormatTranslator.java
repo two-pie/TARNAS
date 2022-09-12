@@ -1,7 +1,7 @@
-package it.unicam.cs.twopier.tarnas.translator;
+package it.unicam.cs.twopier.tarnas.model.translator;
 
-import it.unicam.cs.twopier.tarnas.rnafile.FormattedRNAFile;
-import it.unicam.cs.twopier.tarnas.rnafile.RNAFile;
+import it.unicam.cs.twopier.tarnas.model.rnafile.FormattedRNAFile;
+import it.unicam.cs.twopier.tarnas.model.rnafile.RNAFile;
 
 /**
  *

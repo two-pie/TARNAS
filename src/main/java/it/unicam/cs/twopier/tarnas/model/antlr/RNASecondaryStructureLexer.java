@@ -1,15 +1,12 @@
 // Generated from /home/piermuz/Documenti/github/TARNAS/src/main/java/it/unicam/cs/twopier/antlr/RNASecondaryStructure.g4 by ANTLR 4.10.1
 
-package it.unicam.cs.twopier.antlr;
+package it.unicam.cs.twopier.tarnas.model.antlr;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class RNASecondaryStructureLexer extends Lexer {

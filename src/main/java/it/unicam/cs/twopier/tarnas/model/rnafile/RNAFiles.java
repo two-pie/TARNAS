@@ -1,7 +1,7 @@
-package it.unicam.cs.twopier.tarnas.rnafile;
+package it.unicam.cs.twopier.tarnas.model.rnafile;
 
-import it.unicam.cs.twopier.tarnas.RNASecondaryStructure;
-import it.unicam.cs.twopier.tarnas.translator.NoSupportedTranslationException;
+import it.unicam.cs.twopier.tarnas.model.RNASecondaryStructure;
+import it.unicam.cs.twopier.tarnas.model.translator.NoSupportedTranslationException;
 
 import java.util.ArrayList;
 import java.util.List;

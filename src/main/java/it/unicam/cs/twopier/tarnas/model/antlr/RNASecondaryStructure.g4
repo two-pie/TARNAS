@@ -19,7 +19,7 @@
 grammar RNASecondaryStructure;
 
 @header{
-package it.unicam.cs.twopier.antlr;
+package it.unicam.cs.twopier.tarnas.model.cleaner.antlr;
 }
 
 // Grammar rules

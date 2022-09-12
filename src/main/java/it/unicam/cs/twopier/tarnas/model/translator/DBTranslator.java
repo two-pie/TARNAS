@@ -1,10 +1,10 @@
-package it.unicam.cs.twopier.tarnas.translator;
+package it.unicam.cs.twopier.tarnas.model.translator;
 
 
-import it.unicam.cs.twopier.tarnas.rnafile.FormattedRNAFile;
-import it.unicam.cs.twopier.tarnas.rnafile.RNAFile;
-import it.unicam.cs.twopier.tarnas.rnafile.RNAFiles;
-import it.unicam.cs.twopier.tarnas.rnafile.RNAFormatType;
+import it.unicam.cs.twopier.tarnas.model.rnafile.FormattedRNAFile;
+import it.unicam.cs.twopier.tarnas.model.rnafile.RNAFile;
+import it.unicam.cs.twopier.tarnas.model.rnafile.RNAFiles;
+import it.unicam.cs.twopier.tarnas.model.rnafile.RNAFormatType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class DBTranslator implements RNAFormatTranslator {
 
     @Override
     public FormattedRNAFile translateToDB(RNAFile rnaFile) {
-        throw new NoSupportedTranslationException(RNAFormatType.DB.toString());
+        return null;
     }
 
     @Override
