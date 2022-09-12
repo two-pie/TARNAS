@@ -81,8 +81,11 @@ public class RNAFiles {
      * @param rnaSecondaryStructure
      * @return
      */
-    static List<String> createAADBody(RNASecondaryStructure rnaSecondaryStructure) {
-        return null;
+    static List<String> createAASBody(RNASecondaryStructure rnaSecondaryStructure) {
+        var body = new ArrayList<String>();
+        body.add(rnaSecondaryStructure.getSequence());
+        body.addAll(createAASNoSequenceBody(rnaSecondaryStructure));
+        return body;
     }
 
     /**
@@ -90,7 +93,17 @@ public class RNAFiles {
      * @return
      */
     static List<String> createAASNoSequenceBody(RNASecondaryStructure rnaSecondaryStructure) {
-        return null;
+        StringBuilder structure = new StringBuilder();
+        for (var b : rnaSecondaryStructure.getBonds())
+            structure.append("(")
+                    .append(b.getLeft())
+                    .append(",")
+                    .append(b.getRight())
+                    .append(");");
+        // remove the character ';'
+        if (structure.length() >0 && structure.charAt(structure.length()-1)==';')
+            structure.setLength(structure.length()-1);
+        return List.of(structure.toString());
     }
 
     /**

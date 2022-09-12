@@ -2,13 +2,10 @@ package it.unicam.cs.twopier.tarnas;
 
 import java.util.ArrayList;
 
-public class BpseqTranslator implements RNAFormatTranslator {
-
-
+public class CTTranslator implements RNAFormatTranslator{
     @Override
     public FormattedRNAFile translateToDB(RNAFile rnaFile) {
-        // add '# before each line of the header'
-        var header = new ArrayList<>(rnaFile.header().stream().map(l -> "#" + l).toList());
+        var header = new ArrayList<>(rnaFile.header());
         // fill the body
         var body = RNAFiles.createDBBody(rnaFile.structure());
         // create and return the formatted file as object
@@ -17,8 +14,7 @@ public class BpseqTranslator implements RNAFormatTranslator {
 
     @Override
     public FormattedRNAFile translateToDBNoSequence(RNAFile rnaFile) {
-        // add '# before each line of the header'
-        var header = new ArrayList<>(rnaFile.header().stream().map(l -> "#" + l).toList());
+        var header = new ArrayList<>(rnaFile.header());
         // fill the body
         var body = RNAFiles.createDBNoSequenceBody(rnaFile.structure());
         // create and return the formatted file as object
@@ -27,23 +23,21 @@ public class BpseqTranslator implements RNAFormatTranslator {
 
     @Override
     public FormattedRNAFile translateToBPSEQ(RNAFile rnaFile) {
-        throw new NoSupportedTranslationException(RNAFormatType.BPSEQ.toString());
+        var header = new ArrayList<>(rnaFile.header().stream().map(l -> l.substring(1)).toList());
+        // fill the body
+        var body = RNAFiles.createBPSEQBody(rnaFile.structure());
+        // create and return the formatted file as object
+        return new FormattedRNAFile(header,body,RNAFormatType.BPSEQ);
     }
 
     @Override
     public FormattedRNAFile translateToCT(RNAFile rnaFile) {
-        // add '# before each line of the header'
-        var header = new ArrayList<>(rnaFile.header().stream().map(l -> "#" + l).toList());
-        // fill the body
-        var body = RNAFiles.createCTBody(rnaFile.structure());
-        // create and return the formatted file as object
-        return new FormattedRNAFile(header,body,RNAFormatType.CT);
+        throw new NoSupportedTranslationException(RNAFormatType.CT.toString());
     }
 
     @Override
     public FormattedRNAFile translateToAAS(RNAFile rnaFile) {
-        // add '# before each line of the header'
-        var header = new ArrayList<>(rnaFile.header().stream().map(l -> "#" + l).toList());
+        var header = new ArrayList<>(rnaFile.header());
         // fill the body
         var body = RNAFiles.createAASBody(rnaFile.structure());
         // create and return the formatted file as object
@@ -52,8 +46,7 @@ public class BpseqTranslator implements RNAFormatTranslator {
 
     @Override
     public FormattedRNAFile translateToAASNoSequence(RNAFile rnaFile) {
-        // add '# before each line of the header'
-        var header = new ArrayList<>(rnaFile.header().stream().map(l -> "#" + l).toList());
+        var header = new ArrayList<>(rnaFile.header());
         // fill the body
         var body = RNAFiles.createAASNoSequenceBody(rnaFile.structure());
         // create and return the formatted file as object
@@ -62,8 +55,7 @@ public class BpseqTranslator implements RNAFormatTranslator {
 
     @Override
     public FormattedRNAFile translateToFASTA(RNAFile rnaFile) {
-        // add '# before each line of the header'
-        var header = new ArrayList<>(rnaFile.header().stream().map(l -> "#" + l).toList());
+        var header = new ArrayList<>(rnaFile.header());
         // fill the body
         var body = RNAFiles.createFASTABody(rnaFile.structure());
         // create and return the formatted file as object

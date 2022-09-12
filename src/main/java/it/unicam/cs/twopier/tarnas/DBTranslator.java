@@ -37,7 +37,7 @@ public class DBTranslator implements RNAFormatTranslator {
 
     @Override
     public FormattedRNAFile translateToAAS(RNAFile rnaFile) {
-        return new FormattedRNAFile(new ArrayList<>(), RNAFiles.createAADBody(rnaFile.structure()), RNAFormatType.AAS);
+        return new FormattedRNAFile(new ArrayList<>(), RNAFiles.createAASBody(rnaFile.structure()), RNAFormatType.AAS);
     }
 
     @Override
