@@ -1,6 +1,6 @@
 // Generated from /home/piermuz/Documenti/github/TARNAS/src/main/java/it/unicam/cs/twopier/antlr/RNASecondaryStructure.g4 by ANTLR 4.10.1
 
-package it.unicam.cs.twopier.tarnas.model.antlr;
+package it.unicam.cs.twopie.tarnas.model.antlr;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;

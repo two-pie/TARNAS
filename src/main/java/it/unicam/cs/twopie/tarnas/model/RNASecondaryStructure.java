@@ -1,4 +1,4 @@
-package it.unicam.cs.twopier.tarnas.model;
+package it.unicam.cs.twopie.tarnas.model;
 
 /**
  * ASPRAlign - Algebraic Structural Pseudoknot RNA Alignment
@@ -23,7 +23,7 @@ package it.unicam.cs.twopier.tarnas.model;
  * along with ASPRAlign. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import it.unicam.cs.twopier.tarnas.model.rnafile.RNAInputFileParserException;
+import it.unicam.cs.twopie.tarnas.model.rnafile.RNAInputFileParserException;
 
 import java.util.ArrayList;
 import java.util.Collections;

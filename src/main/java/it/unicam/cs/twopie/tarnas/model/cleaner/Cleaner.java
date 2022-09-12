@@ -1,8 +1,8 @@
-package it.unicam.cs.twopier.tarnas.model.cleaner;
+package it.unicam.cs.twopie.tarnas.model.cleaner;
 
-import it.unicam.cs.twopier.tarnas.model.rnafile.RNAFile;
-import it.unicam.cs.twopier.tarnas.model.rnafile.RNAFiles;
-import it.unicam.cs.twopier.tarnas.model.rnafile.RNAFormatType;
+import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
+import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFiles;
+import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormatType;
 
 import java.util.ArrayList;
 import java.util.List;
