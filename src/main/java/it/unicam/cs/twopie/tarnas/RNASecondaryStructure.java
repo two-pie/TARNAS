@@ -26,7 +26,6 @@ package it.unicam.cs.twopie.tarnas;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAInputFileParserException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -132,27 +131,6 @@ public class RNASecondaryStructure {
         this.bonds.add(b);
     }
 
-    /**
-     * Order the list of bonds and initialise the array p of pointers for the bonds.
-     * To be called when all the weak bonds have been added to the structure.
-     *
-     * @throws RNAInputFileParserException if called before the determination of the
-     *                                     structure size
-     */
-    protected void finalise() {
-        // order the bonds, using their natural order
-        Collections.sort(this.bonds);
-        // check size
-        if (this.size == -1)
-            throw new RNAInputFileParserException("Error in determining the size of the secondary structure");
-        // create the array p
-        this.p = new int[this.size + 1]; // position 0 is not used
-        // initialise the array p
-        for (WeakBond b : this.bonds) {
-            p[b.getLeft()] = b.getRight();
-            p[b.getRight()] = b.getLeft();
-        }
-    }
 
     /**
      * Determine if this secondary structure is pseudoknotted.
@@ -214,7 +192,11 @@ public class RNASecondaryStructure {
         }
     }
 
-    public int[] getP() {
+    /**
+     *
+     * @return
+     */
+    public int[] calculateP() {
         this.p = new int[this.size + 1];
         this.bonds.forEach(w -> {
             p[w.getLeft()] = w.getRight();

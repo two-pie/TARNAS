@@ -4,5 +4,5 @@ import it.unicam.cs.twopie.tarnas.RNASecondaryStructure;
 
 import java.util.List;
 
-public record RNAFile(List<String> header, RNASecondaryStructure structure, RNAFormatType format) {
+public record RNAFile(List<String> header, RNASecondaryStructure structure, RNAFormat format) {
 }

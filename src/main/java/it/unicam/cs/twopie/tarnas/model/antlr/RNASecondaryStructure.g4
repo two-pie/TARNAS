@@ -19,7 +19,7 @@
 grammar RNASecondaryStructure;
 
 @header{
-package it.unicam.cs.twopie.tarnas.model.cleaner.antlr;
+package it.unicam.cs.twopie.tarnas.model.antlr;
 }
 
 // Grammar rules
@@ -28,11 +28,29 @@ rna_format:
 ;
 
 aas:
-    sequence? bonds
+    header sequence? bonds
 ;
 
 db:
-    ( HASH LINE1BPSEQCT HASH LINE2BPSEQCT HASH LINE3BPSEQCT HASH LINE4BPSEQCT )? sequence? db_structure
+    header sequence? db_structure
+;
+
+bpseq:
+    header bpseq_structure
+;
+
+ct:
+    header LINECT ct_structure
+;
+
+
+db_structure:
+	DBN db_structure #dbStructureContinue
+	| DBN # dbStructureEnd
+;
+
+header:
+ .*?
 ;
 
 sequence:
@@ -40,10 +58,7 @@ sequence:
     | NUCLEOTIDE # sequenceEnd
 ;
 
-db_structure:
-	DBN db_structure #dbStructureContinue
-	| DBN # dbStructureEnd
-;
+
 
 bonds:
 	bond ';' bonds #bondsContinue
@@ -54,14 +69,10 @@ bond:
 	'(' INDEX ',' INDEX ')'
 ;
 
-ct:
-    ((
-       LINE1BPSEQCT LINE2BPSEQCT LINE3BPSEQCT LINE4BPSEQCT
-    ) | COMMENT+)? LINE5CT
-;
+
 
 ct_structure:
-	ct_line ct_structure # ctSeq
+     ct_line ct_structure # ctSeq
 	| ct_line # ctLast
 ;
 
@@ -82,11 +93,7 @@ ct_line:
 ;
 
 
-bpseq:
-    ((
-       LINE1BPSEQCT LINE2BPSEQCT LINE3BPSEQCT LINE4BPSEQCT
-     ) | COMMENT)? bpseq_structure
-;
+
 
 bpseq_structure:
     bpseq_line bpseq_structure # bpseqSeq
@@ -131,33 +138,10 @@ fragment NONEWLINE:
 	~( '\r' | '\n' )
 ;
 
-LINE1BPSEQCT:
-	'Filename' .*? '\r'? '\n'
-;
 
-LINE2BPSEQCT:
-	'Organism' .*? '\r'? '\n'
-;
-
-LINE3BPSEQCT:
-	'Accession' .*? '\r'? '\n'
-;
-
-LINE4BPSEQCT:
-	'Citation' .*? '\r'? '\n'
-;
-
-LINE5CT:
+LINECT:
 	NONEWLINE*?
 	( 'ENERGY' | 'Energy' | 'dG' ) .*? '\r'? '\n'
-;
-
-COMMENT :
-    HASH .*? '\r'? '\n'
-;
-
-HASH:
-    '#'
 ;
 
 WS:

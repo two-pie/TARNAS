@@ -2,7 +2,7 @@ package it.unicam.cs.twopie.tarnas.model.rnafile;
 
 import java.util.List;
 
-public record FormattedRNAFile(List<String> header, List<String> body, RNAFormatType rnaFormatType) {
+public record FormattedRNAFile(List<String> header, List<String> body, RNAFormat rnaFormatType) {
 
     @Override
     public String toString() {
