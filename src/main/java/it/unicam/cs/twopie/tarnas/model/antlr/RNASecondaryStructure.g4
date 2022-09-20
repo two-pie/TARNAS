@@ -24,41 +24,39 @@ package it.unicam.cs.twopie.tarnas.model.antlr;
 
 // Grammar rules
 rna_format:
-    aas | ct | db | bpseq | fasta
+    aas | ct | edbn | bpseq | fasta
 ;
 
 aas:
-    header sequence? bonds
+    COMMENT* sequence? bonds
 ;
 
-db:
-    header sequence? db_structure
+edbn:
+    COMMENT* sequence? edbn_structure
+;
+
+fasta:
+    COMMENT* sequence
 ;
 
 bpseq:
-    header bpseq_structure
+    header_line+=(COMMENT | LINE1BPSEQCT| LINE2BPSEQCT | LINE3BPSEQCT | LINE4BPSEQCT)* bpseq_structure
 ;
 
 ct:
-    header LINECT ct_structure
+    header_line+=(COMMENT | LINE1BPSEQCT| LINE2BPSEQCT | LINE3BPSEQCT | LINE4BPSEQCT)* LINECT ct_structure
 ;
 
-
-db_structure:
-	DBN db_structure #dbStructureContinue
-	| DBN # dbStructureEnd
+edbn_structure:
+	EDBN edbn_structure #edbnStructureContinue
+	| EDBN # edbnStructureEnd
 ;
 
-header:
- .*?
-;
 
 sequence:
     NUCLEOTIDE sequence # sequenceContinue
     | NUCLEOTIDE # sequenceEnd
 ;
-
-
 
 bonds:
 	bond ';' bonds #bondsContinue
@@ -68,8 +66,6 @@ bonds:
 bond:
 	'(' INDEX ',' INDEX ')'
 ;
-
-
 
 ct_structure:
      ct_line ct_structure # ctSeq
@@ -92,9 +88,6 @@ ct_line:
 	INDEX # ctLineBond
 ;
 
-
-
-
 bpseq_structure:
     bpseq_line bpseq_structure # bpseqSeq
 	| bpseq_line # bpseqLast
@@ -105,9 +98,6 @@ bpseq_line:
 	| INDEX IUPAC_CODE INDEX # bpseqLineBond
 ;
 
-fasta:
-    sequence
-;
 
 // Lexer tokens
 INDEX:
@@ -118,6 +108,21 @@ ZERO_INDEX:
     '0'
 ;
 
+LINECT:
+	NONEWLINE*?
+	(
+		'ENERGY'
+		| 'Energy'
+		| 'dG'
+	) .*? '\r'? '\n'
+;
+
+fragment
+NONEWLINE
+:
+	~( '\r' | '\n' )
+;
+
 IUPAC_CODE:
 	[ACGUacguTtRrYysSWwKkMmBbDdHhVvNn-]
 ;
@@ -126,24 +131,51 @@ NUCLEOTIDE:
 	IUPAC_CODE+
 ;
 
-fragment DBN_CODE:
-	'.' | '(' | ')'
+fragment EDBN_CODE:
+	'.'
+	| '('
+	| ')'
+	| '['
+	| ']'
+	| '{'
+	| '}'
+	| '<'
+	| '>'
+	| [a-zA-Z]
 ;
 
-DBN:
-	DBN_CODE+
+EDBN:
+	EDBN_CODE+
 ;
 
-fragment NONEWLINE:
-	~( '\r' | '\n' )
+LINE1BPSEQCT
+:
+	'Filename' .*? '\r'? '\n'
 ;
 
-
-LINECT:
-	NONEWLINE*?
-	( 'ENERGY' | 'Energy' | 'dG' ) .*? '\r'? '\n'
+LINE2BPSEQCT
+:
+	'Organism' .*? '\r'? '\n'
 ;
 
-WS:
+LINE3BPSEQCT
+:
+	'Accession' .*? '\r'? '\n'
+;
+
+LINE4BPSEQCT
+:
+	'Citation' .*? '\r'? '\n'
+;
+
+COMMENT
+:
+	'#' .*? '\r'? '\n'
+;
+
+WS
+:
 	[ \t\r\n]+ -> skip
 ; // skip spaces, tabs, newlines
+
+

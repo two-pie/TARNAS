@@ -3,7 +3,7 @@ module org.example {
     requires javafx.fxml;
     requires org.antlr.antlr4.runtime;
 
+    opens it.unicam.cs.twopie.tarnas.view to javafx.fxml;
+    exports it.unicam.cs.twopie.tarnas.view;
 
-    opens cs.example to javafx.fxml;
-    exports cs.example;
 }

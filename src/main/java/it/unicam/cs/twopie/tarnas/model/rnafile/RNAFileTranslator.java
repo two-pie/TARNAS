@@ -1,6 +1,6 @@
 package it.unicam.cs.twopie.tarnas.model.rnafile;
 
-import it.unicam.cs.twopie.tarnas.RNASecondaryStructure;
+import it.unicam.cs.twopie.tarnas.model.rnastructure.RNASecondaryStructure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +109,7 @@ public class RNAFileTranslator {
      * @return
      */
     private static List<String> createDBBody(RNASecondaryStructure rnaSecondaryStructure, boolean addSequence) {
-        var p = rnaSecondaryStructure.calculateP();
+        var p = rnaSecondaryStructure.getP();
         var size = rnaSecondaryStructure.getSize();
         var structure = new StringBuilder();
         structure.append(".".repeat(size - 1));
@@ -153,7 +153,7 @@ public class RNAFileTranslator {
         for (int i = 1; i <= rnaSecondaryStructure.getSequence().length(); i++) {
             var line = i + " " +
                     rnaSecondaryStructure.getSequence().charAt(i - 1) + " " +
-                    rnaSecondaryStructure.calculateP()[i] + "\n";
+                    rnaSecondaryStructure.getP()[i] + "\n";
             body.add(line);
         }
         return body;
@@ -166,7 +166,7 @@ public class RNAFileTranslator {
     private static List<String> createCTBody(RNASecondaryStructure rnaSecondaryStructure) {
         var body = new ArrayList<String>();
         var rnaSequence = rnaSecondaryStructure.getSequence();
-        var p = rnaSecondaryStructure.calculateP();
+        var p = rnaSecondaryStructure.getP();
         for (int i = 1; i <= rnaSecondaryStructure.getSize(); i++) {
             var line = i + " " + rnaSequence.charAt(i - 1) + " " + (i - 1) + " " + (i + 1) + " " + p[i] + " " + i;
             body.add(line);
