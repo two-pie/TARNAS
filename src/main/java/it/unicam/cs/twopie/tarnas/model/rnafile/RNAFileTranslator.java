@@ -110,14 +110,14 @@ public class RNAFileTranslator {
      */
     private static List<String> createDBBody(RNASecondaryStructure rnaSecondaryStructure, boolean addSequence) {
         var p = rnaSecondaryStructure.getP();
-        var size = rnaSecondaryStructure.getSize();
         var structure = new StringBuilder();
-        structure.append(".".repeat(size - 1));
-        for (int i = 1; i <= size; i++)
+        structure.append(".".repeat(p.length));
+        for (int i = 1; i < p.length; i++)
             if (p[i] != 0 && structure.charAt(i) == '.' && structure.charAt(p[i]) == '.') {
                 structure.setCharAt(i, '(');
                 structure.setCharAt(p[i], ')');
             }
+        structure.deleteCharAt(0);
         return addSequence ?
                 List.of(rnaSecondaryStructure.getSequence(), structure.toString()) :
                 List.of(structure.toString());

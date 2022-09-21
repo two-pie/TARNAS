@@ -170,7 +170,7 @@ LINE4BPSEQCT
 
 COMMENT
 :
-	'#' .*? '\r'? '\n'
+	('#' | '>') .*? '\r'? '\n'
 ;
 
 WS
