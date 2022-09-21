@@ -30,6 +30,5 @@ public class Main {
         // Walk the tree created during the parse, trigger callbacks
         walker.walk(constructor, tree);
         RNAFile rnaFile = constructor.getRnaFile();
-        rnaFile.header().forEach(System.out::println);
     }
 }

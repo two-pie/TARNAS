@@ -3,6 +3,8 @@ module it.unicam.cs.twopie {
     requires javafx.fxml;
     requires org.antlr.antlr4.runtime;
 
+    opens it.unicam.cs.twopie.tarnas.model.rnastructure to javafx.base;
+    exports it.unicam.cs.twopie.tarnas.model.rnastructure;
     opens it.unicam.cs.twopie.tarnas.model.rnafile to javafx.base;
     exports it.unicam.cs.twopie.tarnas.model.rnafile;
     opens it.unicam.cs.twopie to javafx.fxml;
