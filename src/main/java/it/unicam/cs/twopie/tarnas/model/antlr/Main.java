@@ -26,7 +26,7 @@ public class Main {
         // Create a generic parse tree walker that can trigger callbacks
         ParseTreeWalker walker = new ParseTreeWalker();
         // Create the specialised listener for the RNA secondary structure
-        RNAFileConstructor constructor = new RNAFileConstructor();
+        RNAFileConstructor constructor = new RNAFileConstructor("pippo");//TODO togliere questa classe
         // Walk the tree created during the parse, trigger callbacks
         walker.walk(constructor, tree);
         RNAFile rnaFile = constructor.getRnaFile();
