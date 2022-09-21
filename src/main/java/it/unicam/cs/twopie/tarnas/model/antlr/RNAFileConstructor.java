@@ -15,12 +15,14 @@ public class RNAFileConstructor extends RNASecondaryStructureBaseListener {
     private final StringBuffer sequenceBuffer;
     private final StringBuffer edbnsBuffer;
     private final List<String> header;
+    private final String fileName;
 
-    public RNAFileConstructor() {
+    public RNAFileConstructor(String fileName) {
         this.s = new RNASecondaryStructure();
         this.sequenceBuffer = new StringBuffer();
         this.edbnsBuffer = new StringBuffer();
         this.header = new ArrayList<>();
+        this.fileName = fileName;
     }
 
     public RNAFile getRnaFile() {
@@ -61,7 +63,7 @@ public class RNAFileConstructor extends RNASecondaryStructureBaseListener {
         // everything has been added to the structure, finalise it
         this.s.finalise();
         // create rnafile object
-        this.rnaFile = new RNAFile(this.header, this.s, RNAFormat.BPSEQ);
+        this.rnaFile = new RNAFile(fileName, this.header, this.s, RNAFormat.BPSEQ);
     }
 
     //CT
@@ -98,7 +100,7 @@ public class RNAFileConstructor extends RNASecondaryStructureBaseListener {
         // everything has been added to the structure, finalise it
         this.s.finalise();
         // create rnafile object
-        this.rnaFile = new RNAFile(this.header, this.s, RNAFormat.CT);
+        this.rnaFile = new RNAFile(fileName, this.header, this.s, RNAFormat.CT);
     }
 
     //AAS
@@ -151,7 +153,7 @@ public class RNAFileConstructor extends RNASecondaryStructureBaseListener {
         // everything has been added to the structure, finalise it
         this.s.finalise();
         // create rnafile object
-        this.rnaFile = new RNAFile(this.header,
+        this.rnaFile = new RNAFile(fileName, this.header,
                 this.s,
                 this.s.getSequence() == null ? RNAFormat.AAS_NO_SEQUENCE : RNAFormat.AAS);
     }
@@ -165,7 +167,7 @@ public class RNAFileConstructor extends RNASecondaryStructureBaseListener {
     @Override
     public void exitFasta(RNASecondaryStructureParser.FastaContext ctx) {
         // create rnafile object
-        this.rnaFile = new RNAFile(this.header, this.s, RNAFormat.FASTA);
+        this.rnaFile = new RNAFile(fileName, this.header, this.s, RNAFormat.FASTA);
     }
 
     // EDBN
@@ -250,7 +252,7 @@ public class RNAFileConstructor extends RNASecondaryStructureBaseListener {
         // create rnafile object
         this.s.finalise();
         // create rnafile object
-        this.rnaFile = new RNAFile(this.header,
+        this.rnaFile = new RNAFile(fileName, this.header,
                 this.s,
                 this.s.getSequence() == null ? RNAFormat.DB_NO_SEQUENCE : RNAFormat.DB);
     }
@@ -273,7 +275,7 @@ public class RNAFileConstructor extends RNASecondaryStructureBaseListener {
          * Parse the edbn string using stacks to push opening symbols and
          * match them with closing ones
          */
-        var stacks = new HashMap<Character,Stack<Integer>>();
+        var stacks = new HashMap<Character, Stack<Integer>>();
         for (int i = 0; i < extendedDotBracketNotation.length(); i++) {
             var c = extendedDotBracketNotation.charAt(i);
             Character oc = c;
