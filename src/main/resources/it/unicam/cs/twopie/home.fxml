@@ -41,6 +41,7 @@
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -83,7 +84,11 @@
                 <Button mnemonicParsing="false" text="carica file" />
               </buttons>
             </ButtonBar>
-            <TableView fx:id="filesTable" layoutX="97.0" layoutY="120.0" prefHeight="262.0" prefWidth="1223.0" />
+            <TableView fx:id="filesTable" layoutX="97.0" layoutY="120.0" prefHeight="262.0" prefWidth="1223.0">
+               <columns>
+                  <TableColumn fx:id="nameColumn" prefWidth="161.6000213623047" text="File Name" />
+                  <TableColumn fx:id="formatColumn" prefWidth="169.5999755859375" text="Format" />
+               </columns></TableView>
             <Button fx:id="addFile" layoutX="51.0" layoutY="429.0" mnemonicParsing="false" onAction="#handleAddFile" prefHeight="25.0" prefWidth="92.0" text="add file" />
             <MenuButton layoutX="1160.0" layoutY="589.0" mnemonicParsing="false" text="Traduci in...">
               <items>
