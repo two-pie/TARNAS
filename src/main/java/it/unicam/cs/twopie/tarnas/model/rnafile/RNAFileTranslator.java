@@ -26,7 +26,7 @@ public class RNAFileTranslator {
      */
     public static FormattedRNAFile translateToDB(RNAFile rnaFile) {
         // create DB header
-        var header = createHeader(rnaFile.getHeader(), rnaFile.getFormat());
+        var header = createHeader(rnaFile.getHeader(), RNAFormat.DB);
         // create DB body
         var body = createDBBody(rnaFile.getStructure(), true);
         // return a formatted rna file object
@@ -41,7 +41,7 @@ public class RNAFileTranslator {
      */
     public static FormattedRNAFile translateToDBNoSequence(RNAFile rnaFile) {
         // create DB no sequence header
-        var header = createHeader(rnaFile.getHeader(), rnaFile.getFormat());
+        var header = createHeader(rnaFile.getHeader(), RNAFormat.DB_NO_SEQUENCE);
         // create DB no sequence body
         var body = createDBBody(rnaFile.getStructure(), false);
         // return a formatted rna file object
@@ -56,7 +56,7 @@ public class RNAFileTranslator {
      */
     public static FormattedRNAFile translateToBPSEQ(RNAFile rnaFile) {
         // create BPSEQ header
-        var header = createHeader(rnaFile.getHeader(), rnaFile.getFormat());
+        var header = createHeader(rnaFile.getHeader(), RNAFormat.BPSEQ);
         //create BPSEQ body
         // create BPSEQ body
         var body = createBPSEQBody(rnaFile.getStructure());
@@ -72,7 +72,7 @@ public class RNAFileTranslator {
      */
     public static FormattedRNAFile translateToCT(RNAFile rnaFile) {
         // create CT header
-        var header = createHeader(rnaFile.getHeader(), rnaFile.getFormat());
+        var header = createHeader(rnaFile.getHeader(), RNAFormat.CT);
         // create CT body
         var body = createCTBody(rnaFile.getStructure());
         // return a formatted rna file object
@@ -87,7 +87,7 @@ public class RNAFileTranslator {
      */
     public static FormattedRNAFile translateToAAS(RNAFile rnaFile) {
         // create AAS header
-        var header = createHeader(rnaFile.getHeader(), rnaFile.getFormat());
+        var header = createHeader(rnaFile.getHeader(), RNAFormat.AAS);
         // create AAS body
         var body = createAASBody(rnaFile.getStructure(), true);
         // return a formatted rna file object
@@ -102,7 +102,7 @@ public class RNAFileTranslator {
      */
     public static FormattedRNAFile translateToAASNoSequence(RNAFile rnaFile) {
         // create ASS no sequence header
-        var header = createHeader(rnaFile.getHeader(), rnaFile.getFormat());
+        var header = createHeader(rnaFile.getHeader(), RNAFormat.AAS_NO_SEQUENCE);
         // create ASS no sequence body
         var body = createAASBody(rnaFile.getStructure(), false);
         // return a formatted rna file object
@@ -118,7 +118,7 @@ public class RNAFileTranslator {
     public static FormattedRNAFile translateToFASTA(RNAFile rnaFile) {
         var rnaSecondaryStructure = rnaFile.getStructure();
         // create FASTA header
-        var header = createHeader(rnaFile.getHeader(), rnaFile.getFormat());
+        var header = createHeader(rnaFile.getHeader(), RNAFormat.FASTA);
         // create FASTA body
         var body = List.of(rnaFile.getStructure().getSequence());
         // return a formatted rna file object
