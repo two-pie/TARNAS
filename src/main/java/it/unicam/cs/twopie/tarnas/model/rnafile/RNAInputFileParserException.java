@@ -6,7 +6,7 @@ import java.io.Serial;
  * Exception to signal any syntax error in input files containing the
  * description of an RNA secondary structure in any supported format.
  *
- * @author Luca Tesei
+ * @author Luca Tesei, Piero Hierro, Piermichele Rosati
  *
  */
 public class RNAInputFileParserException extends RuntimeException {

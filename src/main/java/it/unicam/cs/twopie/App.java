@@ -9,7 +9,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * JavaFX App
+ * TARNAS JavaFX App
+ *
+ * @author Piero Hierro, Piermichele Rosati
  */
 public class App extends Application {
 
