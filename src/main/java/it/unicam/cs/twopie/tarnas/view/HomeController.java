@@ -1,10 +1,11 @@
 package it.unicam.cs.twopie.tarnas.view;
 
 import it.unicam.cs.twopie.App;
-import it.unicam.cs.twopie.tarnas.model.antlr.RNAFileConstructor;
+import it.unicam.cs.twopie.tarnas.model.antlr.RNAFileListener;
 import it.unicam.cs.twopie.tarnas.model.antlr.RNASecondaryStructureLexer;
 import it.unicam.cs.twopie.tarnas.model.antlr.RNASecondaryStructureParser;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
+import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFileConstructor;
 import it.unicam.cs.twopie.tarnas.view.utils.TrashCell;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
@@ -60,7 +61,7 @@ public class HomeController {
         var fileChooser = new FileChooser();
         var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
         if (selectedFile != null) {
-            var rnaFile = this.readFile(selectedFile.toPath());
+            var rnaFile = RNAFileConstructor.getInstance().construct(Path.of(selectedFile.getPath())); // TODO: da rimpiazzare con il TranslatorController
             this.filesTable.getItems().add(rnaFile);
         }
     }
@@ -74,28 +75,8 @@ public class HomeController {
                     .filter(Files::isRegularFile)
                     .toList();
             for (var f : files)
-                this.filesTable.getItems().add(this.readFile(f));
+                this.filesTable.getItems().add(RNAFileConstructor.getInstance().construct(Path.of(String.valueOf(f.getFileName()))));
         }
-    }
-
-    private RNAFile readFile(Path path) throws IOException {
-        CharStream input = CharStreams.fromPath(path);
-        // create a lexer that feeds off of input CharStream
-        RNASecondaryStructureLexer lexer = new RNASecondaryStructureLexer(input);
-        // create a buffer of tokens pulled from the lexer
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        // create a parser that feeds off the tokens buffer
-        RNASecondaryStructureParser structureParser = new RNASecondaryStructureParser(tokens);
-        // begin parsing at rna rule
-        ParseTree tree = structureParser.rna_format();
-        // Create a generic parse tree walker that can trigger callbacks
-        ParseTreeWalker walker = new ParseTreeWalker();
-        // Create the specialised listener for the RNA secondary structure
-        RNAFileConstructor constructor = new RNAFileConstructor(path.getFileName().toString());
-        // Walk the tree created during the parse, trigger callbacks
-        walker.walk(constructor, tree);
-
-        return constructor.getRnaFile();
     }
 
     private Stage getPrimaryStage() {
