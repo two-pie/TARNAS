@@ -45,7 +45,7 @@ public class HomeController {
     @FXML
     public void initialize() {
         // load trash image
-        var trashImage = new Image(Objects.requireNonNull(App.class.getResource("trash.png")).toExternalForm(), 18, 18, false, false);
+        var trashImage = new Image(Objects.requireNonNull(App.class.getResource("/img/trash.png")).toExternalForm(), 18, 18, false, false);
         //change table label
         this.filesTable.setPlaceholder(new Label("No loaded files"));
         // init columns

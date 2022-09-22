@@ -8,6 +8,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * TARNAS JavaFX App
@@ -18,10 +19,10 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = new FXMLLoader(App.class.getResource("home.fxml")).load();
-        var scene = new Scene(root, 500, 500);
+        //System.out.println(App.class.getResource("/fxml/home.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(App.class.getResource("/fxml/home.fxml")));
         stage.setTitle("TARNAS");
-        stage.setScene(scene);
+        stage.setScene(new Scene(root, 1000, 600));
         stage.show();
     }
 
