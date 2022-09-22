@@ -35,7 +35,7 @@ import java.util.List;
  * bonds given as pairs of positions in the primary sequence. Positions start at
  * 1 and end at the length of the primary sequence.
  *
- * @author Luca Tesei
+ * @author Luca Tesei, Piero Hierro, Piermichele Rosati
  */
 public class RNASecondaryStructure {
     // private and protected fields:

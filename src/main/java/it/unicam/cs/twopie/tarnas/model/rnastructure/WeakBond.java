@@ -6,7 +6,7 @@ import it.unicam.cs.twopie.tarnas.model.rnafile.RNAInputFileParserException;
  * Simple class whose objects contain a pair of indexes that identify a weak
  * bond in a secondary structure.
  *
- * @author Luca Tesei
+ * @author Luca Tesei, Piero Hierro, Piermichele Rosati
  *
  */
 public class WeakBond implements Comparable<WeakBond> {
