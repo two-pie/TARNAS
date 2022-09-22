@@ -51,7 +51,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="457.0" prefWidth="1321.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.cs.twopie.tarnas.view.HomeController">
+<VBox prefHeight="457.0" prefWidth="1321.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.cs.twopie.tarnas.view.HomeController">
   <children>
     <MenuBar prefHeight="0.0" prefWidth="500.0" VBox.vgrow="NEVER">
       <menus>
@@ -84,10 +84,11 @@
                 <Button mnemonicParsing="false" text="carica file" />
               </buttons>
             </ButtonBar>
-            <TableView fx:id="filesTable" layoutX="97.0" layoutY="120.0" prefHeight="262.0" prefWidth="1223.0">
+            <TableView fx:id="filesTable" editable="true" layoutX="74.0" layoutY="129.0" prefHeight="263.0" prefWidth="1227.0" stylesheets="@../css/home.css">
                <columns>
-                  <TableColumn fx:id="nameColumn" prefWidth="161.6000213623047" text="File Name" />
-                  <TableColumn fx:id="formatColumn" prefWidth="169.5999755859375" text="Format" />
+                  <TableColumn fx:id="nameColumn" prefWidth="262.40000915527344" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="File Name" />
+                  <TableColumn fx:id="formatColumn" minWidth="0.0" prefWidth="184.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Format" />
+                  <TableColumn fx:id="actionsColumn" prefWidth="775.9998779296875" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="actions" />
                </columns></TableView>
             <Button fx:id="addFile" layoutX="51.0" layoutY="429.0" mnemonicParsing="false" onAction="#handleAddFile" prefHeight="25.0" prefWidth="92.0" text="add file" />
             <MenuButton layoutX="1160.0" layoutY="589.0" mnemonicParsing="false" text="Traduci in...">
@@ -123,7 +124,7 @@
                   <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
-            <Button layoutX="187.0" layoutY="429.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="ADD FOLDER" />
+            <Button fx:id="addFolder" layoutX="187.0" layoutY="429.0" mnemonicParsing="false" onAction="#handleAddFolder" prefHeight="25.0" prefWidth="92.0" text="ADD FOLDER" />
             <Label alignment="CENTER" layoutX="561.0" layoutY="59.0" prefHeight="17.0" prefWidth="267.0" text="TARNAS" textAlignment="CENTER" textFill="#0088ff">
                <font>
                   <Font size="36.0" />
