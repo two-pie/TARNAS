@@ -8,7 +8,7 @@ public record FormattedRNAFile(List<String> header, List<String> body, RNAFormat
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        header.forEach(sb::append);
+        //header.forEach(sb::append);
         body.forEach(sb::append);
         return sb.toString();
     }

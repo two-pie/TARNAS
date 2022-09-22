@@ -204,6 +204,7 @@ public class RNAFileConstructor extends RNASecondaryStructureBaseListener {
     @Override
     public void enterEdbnStructureEnd(RNASecondaryStructureParser.EdbnStructureEndContext ctx) {
         var edbn = ctx.EDBN().getText();
+        System.out.println("EDBN: "+edbn);
         /*
          * Control if this part of string has been classified wrongly as EDBN
          * while originally it was a nucleotide part with non-recognised

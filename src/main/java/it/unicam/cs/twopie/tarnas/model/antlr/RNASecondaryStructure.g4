@@ -124,7 +124,7 @@ NONEWLINE
 ;
 
 IUPAC_CODE:
-	[ACGUacguTtRrYysSWwKkMmBbDdHhVvNn-]
+	[ACGUacguTtRrYysSWwKkMmBbDdHhVvNnOPI-]
 ;
 
 NUCLEOTIDE:
