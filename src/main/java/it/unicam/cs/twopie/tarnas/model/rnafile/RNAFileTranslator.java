@@ -1,9 +1,9 @@
 package it.unicam.cs.twopie.tarnas.model.rnafile;
 
 import it.unicam.cs.twopie.tarnas.model.rnastructure.RNASecondaryStructure;
+import it.unicam.cs.twopie.tarnas.model.utils.Region;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A representation of an RNA files translator.<br>
@@ -134,18 +134,14 @@ public class RNAFileTranslator {
      * @return the {@link RNAFormat#DB} body as a {@link List} of {@code String}
      */
     private static List<String> createDBBody(RNASecondaryStructure rnaSecondaryStructure, boolean addSequence) {
-        var p = rnaSecondaryStructure.getP();
-        var structure = new StringBuilder();
-        structure.append(".".repeat(p.length));
-        for (int i = 1; i < p.length; i++)
-            if (p[i] != 0 && structure.charAt(i) == '.' && structure.charAt(p[i]) == '.') {
-                structure.setCharAt(i, '(');
-                structure.setCharAt(p[i], ')');
-            }
-        structure.deleteCharAt(0);
+        var regs   = findAllPairedRegions(rnaSecondaryStructure);
+        var n = regs.size();
+        sortRegionsByStartPoint(regs);
+        setRegionsOrder(regs, n);
+        var structure = encodeBasePairs(regs, rnaSecondaryStructure.getSize());
         return addSequence ?
-                List.of(rnaSecondaryStructure.getSequence(), structure.toString()) :
-                List.of(structure.toString());
+                List.of(rnaSecondaryStructure.getSequence(), structure) :
+                List.of(structure);
     }
 
     /**
@@ -225,4 +221,81 @@ public class RNAFileTranslator {
         }
         return newHeader;
     }
+
+    private static List<Region> findAllPairedRegions(RNASecondaryStructure rnaSecondaryStructure){
+        return rnaSecondaryStructure.getBonds().stream().map(Region::new).toList();
+    }
+
+    /**
+     *
+     * @param regs
+     */
+    private static void sortRegionsByStartPoint(List<Region> regs) {
+        regs.sort(Comparator.comparingInt(r -> r.getWeakBond().getLeft()));
+    }
+
+    /**
+     * @param regs
+     * @param n
+     */
+    private static void setRegionsOrder(List<Region> regs, int n) {
+        if (n < 2) return;
+        regs.get(0).setOrder(0);
+        for (int i = 1; i < n; i++) {
+            var globalOrder = 0;
+            for (int j = 0; j < i - 1; j++) {
+                if (regs.get(j).getOrder() == globalOrder && areRegionsConflicting(regs.get(i), regs.get(j)))
+                    globalOrder += 1;
+            }
+            regs.get(i).setOrder(globalOrder);
+        }
+    }
+
+    private static boolean areRegionsConflicting(Region r1, Region r2) {
+        var wb1 = r1.getWeakBond();
+        var wb2 = r2.getWeakBond();
+        var firstCase = wb1.getLeft() < wb2.getLeft() && wb1.getRight() > wb2.getLeft() && wb2.getRight() > wb1.getRight();
+        var secondCase = wb2.getLeft() < wb1.getLeft() && wb2.getRight() > wb1.getLeft() && wb1.getRight() > wb2.getRight();
+        return firstCase || secondCase;
+    }
+    private static String encodeBasePairs(List<Region> regs, int size) {
+        var structure = new StringBuilder();
+        structure.append(".".repeat(size));
+        for (var r : regs) {
+            structure.setCharAt(r.getWeakBond().getLeft(), getOpeningBracket(r.getOrder()));
+            structure.setCharAt(r.getWeakBond().getRight(), getClosingBracket(r.getOrder()));
+        }
+        return structure.toString();
+    }
+
+    private static Character getOpeningBracket(int order) {
+        return switch (order){
+            case 0 -> '(';
+            case 1 -> '[';
+            case 2 -> '{';
+            case 3 -> '<';
+            case 4 -> 'A';
+            case 5 -> 'B';
+            case 6 -> 'C';
+            case 7 -> 'D';
+            case 8 -> 'E';
+            default -> throw new IllegalArgumentException("Maximum order is 8!");
+        };
+    }
+
+    private static Character getClosingBracket(int order) {
+        return switch (order){
+            case 0 -> ')';
+            case 1 -> ']';
+            case 2 -> '}';
+            case 3 -> '>';
+            case 4 -> 'a';
+            case 5 -> 'b';
+            case 6 -> 'c';
+            case 7 -> 'd';
+            case 8 -> 'e';
+            default -> throw new IllegalArgumentException("Maximum order is 8!");
+        };
+    }
+
 }
