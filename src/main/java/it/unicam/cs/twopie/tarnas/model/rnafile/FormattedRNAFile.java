@@ -3,7 +3,9 @@ package it.unicam.cs.twopie.tarnas.model.rnafile;
 import java.util.List;
 import java.util.Objects;
 
-public record FormattedRNAFile(List<String> header, List<String> body, RNAFormat rnaFormatType) {
+public record FormattedRNAFile(String fileName, List<String> header, List<String> body, RNAFormat rnaFormatType) {
+
+    // TODO: regenerate methods above
 
     @Override
     public String toString() {

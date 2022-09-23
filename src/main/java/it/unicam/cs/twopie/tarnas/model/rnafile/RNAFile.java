@@ -2,6 +2,7 @@ package it.unicam.cs.twopie.tarnas.model.rnafile;
 
 import it.unicam.cs.twopie.tarnas.model.rnastructure.RNASecondaryStructure;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,7 +60,7 @@ public class RNAFile {
      * @return the name of this {@code RNAFile}
      */
     public String getFileName() {
-        return fileName;
+        return this.fileName;
     }
 
     /**
@@ -68,7 +69,7 @@ public class RNAFile {
      * @return the header of this {@code RNAFile}
      */
     public List<String> getHeader() {
-        return header;
+        return this.header;
     }
 
     /**
@@ -77,7 +78,7 @@ public class RNAFile {
      * @return the {@code RNASecondaryStructure} of this {@code RNAFile}
      */
     public RNASecondaryStructure getStructure() {
-        return structure;
+        return this.structure;
     }
 
     /**
@@ -86,7 +87,7 @@ public class RNAFile {
      * @return the {@code RNAFormat} of this {@code RNAFile}
      */
     public RNAFormat getFormat() {
-        return format;
+        return this.format;
     }
 
     @Override

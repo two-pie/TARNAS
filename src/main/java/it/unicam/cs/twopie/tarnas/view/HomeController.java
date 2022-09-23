@@ -1,32 +1,35 @@
 package it.unicam.cs.twopie.tarnas.view;
 
 import it.unicam.cs.twopie.App;
-import it.unicam.cs.twopie.tarnas.model.antlr.RNAFileListener;
-import it.unicam.cs.twopie.tarnas.model.antlr.RNASecondaryStructureLexer;
-import it.unicam.cs.twopie.tarnas.model.antlr.RNASecondaryStructureParser;
+import it.unicam.cs.twopie.tarnas.controller.TranslatorController;
+import it.unicam.cs.twopie.tarnas.model.rnafile.FormattedRNAFile;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
-import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFileConstructor;
+import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat;
 import it.unicam.cs.twopie.tarnas.view.utils.TrashCell;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
+import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
 
 public class HomeController {
+
+    TranslatorController tc = new TranslatorController();
 
     @FXML
     private TableView<RNAFile> filesTable;
@@ -39,9 +42,13 @@ public class HomeController {
 
     @FXML
     private TableColumn<RNAFile, RNAFile> actionsColumn;
-
     @FXML
-    private Button addFile;
+    public MenuButton btnSelectFormatTranslation;
+    private RNAFormat selectedFormat;
+    @FXML
+    public MenuItem itmAAS, itmAASNS, itmBPSEQ, itmCT, itmDB, itmDBNS, itmFASTA; // example: "AAS_NO_SEQUENCE" instead "AAS NO SEQUENCE" for enum recognition
+    @FXML
+    public Button btnTranslateAllLoadedFiles;
 
     @FXML
     public void initialize() {
@@ -54,6 +61,9 @@ public class HomeController {
         this.formatColumn.setCellValueFactory(new PropertyValueFactory<>("format"));
         this.actionsColumn.setCellValueFactory(rnaFile -> new ReadOnlyObjectWrapper<>(rnaFile.getValue()));
         this.actionsColumn.setCellFactory(column -> new TrashCell(trashImage));
+        // add event to select ButtonItem for destination format translation
+        this.initSelectEventOnButtonItems();
+        this.btnTranslateAllLoadedFiles.setDisable(true);
     }
 
     @FXML
@@ -61,8 +71,9 @@ public class HomeController {
         var fileChooser = new FileChooser();
         var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
         if (selectedFile != null) {
-            var rnaFile = RNAFileConstructor.getInstance().construct(Path.of(selectedFile.getPath())); // TODO: da rimpiazzare con il TranslatorController
-            this.filesTable.getItems().add(rnaFile);
+            var selectedRNAFile = Path.of(selectedFile.getPath());
+            tc.loadFile(selectedRNAFile);
+            this.filesTable.getItems().add(tc.getRNAFileOf(selectedRNAFile));
         }
     }
 
@@ -75,12 +86,70 @@ public class HomeController {
                     .filter(Files::isRegularFile)
                     .toList();
             for (var f : files)
-                this.filesTable.getItems().add(RNAFileConstructor.getInstance().construct(Path.of(String.valueOf(f.getFileName()))));
+                this.filesTable.getItems().add(tc.getRNAFileOf(Path.of(String.valueOf(f))));
+            tc.loadDirectory(selectedDirectory.toPath());
         }
     }
 
-    private Stage getPrimaryStage() {
-        return (Stage) addFile.getScene().getWindow();
+    private void initSelectEventOnButtonItems() {
+        this.itmAAS.setId(AAS.toString());
+        this.itmAASNS.setId(AAS_NO_SEQUENCE.toString());
+        this.itmBPSEQ.setId(BPSEQ.toString());
+        this.itmCT.setId(CT.toString());
+        this.itmDB.setId(DB.toString());
+        this.itmDBNS.setId(DB_NO_SEQUENCE.toString());
+        this.itmFASTA.setId(FASTA.toString());
+        //EventHandler<ActionEvent> event1 = e -> System.out.println((((MenuItem) e.getSource()).getText() + " selected"));
+        EventHandler<ActionEvent> event1 = e -> {
+            this.selectedFormat = RNAFormat.valueOf((((MenuItem) e.getSource()).getId()));  // set RNAFormat enum
+            //System.out.println("sel: " + selectedFormat);
+            this.btnSelectFormatTranslation.setText(String.valueOf((((MenuItem) e.getSource()).getText()))); // set String to display in MenuItem
+            this.btnTranslateAllLoadedFiles.setDisable(false);  // when format translation is selected, translate btn is enabled
+        };
+        this.btnSelectFormatTranslation.getItems().forEach(f -> f.setOnAction(event1));
+
     }
 
+    @FXML
+    public void translateAllLoadedFiles(ActionEvent event) {
+        List<FormattedRNAFile> formattedRNAFileList = null;
+        if (this.confirmAndTranslate())
+            formattedRNAFileList = this.tc.translateAllLoadedFiles(this.selectedFormat);
+        if (formattedRNAFileList != null) {
+            formattedRNAFileList.forEach(f -> {
+                try {
+                    this.tc.saveFile(f, Path.of("C:\\Users\\Piermuz\\Documents\\GitHub\\TARNAS\\src\\main\\java\\it\\unicam\\cs\\twopie\\tarnas\\controller\\" + f.fileName()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
+    private boolean confirmAndTranslate() {
+        Alert translateConfirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        translateConfirmationAlert.initOwner(this.getPrimaryStage());
+        translateConfirmationAlert.initModality(Modality.WINDOW_MODAL);
+        translateConfirmationAlert.setTitle("TRANSLATION FILES CONFIRM");
+        translateConfirmationAlert.setHeaderText("Translate all loaded files to " + this.selectedFormat + "?");
+        translateConfirmationAlert.setContentText("Are you sure you want to translate all loaded files?");
+        Optional<ButtonType> result = translateConfirmationAlert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
+    }
+
+    @FXML
+    public void resetAll(ActionEvent event) {
+        // Reset all data structures
+        this.tc.resetAll();
+        this.filesTable.getItems().clear();
+        // Reset all buttons
+        this.btnSelectFormatTranslation.setText("TRANSLATE TO...");
+        this.btnTranslateAllLoadedFiles.setDisable(true);
+        // TODO: clean options
+    }
+
+
+    private Stage getPrimaryStage() {
+        return (Stage) this.filesTable.getScene().getWindow();
+    }
 }

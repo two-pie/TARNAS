@@ -6,6 +6,7 @@ import it.unicam.cs.twopie.tarnas.model.rnafile.RNAInputFileParserException;
 import it.unicam.cs.twopie.tarnas.model.rnastructure.RNASecondaryStructure;
 import it.unicam.cs.twopie.tarnas.model.rnastructure.WeakBond;
 
+import java.nio.file.Path;
 import java.util.*;
 
 public class RNAFileListener extends RNASecondaryStructureBaseListener {

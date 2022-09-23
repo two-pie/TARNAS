@@ -3,6 +3,7 @@ package it.unicam.cs.twopie.tarnas.model.rnafile;
 import it.unicam.cs.twopie.tarnas.model.rnastructure.RNASecondaryStructure;
 import it.unicam.cs.twopie.tarnas.model.utils.Region;
 
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -30,7 +31,7 @@ public class RNAFileTranslator {
         // create DB body
         var body = createDBBody(rnaFile.getStructure(), true);
         // return a formatted rna file object
-        return new FormattedRNAFile(header, body, RNAFormat.DB);
+        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "db"), header, body, RNAFormat.DB);
     }
 
     /**
@@ -45,7 +46,7 @@ public class RNAFileTranslator {
         // create DB no sequence body
         var body = createDBBody(rnaFile.getStructure(), false);
         // return a formatted rna file object
-        return new FormattedRNAFile(header, body, RNAFormat.DB_NO_SEQUENCE);
+        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "db"), header, body, RNAFormat.DB_NO_SEQUENCE);
     }
 
     /**
@@ -61,7 +62,7 @@ public class RNAFileTranslator {
         // create BPSEQ body
         var body = createBPSEQBody(rnaFile.getStructure());
         // return a formatted rna file object
-        return new FormattedRNAFile(header, body, RNAFormat.BPSEQ);
+        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "bpseq"), header, body, RNAFormat.BPSEQ);
     }
 
     /**
@@ -76,7 +77,7 @@ public class RNAFileTranslator {
         // create CT body
         var body = createCTBody(rnaFile.getStructure());
         // return a formatted rna file object
-        return new FormattedRNAFile(header, body, RNAFormat.CT);
+        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "ct"), header, body, RNAFormat.CT);
     }
 
     /**
@@ -91,7 +92,7 @@ public class RNAFileTranslator {
         // create AAS body
         var body = createAASBody(rnaFile.getStructure(), true);
         // return a formatted rna file object
-        return new FormattedRNAFile(header, body, RNAFormat.AAS);
+        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, body, RNAFormat.AAS);
     }
 
     /**
@@ -106,7 +107,7 @@ public class RNAFileTranslator {
         // create ASS no sequence body
         var body = createAASBody(rnaFile.getStructure(), false);
         // return a formatted rna file object
-        return new FormattedRNAFile(header, List.of(body.toString()), RNAFormat.AAS_NO_SEQUENCE);
+        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, List.of(body.toString()), RNAFormat.AAS_NO_SEQUENCE);
     }
 
     /**
@@ -122,7 +123,7 @@ public class RNAFileTranslator {
         // create FASTA body
         var body = List.of(rnaFile.getStructure().getSequence());
         // return a formatted rna file object
-        return new FormattedRNAFile(header, body, RNAFormat.FASTA);
+        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "fasta"), header, body, RNAFormat.FASTA);
     }
 
     /**
@@ -134,7 +135,7 @@ public class RNAFileTranslator {
      * @return the {@link RNAFormat#DB} body as a {@link List} of {@code String}
      */
     private static List<String> createDBBody(RNASecondaryStructure rnaSecondaryStructure, boolean addSequence) {
-        var regs   = findAllPairedRegions(rnaSecondaryStructure);
+        var regs = findAllPairedRegions(rnaSecondaryStructure);
         var n = regs.size();
         sortRegionsByStartPoint(regs);
         setRegionsOrder(regs, n);
@@ -222,12 +223,11 @@ public class RNAFileTranslator {
         return newHeader;
     }
 
-    private static List<Region> findAllPairedRegions(RNASecondaryStructure rnaSecondaryStructure){
+    private static List<Region> findAllPairedRegions(RNASecondaryStructure rnaSecondaryStructure) {
         return rnaSecondaryStructure.getBonds().stream().map(Region::new).toList();
     }
 
     /**
-     *
      * @param regs
      */
     private static void sortRegionsByStartPoint(List<Region> regs) {
@@ -258,6 +258,7 @@ public class RNAFileTranslator {
         var secondCase = wb2.getLeft() < wb1.getLeft() && wb2.getRight() > wb1.getLeft() && wb1.getRight() > wb2.getRight();
         return firstCase || secondCase;
     }
+
     private static String encodeBasePairs(List<Region> regs, int size) {
         var structure = new StringBuilder();
         structure.append(".".repeat(size));
@@ -269,7 +270,7 @@ public class RNAFileTranslator {
     }
 
     private static Character getOpeningBracket(int order) {
-        return switch (order){
+        return switch (order) {
             case 0 -> '(';
             case 1 -> '[';
             case 2 -> '{';
@@ -284,7 +285,7 @@ public class RNAFileTranslator {
     }
 
     private static Character getClosingBracket(int order) {
-        return switch (order){
+        return switch (order) {
             case 0 -> ')';
             case 1 -> ']';
             case 2 -> '}';
@@ -297,5 +298,10 @@ public class RNAFileTranslator {
             default -> throw new IllegalArgumentException("Maximum order is 8!");
         };
     }
+
+    private static String getFileNameWithDstExtension(String fileName, String dstExtension) {
+        return fileName.substring(0, fileName.lastIndexOf('.') + 1) + dstExtension;
+    }
+
 
 }

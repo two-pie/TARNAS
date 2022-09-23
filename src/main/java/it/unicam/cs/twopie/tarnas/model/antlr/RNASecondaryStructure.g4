@@ -124,7 +124,7 @@ NONEWLINE
 ;
 
 IUPAC_CODE:
-	[ACGUacguTtRrYysSWwKkMmBbDdHhVvNnOPI-]
+	[ACGUacguTtRrYysSWwKkMmBbDdHhVvNnOPI-] | '_' // TODO: fare non standard
 ;
 
 NUCLEOTIDE:
