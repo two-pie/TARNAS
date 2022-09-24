@@ -37,7 +37,10 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     //BPSEQ
     @Override
     public void enterBpseq(RNASecondaryStructureParser.BpseqContext ctx) {
-        ctx.header_line.forEach(line -> this.header.add(line.getText().trim()));
+        if (ctx.COMMENT() != null)
+            ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
+        if (ctx.CTLINES() != null)
+            this.header.addAll(Arrays.stream(ctx.CTLINES().getText().split("\n")).map(String::trim).toList());
     }
 
     @Override
@@ -74,7 +77,10 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     //CT
     @Override
     public void enterCt(RNASecondaryStructureParser.CtContext ctx) {
-        ctx.header_line.forEach(line -> this.header.add(line.getText().trim()));
+        if (ctx.COMMENT() != null)
+            ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
+        if (ctx.CTLINES() != null)
+            this.header.add(ctx.CTLINES().getText());
     }
 
     @Override

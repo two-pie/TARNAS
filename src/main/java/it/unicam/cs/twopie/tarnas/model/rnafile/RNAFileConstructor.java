@@ -15,8 +15,8 @@ import java.nio.file.Path;
 public class RNAFileConstructor {
 
     private static RNAFileConstructor instance;
-    private ParseTreeWalker walker;
-    private RNAFileListener constructor;
+    private final ParseTreeWalker walker;
+    private final RNAFileListener constructor;
 
     /**
      * Invisible constructor.

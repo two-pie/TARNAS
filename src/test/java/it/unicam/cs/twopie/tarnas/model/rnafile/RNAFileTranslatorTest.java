@@ -33,7 +33,7 @@ class RNAFileTranslatorTest {
     @ParameterizedTest
     @MethodSource({"benchmarkArchaea90110AllTypeFormatFolders", "benchmarkDatasetFunctional", "moleculesPseudoknotfreeArchaea", "moleculesPseudoknotfreeBacteria", "moleculesPseudoknotfreeEukaryota", "benchmarkAspralign"})
     public void translateFormatToAll(Path srcDataset, String srcFolder, List<String> expectedFolder, List<String> expectedExtension, List<RNAFormat> rnaFormat) throws IOException {
-        Files.walk(Paths.get(srcFolder)).filter(Files::isRegularFile).forEach(
+        Files.walk(Paths.get(srcFolder)).parallel().filter(Files::isRegularFile).forEach(
                 f -> {
                     try {
                         RNAFile toTranslate = RNAFileConstructor.getInstance().construct(f);

@@ -1,6 +1,7 @@
 package it.unicam.cs.twopie.tarnas.view;
 
 import it.unicam.cs.twopie.App;
+import it.unicam.cs.twopie.tarnas.controller.CleanerController;
 import it.unicam.cs.twopie.tarnas.controller.TranslatorController;
 import it.unicam.cs.twopie.tarnas.model.rnafile.FormattedRNAFile;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
@@ -29,7 +30,8 @@ import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
 
 public class HomeController {
 
-    TranslatorController tc = new TranslatorController();
+    private TranslatorController translatorController;
+    private CleanerController cleanerController;
 
     @FXML
     private TableView<RNAFile> filesTable;
@@ -52,6 +54,8 @@ public class HomeController {
 
     @FXML
     public void initialize() {
+        // creates controllers
+        this.createsControllers();
         // load trash image
         var trashImage = new Image(Objects.requireNonNull(App.class.getResource("/img/trash.png")).toExternalForm(), 18, 18, false, false);
         //change table label
@@ -66,14 +70,19 @@ public class HomeController {
         this.btnTranslateAllLoadedFiles.setDisable(true);
     }
 
+    private void createsControllers() {
+        this.translatorController = new TranslatorController();
+        this.cleanerController = new CleanerController();
+    }
+
     @FXML
     public void handleAddFile() throws IOException {
         var fileChooser = new FileChooser();
         var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
         if (selectedFile != null) {
             var selectedRNAFile = Path.of(selectedFile.getPath());
-            tc.loadFile(selectedRNAFile);
-            this.filesTable.getItems().add(tc.getRNAFileOf(selectedRNAFile));
+            translatorController.loadFile(selectedRNAFile);
+            this.filesTable.getItems().add(translatorController.getRNAFileOf(selectedRNAFile));
         }
     }
 
@@ -86,8 +95,8 @@ public class HomeController {
                     .filter(Files::isRegularFile)
                     .toList();
             for (var f : files)
-                this.filesTable.getItems().add(tc.getRNAFileOf(Path.of(String.valueOf(f))));
-            tc.loadDirectory(selectedDirectory.toPath());
+                this.filesTable.getItems().add(translatorController.getRNAFileOf(Path.of(String.valueOf(f))));
+            translatorController.loadDirectory(selectedDirectory.toPath());
         }
     }
 
@@ -114,11 +123,11 @@ public class HomeController {
     public void translateAllLoadedFiles(ActionEvent event) {
         List<FormattedRNAFile> formattedRNAFileList = null;
         if (this.confirmAndTranslate())
-            formattedRNAFileList = this.tc.translateAllLoadedFiles(this.selectedFormat);
+            formattedRNAFileList = this.translatorController.translateAllLoadedFiles(this.selectedFormat);
         if (formattedRNAFileList != null) {
             formattedRNAFileList.forEach(f -> {
                 try {
-                    this.tc.saveFile(f, Path.of("C:\\Users\\Piermuz\\Documents\\GitHub\\TARNAS\\src\\main\\java\\it\\unicam\\cs\\twopie\\tarnas\\controller\\" + f.fileName()));
+                    this.translatorController.saveFile(f, Path.of("C:\\Users\\Piermuz\\Documents\\GitHub\\TARNAS\\src\\main\\java\\it\\unicam\\cs\\twopie\\tarnas\\controller\\" + f.fileName()));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -140,12 +149,12 @@ public class HomeController {
     @FXML
     public void resetAll(ActionEvent event) {
         // Reset all data structures
-        this.tc.resetAll();
+        this.translatorController.resetAll();
         this.filesTable.getItems().clear();
         // Reset all buttons
         this.btnSelectFormatTranslation.setText("TRANSLATE TO...");
         this.btnTranslateAllLoadedFiles.setDisable(true);
-        // TODO: clean options
+        // TODO: insert clean options
     }
 
 

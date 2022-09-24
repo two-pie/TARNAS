@@ -40,11 +40,11 @@ fasta:
 ;
 
 bpseq:
-    header_line+=(COMMENT | LINE1BPSEQCT| LINE2BPSEQCT | LINE3BPSEQCT | LINE4BPSEQCT)* bpseq_structure
+    (CTLINES? | COMMENT*) bpseq_structure
 ;
 
 ct:
-    header_line+=(COMMENT | LINE1BPSEQCT| LINE2BPSEQCT | LINE3BPSEQCT | LINE4BPSEQCT)* LINECT ct_structure
+    (CTLINES? | COMMENT*) LINECT ct_structure
 ;
 
 edbn_structure:
@@ -108,6 +108,10 @@ ZERO_INDEX:
     '0'
 ;
 
+CTLINES:
+    LINE1BPSEQCT LINE2BPSEQCT LINE3BPSEQCT LINE4BPSEQCT
+;
+
 LINECT:
 	NONEWLINE*?
 	(
@@ -124,11 +128,34 @@ NONEWLINE
 ;
 
 IUPAC_CODE:
-	[ACGUacguTtRrYysSWwKkMmBbDdHhVvNnOPI-] | '_' // TODO: fare non standard
+	[ACGUacguTtRrYysSWwKkMmBbDdHhVvNn-]
 ;
 
-NUCLEOTIDE:
-	IUPAC_CODE+
+NUCLEOTIDE
+:
+	(
+		IUPAC_CODE
+		| NON_STANDARD_CODE
+	)+
+;
+
+fragment
+NON_STANDARD_CODE
+:
+	'"'
+	| '?'
+	| ']'
+	| '~'
+	| '['
+	| '_'
+	| '+'
+	| '='
+	| '/'
+	| '4'
+	| '7'
+	| 'P'
+	| 'O'
+	| 'I'
 ;
 
 fragment EDBN_CODE:

@@ -19,9 +19,9 @@ public class RNASecondaryStructureParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, INDEX=5, ZERO_INDEX=6, LINECT=7, IUPAC_CODE=8, 
-		NUCLEOTIDE=9, EDBN=10, LINE1BPSEQCT=11, LINE2BPSEQCT=12, LINE3BPSEQCT=13, 
-		LINE4BPSEQCT=14, COMMENT=15, WS=16;
+		T__0=1, T__1=2, T__2=3, T__3=4, INDEX=5, ZERO_INDEX=6, CTLINES=7, LINECT=8, 
+		IUPAC_CODE=9, NUCLEOTIDE=10, EDBN=11, LINE1BPSEQCT=12, LINE2BPSEQCT=13, 
+		LINE3BPSEQCT=14, LINE4BPSEQCT=15, COMMENT=16, WS=17;
 	public static final int
 		RULE_rna_format = 0, RULE_aas = 1, RULE_edbn = 2, RULE_fasta = 3, RULE_bpseq = 4, 
 		RULE_ct = 5, RULE_edbn_structure = 6, RULE_sequence = 7, RULE_bonds = 8, 
@@ -44,8 +44,8 @@ public class RNASecondaryStructureParser extends Parser {
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, null, null, "INDEX", "ZERO_INDEX", "LINECT", "IUPAC_CODE", 
-			"NUCLEOTIDE", "EDBN", "LINE1BPSEQCT", "LINE2BPSEQCT", "LINE3BPSEQCT", 
+			null, null, null, null, null, "INDEX", "ZERO_INDEX", "CTLINES", "LINECT", 
+			"IUPAC_CODE", "NUCLEOTIDE", "EDBN", "LINE1BPSEQCT", "LINE2BPSEQCT", "LINE3BPSEQCT", 
 			"LINE4BPSEQCT", "COMMENT", "WS"
 		};
 	}
@@ -391,35 +391,13 @@ public class RNASecondaryStructureParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class BpseqContext extends ParserRuleContext {
-		public Token COMMENT;
-		public List<Token> header_line = new ArrayList<Token>();
-		public Token LINE1BPSEQCT;
-		public Token LINE2BPSEQCT;
-		public Token LINE3BPSEQCT;
-		public Token LINE4BPSEQCT;
-		public Token _tset77;
 		public Bpseq_structureContext bpseq_structure() {
 			return getRuleContext(Bpseq_structureContext.class,0);
 		}
+		public TerminalNode CTLINES() { return getToken(RNASecondaryStructureParser.CTLINES, 0); }
 		public List<TerminalNode> COMMENT() { return getTokens(RNASecondaryStructureParser.COMMENT); }
 		public TerminalNode COMMENT(int i) {
 			return getToken(RNASecondaryStructureParser.COMMENT, i);
-		}
-		public List<TerminalNode> LINE1BPSEQCT() { return getTokens(RNASecondaryStructureParser.LINE1BPSEQCT); }
-		public TerminalNode LINE1BPSEQCT(int i) {
-			return getToken(RNASecondaryStructureParser.LINE1BPSEQCT, i);
-		}
-		public List<TerminalNode> LINE2BPSEQCT() { return getTokens(RNASecondaryStructureParser.LINE2BPSEQCT); }
-		public TerminalNode LINE2BPSEQCT(int i) {
-			return getToken(RNASecondaryStructureParser.LINE2BPSEQCT, i);
-		}
-		public List<TerminalNode> LINE3BPSEQCT() { return getTokens(RNASecondaryStructureParser.LINE3BPSEQCT); }
-		public TerminalNode LINE3BPSEQCT(int i) {
-			return getToken(RNASecondaryStructureParser.LINE3BPSEQCT, i);
-		}
-		public List<TerminalNode> LINE4BPSEQCT() { return getTokens(RNASecondaryStructureParser.LINE4BPSEQCT); }
-		public TerminalNode LINE4BPSEQCT(int i) {
-			return getToken(RNASecondaryStructureParser.LINE4BPSEQCT, i);
 		}
 		public BpseqContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -442,31 +420,43 @@ public class RNASecondaryStructureParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(68);
+			setState(74);
 			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 63488L) != 0) {
+			switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
+			case 1:
 				{
-				{
-				setState(65);
-				((BpseqContext)_localctx)._tset77 = _input.LT(1);
-				_la = _input.LA(1);
-				if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 63488L) != 0) ) {
-					((BpseqContext)_localctx)._tset77 = (Token)_errHandler.recoverInline(this);
-				}
-				else {
-					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
-				((BpseqContext)_localctx).header_line.add(((BpseqContext)_localctx)._tset77);
-				}
-				}
-				setState(70);
+				setState(66);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
+				if (_la==CTLINES) {
+					{
+					setState(65);
+					match(CTLINES);
+					}
+				}
+
+				}
+				break;
+			case 2:
+				{
+				setState(71);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				while (_la==COMMENT) {
+					{
+					{
+					setState(68);
+					match(COMMENT);
+					}
+					}
+					setState(73);
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+				}
+				}
+				break;
 			}
-			setState(71);
+			setState(76);
 			bpseq_structure();
 			}
 		}
@@ -483,36 +473,14 @@ public class RNASecondaryStructureParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class CtContext extends ParserRuleContext {
-		public Token COMMENT;
-		public List<Token> header_line = new ArrayList<Token>();
-		public Token LINE1BPSEQCT;
-		public Token LINE2BPSEQCT;
-		public Token LINE3BPSEQCT;
-		public Token LINE4BPSEQCT;
-		public Token _tset106;
 		public TerminalNode LINECT() { return getToken(RNASecondaryStructureParser.LINECT, 0); }
 		public Ct_structureContext ct_structure() {
 			return getRuleContext(Ct_structureContext.class,0);
 		}
+		public TerminalNode CTLINES() { return getToken(RNASecondaryStructureParser.CTLINES, 0); }
 		public List<TerminalNode> COMMENT() { return getTokens(RNASecondaryStructureParser.COMMENT); }
 		public TerminalNode COMMENT(int i) {
 			return getToken(RNASecondaryStructureParser.COMMENT, i);
-		}
-		public List<TerminalNode> LINE1BPSEQCT() { return getTokens(RNASecondaryStructureParser.LINE1BPSEQCT); }
-		public TerminalNode LINE1BPSEQCT(int i) {
-			return getToken(RNASecondaryStructureParser.LINE1BPSEQCT, i);
-		}
-		public List<TerminalNode> LINE2BPSEQCT() { return getTokens(RNASecondaryStructureParser.LINE2BPSEQCT); }
-		public TerminalNode LINE2BPSEQCT(int i) {
-			return getToken(RNASecondaryStructureParser.LINE2BPSEQCT, i);
-		}
-		public List<TerminalNode> LINE3BPSEQCT() { return getTokens(RNASecondaryStructureParser.LINE3BPSEQCT); }
-		public TerminalNode LINE3BPSEQCT(int i) {
-			return getToken(RNASecondaryStructureParser.LINE3BPSEQCT, i);
-		}
-		public List<TerminalNode> LINE4BPSEQCT() { return getTokens(RNASecondaryStructureParser.LINE4BPSEQCT); }
-		public TerminalNode LINE4BPSEQCT(int i) {
-			return getToken(RNASecondaryStructureParser.LINE4BPSEQCT, i);
 		}
 		public CtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -535,33 +503,45 @@ public class RNASecondaryStructureParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(76);
+			setState(87);
 			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 63488L) != 0) {
+			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
+			case 1:
 				{
-				{
-				setState(73);
-				((CtContext)_localctx)._tset106 = _input.LT(1);
-				_la = _input.LA(1);
-				if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 63488L) != 0) ) {
-					((CtContext)_localctx)._tset106 = (Token)_errHandler.recoverInline(this);
-				}
-				else {
-					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-					_errHandler.reportMatch(this);
-					consume();
-				}
-				((CtContext)_localctx).header_line.add(((CtContext)_localctx)._tset106);
-				}
-				}
-				setState(78);
+				setState(79);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
+				if (_la==CTLINES) {
+					{
+					setState(78);
+					match(CTLINES);
+					}
+				}
+
+				}
+				break;
+			case 2:
+				{
+				setState(84);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				while (_la==COMMENT) {
+					{
+					{
+					setState(81);
+					match(COMMENT);
+					}
+					}
+					setState(86);
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+				}
+				}
+				break;
 			}
-			setState(79);
+			setState(89);
 			match(LINECT);
-			setState(80);
+			setState(90);
 			ct_structure();
 			}
 		}
@@ -622,16 +602,16 @@ public class RNASecondaryStructureParser extends Parser {
 		Edbn_structureContext _localctx = new Edbn_structureContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_edbn_structure);
 		try {
-			setState(85);
+			setState(95);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
 			case 1:
 				_localctx = new EdbnStructureContinueContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(82);
+				setState(92);
 				match(EDBN);
-				setState(83);
+				setState(93);
 				edbn_structure();
 				}
 				break;
@@ -639,7 +619,7 @@ public class RNASecondaryStructureParser extends Parser {
 				_localctx = new EdbnStructureEndContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(84);
+				setState(94);
 				match(EDBN);
 				}
 				break;
@@ -702,16 +682,16 @@ public class RNASecondaryStructureParser extends Parser {
 		SequenceContext _localctx = new SequenceContext(_ctx, getState());
 		enterRule(_localctx, 14, RULE_sequence);
 		try {
-			setState(90);
+			setState(100);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
 			case 1:
 				_localctx = new SequenceContinueContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(87);
+				setState(97);
 				match(NUCLEOTIDE);
-				setState(88);
+				setState(98);
 				sequence();
 				}
 				break;
@@ -719,7 +699,7 @@ public class RNASecondaryStructureParser extends Parser {
 				_localctx = new SequenceEndContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(89);
+				setState(99);
 				match(NUCLEOTIDE);
 				}
 				break;
@@ -786,18 +766,18 @@ public class RNASecondaryStructureParser extends Parser {
 		BondsContext _localctx = new BondsContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_bonds);
 		try {
-			setState(97);
+			setState(107);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,10,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
 			case 1:
 				_localctx = new BondsContinueContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(92);
+				setState(102);
 				bond();
-				setState(93);
+				setState(103);
 				match(T__0);
-				setState(94);
+				setState(104);
 				bonds();
 				}
 				break;
@@ -805,7 +785,7 @@ public class RNASecondaryStructureParser extends Parser {
 				_localctx = new BondsEndContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(96);
+				setState(106);
 				bond();
 				}
 				break;
@@ -848,15 +828,15 @@ public class RNASecondaryStructureParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(99);
+			setState(109);
 			match(T__1);
-			setState(100);
+			setState(110);
 			match(INDEX);
-			setState(101);
+			setState(111);
 			match(T__2);
-			setState(102);
+			setState(112);
 			match(INDEX);
-			setState(103);
+			setState(113);
 			match(T__3);
 			}
 		}
@@ -921,16 +901,16 @@ public class RNASecondaryStructureParser extends Parser {
 		Ct_structureContext _localctx = new Ct_structureContext(_ctx, getState());
 		enterRule(_localctx, 20, RULE_ct_structure);
 		try {
-			setState(109);
+			setState(119);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
 			case 1:
 				_localctx = new CtSeqContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(105);
+				setState(115);
 				ct_line();
-				setState(106);
+				setState(116);
 				ct_structure();
 				}
 				break;
@@ -938,7 +918,7 @@ public class RNASecondaryStructureParser extends Parser {
 				_localctx = new CtLastContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(108);
+				setState(118);
 				ct_line();
 				}
 				break;
@@ -1015,18 +995,18 @@ public class RNASecondaryStructureParser extends Parser {
 		enterRule(_localctx, 22, RULE_ct_line);
 		int _la;
 		try {
-			setState(123);
+			setState(133);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
 			case 1:
 				_localctx = new CtLineUnpairedContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(111);
+				setState(121);
 				match(INDEX);
-				setState(112);
+				setState(122);
 				match(IUPAC_CODE);
-				setState(113);
+				setState(123);
 				_la = _input.LA(1);
 				if ( !(_la==INDEX || _la==ZERO_INDEX) ) {
 				_errHandler.recoverInline(this);
@@ -1036,7 +1016,7 @@ public class RNASecondaryStructureParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(114);
+				setState(124);
 				_la = _input.LA(1);
 				if ( !(_la==INDEX || _la==ZERO_INDEX) ) {
 				_errHandler.recoverInline(this);
@@ -1046,9 +1026,9 @@ public class RNASecondaryStructureParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(115);
+				setState(125);
 				match(ZERO_INDEX);
-				setState(116);
+				setState(126);
 				match(INDEX);
 				}
 				break;
@@ -1056,11 +1036,11 @@ public class RNASecondaryStructureParser extends Parser {
 				_localctx = new CtLineBondContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(117);
+				setState(127);
 				match(INDEX);
-				setState(118);
+				setState(128);
 				match(IUPAC_CODE);
-				setState(119);
+				setState(129);
 				_la = _input.LA(1);
 				if ( !(_la==INDEX || _la==ZERO_INDEX) ) {
 				_errHandler.recoverInline(this);
@@ -1070,7 +1050,7 @@ public class RNASecondaryStructureParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(120);
+				setState(130);
 				_la = _input.LA(1);
 				if ( !(_la==INDEX || _la==ZERO_INDEX) ) {
 				_errHandler.recoverInline(this);
@@ -1080,9 +1060,9 @@ public class RNASecondaryStructureParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(121);
+				setState(131);
 				match(INDEX);
-				setState(122);
+				setState(132);
 				match(INDEX);
 				}
 				break;
@@ -1149,16 +1129,16 @@ public class RNASecondaryStructureParser extends Parser {
 		Bpseq_structureContext _localctx = new Bpseq_structureContext(_ctx, getState());
 		enterRule(_localctx, 24, RULE_bpseq_structure);
 		try {
-			setState(129);
+			setState(139);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,17,_ctx) ) {
 			case 1:
 				_localctx = new BpseqSeqContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(125);
+				setState(135);
 				bpseq_line();
-				setState(126);
+				setState(136);
 				bpseq_structure();
 				}
 				break;
@@ -1166,7 +1146,7 @@ public class RNASecondaryStructureParser extends Parser {
 				_localctx = new BpseqLastContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(128);
+				setState(138);
 				bpseq_line();
 				}
 				break;
@@ -1232,18 +1212,18 @@ public class RNASecondaryStructureParser extends Parser {
 		Bpseq_lineContext _localctx = new Bpseq_lineContext(_ctx, getState());
 		enterRule(_localctx, 26, RULE_bpseq_line);
 		try {
-			setState(137);
+			setState(147);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,18,_ctx) ) {
 			case 1:
 				_localctx = new BpseqLineUnpairedContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(131);
+				setState(141);
 				match(INDEX);
-				setState(132);
+				setState(142);
 				match(IUPAC_CODE);
-				setState(133);
+				setState(143);
 				match(ZERO_INDEX);
 				}
 				break;
@@ -1251,11 +1231,11 @@ public class RNASecondaryStructureParser extends Parser {
 				_localctx = new BpseqLineBondContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(134);
+				setState(144);
 				match(INDEX);
-				setState(135);
+				setState(145);
 				match(IUPAC_CODE);
-				setState(136);
+				setState(146);
 				match(INDEX);
 				}
 				break;
@@ -1273,7 +1253,7 @@ public class RNASecondaryStructureParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u0010\u008c\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
+		"\u0004\u0001\u0011\u0096\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
 		"\u0002\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004"+
 		"\u0002\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007"+
 		"\u0002\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b"+
@@ -1283,74 +1263,82 @@ public class RNASecondaryStructureParser extends Parser {
 		"\u0001\u0001\u0001\u0002\u0005\u00020\b\u0002\n\u0002\f\u00023\t\u0002"+
 		"\u0001\u0002\u0003\u00026\b\u0002\u0001\u0002\u0001\u0002\u0001\u0003"+
 		"\u0005\u0003;\b\u0003\n\u0003\f\u0003>\t\u0003\u0001\u0003\u0001\u0003"+
-		"\u0001\u0004\u0005\u0004C\b\u0004\n\u0004\f\u0004F\t\u0004\u0001\u0004"+
-		"\u0001\u0004\u0001\u0005\u0005\u0005K\b\u0005\n\u0005\f\u0005N\t\u0005"+
-		"\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0006\u0001\u0006\u0001\u0006"+
-		"\u0003\u0006V\b\u0006\u0001\u0007\u0001\u0007\u0001\u0007\u0003\u0007"+
-		"[\b\u0007\u0001\b\u0001\b\u0001\b\u0001\b\u0001\b\u0003\bb\b\b\u0001\t"+
-		"\u0001\t\u0001\t\u0001\t\u0001\t\u0001\t\u0001\n\u0001\n\u0001\n\u0001"+
-		"\n\u0003\nn\b\n\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001"+
-		"\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001"+
-		"\u000b\u0001\u000b\u0003\u000b|\b\u000b\u0001\f\u0001\f\u0001\f\u0001"+
-		"\f\u0003\f\u0082\b\f\u0001\r\u0001\r\u0001\r\u0001\r\u0001\r\u0001\r\u0003"+
-		"\r\u008a\b\r\u0001\r\u0000\u0000\u000e\u0000\u0002\u0004\u0006\b\n\f\u000e"+
-		"\u0010\u0012\u0014\u0016\u0018\u001a\u0000\u0002\u0001\u0000\u000b\u000f"+
-		"\u0001\u0000\u0005\u0006\u008f\u0000!\u0001\u0000\u0000\u0000\u0002&\u0001"+
-		"\u0000\u0000\u0000\u00041\u0001\u0000\u0000\u0000\u0006<\u0001\u0000\u0000"+
-		"\u0000\bD\u0001\u0000\u0000\u0000\nL\u0001\u0000\u0000\u0000\fU\u0001"+
-		"\u0000\u0000\u0000\u000eZ\u0001\u0000\u0000\u0000\u0010a\u0001\u0000\u0000"+
-		"\u0000\u0012c\u0001\u0000\u0000\u0000\u0014m\u0001\u0000\u0000\u0000\u0016"+
-		"{\u0001\u0000\u0000\u0000\u0018\u0081\u0001\u0000\u0000\u0000\u001a\u0089"+
-		"\u0001\u0000\u0000\u0000\u001c\"\u0003\u0002\u0001\u0000\u001d\"\u0003"+
-		"\n\u0005\u0000\u001e\"\u0003\u0004\u0002\u0000\u001f\"\u0003\b\u0004\u0000"+
-		" \"\u0003\u0006\u0003\u0000!\u001c\u0001\u0000\u0000\u0000!\u001d\u0001"+
-		"\u0000\u0000\u0000!\u001e\u0001\u0000\u0000\u0000!\u001f\u0001\u0000\u0000"+
-		"\u0000! \u0001\u0000\u0000\u0000\"\u0001\u0001\u0000\u0000\u0000#%\u0005"+
-		"\u000f\u0000\u0000$#\u0001\u0000\u0000\u0000%(\u0001\u0000\u0000\u0000"+
-		"&$\u0001\u0000\u0000\u0000&\'\u0001\u0000\u0000\u0000\'*\u0001\u0000\u0000"+
-		"\u0000(&\u0001\u0000\u0000\u0000)+\u0003\u000e\u0007\u0000*)\u0001\u0000"+
-		"\u0000\u0000*+\u0001\u0000\u0000\u0000+,\u0001\u0000\u0000\u0000,-\u0003"+
-		"\u0010\b\u0000-\u0003\u0001\u0000\u0000\u0000.0\u0005\u000f\u0000\u0000"+
-		"/.\u0001\u0000\u0000\u000003\u0001\u0000\u0000\u00001/\u0001\u0000\u0000"+
-		"\u000012\u0001\u0000\u0000\u000025\u0001\u0000\u0000\u000031\u0001\u0000"+
-		"\u0000\u000046\u0003\u000e\u0007\u000054\u0001\u0000\u0000\u000056\u0001"+
-		"\u0000\u0000\u000067\u0001\u0000\u0000\u000078\u0003\f\u0006\u00008\u0005"+
-		"\u0001\u0000\u0000\u00009;\u0005\u000f\u0000\u0000:9\u0001\u0000\u0000"+
-		"\u0000;>\u0001\u0000\u0000\u0000<:\u0001\u0000\u0000\u0000<=\u0001\u0000"+
-		"\u0000\u0000=?\u0001\u0000\u0000\u0000><\u0001\u0000\u0000\u0000?@\u0003"+
-		"\u000e\u0007\u0000@\u0007\u0001\u0000\u0000\u0000AC\u0007\u0000\u0000"+
-		"\u0000BA\u0001\u0000\u0000\u0000CF\u0001\u0000\u0000\u0000DB\u0001\u0000"+
-		"\u0000\u0000DE\u0001\u0000\u0000\u0000EG\u0001\u0000\u0000\u0000FD\u0001"+
-		"\u0000\u0000\u0000GH\u0003\u0018\f\u0000H\t\u0001\u0000\u0000\u0000IK"+
-		"\u0007\u0000\u0000\u0000JI\u0001\u0000\u0000\u0000KN\u0001\u0000\u0000"+
-		"\u0000LJ\u0001\u0000\u0000\u0000LM\u0001\u0000\u0000\u0000MO\u0001\u0000"+
-		"\u0000\u0000NL\u0001\u0000\u0000\u0000OP\u0005\u0007\u0000\u0000PQ\u0003"+
-		"\u0014\n\u0000Q\u000b\u0001\u0000\u0000\u0000RS\u0005\n\u0000\u0000SV"+
-		"\u0003\f\u0006\u0000TV\u0005\n\u0000\u0000UR\u0001\u0000\u0000\u0000U"+
-		"T\u0001\u0000\u0000\u0000V\r\u0001\u0000\u0000\u0000WX\u0005\t\u0000\u0000"+
-		"X[\u0003\u000e\u0007\u0000Y[\u0005\t\u0000\u0000ZW\u0001\u0000\u0000\u0000"+
-		"ZY\u0001\u0000\u0000\u0000[\u000f\u0001\u0000\u0000\u0000\\]\u0003\u0012"+
-		"\t\u0000]^\u0005\u0001\u0000\u0000^_\u0003\u0010\b\u0000_b\u0001\u0000"+
-		"\u0000\u0000`b\u0003\u0012\t\u0000a\\\u0001\u0000\u0000\u0000a`\u0001"+
-		"\u0000\u0000\u0000b\u0011\u0001\u0000\u0000\u0000cd\u0005\u0002\u0000"+
-		"\u0000de\u0005\u0005\u0000\u0000ef\u0005\u0003\u0000\u0000fg\u0005\u0005"+
-		"\u0000\u0000gh\u0005\u0004\u0000\u0000h\u0013\u0001\u0000\u0000\u0000"+
-		"ij\u0003\u0016\u000b\u0000jk\u0003\u0014\n\u0000kn\u0001\u0000\u0000\u0000"+
-		"ln\u0003\u0016\u000b\u0000mi\u0001\u0000\u0000\u0000ml\u0001\u0000\u0000"+
-		"\u0000n\u0015\u0001\u0000\u0000\u0000op\u0005\u0005\u0000\u0000pq\u0005"+
-		"\b\u0000\u0000qr\u0007\u0001\u0000\u0000rs\u0007\u0001\u0000\u0000st\u0005"+
-		"\u0006\u0000\u0000t|\u0005\u0005\u0000\u0000uv\u0005\u0005\u0000\u0000"+
-		"vw\u0005\b\u0000\u0000wx\u0007\u0001\u0000\u0000xy\u0007\u0001\u0000\u0000"+
-		"yz\u0005\u0005\u0000\u0000z|\u0005\u0005\u0000\u0000{o\u0001\u0000\u0000"+
-		"\u0000{u\u0001\u0000\u0000\u0000|\u0017\u0001\u0000\u0000\u0000}~\u0003"+
-		"\u001a\r\u0000~\u007f\u0003\u0018\f\u0000\u007f\u0082\u0001\u0000\u0000"+
-		"\u0000\u0080\u0082\u0003\u001a\r\u0000\u0081}\u0001\u0000\u0000\u0000"+
-		"\u0081\u0080\u0001\u0000\u0000\u0000\u0082\u0019\u0001\u0000\u0000\u0000"+
-		"\u0083\u0084\u0005\u0005\u0000\u0000\u0084\u0085\u0005\b\u0000\u0000\u0085"+
-		"\u008a\u0005\u0006\u0000\u0000\u0086\u0087\u0005\u0005\u0000\u0000\u0087"+
-		"\u0088\u0005\b\u0000\u0000\u0088\u008a\u0005\u0005\u0000\u0000\u0089\u0083"+
-		"\u0001\u0000\u0000\u0000\u0089\u0086\u0001\u0000\u0000\u0000\u008a\u001b"+
-		"\u0001\u0000\u0000\u0000\u000f!&*15<DLUZam{\u0081\u0089";
+		"\u0001\u0004\u0003\u0004C\b\u0004\u0001\u0004\u0005\u0004F\b\u0004\n\u0004"+
+		"\f\u0004I\t\u0004\u0003\u0004K\b\u0004\u0001\u0004\u0001\u0004\u0001\u0005"+
+		"\u0003\u0005P\b\u0005\u0001\u0005\u0005\u0005S\b\u0005\n\u0005\f\u0005"+
+		"V\t\u0005\u0003\u0005X\b\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001"+
+		"\u0006\u0001\u0006\u0001\u0006\u0003\u0006`\b\u0006\u0001\u0007\u0001"+
+		"\u0007\u0001\u0007\u0003\u0007e\b\u0007\u0001\b\u0001\b\u0001\b\u0001"+
+		"\b\u0001\b\u0003\bl\b\b\u0001\t\u0001\t\u0001\t\u0001\t\u0001\t\u0001"+
+		"\t\u0001\n\u0001\n\u0001\n\u0001\n\u0003\nx\b\n\u0001\u000b\u0001\u000b"+
+		"\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b"+
+		"\u0001\u000b\u0001\u000b\u0001\u000b\u0001\u000b\u0003\u000b\u0086\b\u000b"+
+		"\u0001\f\u0001\f\u0001\f\u0001\f\u0003\f\u008c\b\f\u0001\r\u0001\r\u0001"+
+		"\r\u0001\r\u0001\r\u0001\r\u0003\r\u0094\b\r\u0001\r\u0000\u0000\u000e"+
+		"\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u001a"+
+		"\u0000\u0001\u0001\u0000\u0005\u0006\u009d\u0000!\u0001\u0000\u0000\u0000"+
+		"\u0002&\u0001\u0000\u0000\u0000\u00041\u0001\u0000\u0000\u0000\u0006<"+
+		"\u0001\u0000\u0000\u0000\bJ\u0001\u0000\u0000\u0000\nW\u0001\u0000\u0000"+
+		"\u0000\f_\u0001\u0000\u0000\u0000\u000ed\u0001\u0000\u0000\u0000\u0010"+
+		"k\u0001\u0000\u0000\u0000\u0012m\u0001\u0000\u0000\u0000\u0014w\u0001"+
+		"\u0000\u0000\u0000\u0016\u0085\u0001\u0000\u0000\u0000\u0018\u008b\u0001"+
+		"\u0000\u0000\u0000\u001a\u0093\u0001\u0000\u0000\u0000\u001c\"\u0003\u0002"+
+		"\u0001\u0000\u001d\"\u0003\n\u0005\u0000\u001e\"\u0003\u0004\u0002\u0000"+
+		"\u001f\"\u0003\b\u0004\u0000 \"\u0003\u0006\u0003\u0000!\u001c\u0001\u0000"+
+		"\u0000\u0000!\u001d\u0001\u0000\u0000\u0000!\u001e\u0001\u0000\u0000\u0000"+
+		"!\u001f\u0001\u0000\u0000\u0000! \u0001\u0000\u0000\u0000\"\u0001\u0001"+
+		"\u0000\u0000\u0000#%\u0005\u0010\u0000\u0000$#\u0001\u0000\u0000\u0000"+
+		"%(\u0001\u0000\u0000\u0000&$\u0001\u0000\u0000\u0000&\'\u0001\u0000\u0000"+
+		"\u0000\'*\u0001\u0000\u0000\u0000(&\u0001\u0000\u0000\u0000)+\u0003\u000e"+
+		"\u0007\u0000*)\u0001\u0000\u0000\u0000*+\u0001\u0000\u0000\u0000+,\u0001"+
+		"\u0000\u0000\u0000,-\u0003\u0010\b\u0000-\u0003\u0001\u0000\u0000\u0000"+
+		".0\u0005\u0010\u0000\u0000/.\u0001\u0000\u0000\u000003\u0001\u0000\u0000"+
+		"\u00001/\u0001\u0000\u0000\u000012\u0001\u0000\u0000\u000025\u0001\u0000"+
+		"\u0000\u000031\u0001\u0000\u0000\u000046\u0003\u000e\u0007\u000054\u0001"+
+		"\u0000\u0000\u000056\u0001\u0000\u0000\u000067\u0001\u0000\u0000\u0000"+
+		"78\u0003\f\u0006\u00008\u0005\u0001\u0000\u0000\u00009;\u0005\u0010\u0000"+
+		"\u0000:9\u0001\u0000\u0000\u0000;>\u0001\u0000\u0000\u0000<:\u0001\u0000"+
+		"\u0000\u0000<=\u0001\u0000\u0000\u0000=?\u0001\u0000\u0000\u0000><\u0001"+
+		"\u0000\u0000\u0000?@\u0003\u000e\u0007\u0000@\u0007\u0001\u0000\u0000"+
+		"\u0000AC\u0005\u0007\u0000\u0000BA\u0001\u0000\u0000\u0000BC\u0001\u0000"+
+		"\u0000\u0000CK\u0001\u0000\u0000\u0000DF\u0005\u0010\u0000\u0000ED\u0001"+
+		"\u0000\u0000\u0000FI\u0001\u0000\u0000\u0000GE\u0001\u0000\u0000\u0000"+
+		"GH\u0001\u0000\u0000\u0000HK\u0001\u0000\u0000\u0000IG\u0001\u0000\u0000"+
+		"\u0000JB\u0001\u0000\u0000\u0000JG\u0001\u0000\u0000\u0000KL\u0001\u0000"+
+		"\u0000\u0000LM\u0003\u0018\f\u0000M\t\u0001\u0000\u0000\u0000NP\u0005"+
+		"\u0007\u0000\u0000ON\u0001\u0000\u0000\u0000OP\u0001\u0000\u0000\u0000"+
+		"PX\u0001\u0000\u0000\u0000QS\u0005\u0010\u0000\u0000RQ\u0001\u0000\u0000"+
+		"\u0000SV\u0001\u0000\u0000\u0000TR\u0001\u0000\u0000\u0000TU\u0001\u0000"+
+		"\u0000\u0000UX\u0001\u0000\u0000\u0000VT\u0001\u0000\u0000\u0000WO\u0001"+
+		"\u0000\u0000\u0000WT\u0001\u0000\u0000\u0000XY\u0001\u0000\u0000\u0000"+
+		"YZ\u0005\b\u0000\u0000Z[\u0003\u0014\n\u0000[\u000b\u0001\u0000\u0000"+
+		"\u0000\\]\u0005\u000b\u0000\u0000]`\u0003\f\u0006\u0000^`\u0005\u000b"+
+		"\u0000\u0000_\\\u0001\u0000\u0000\u0000_^\u0001\u0000\u0000\u0000`\r\u0001"+
+		"\u0000\u0000\u0000ab\u0005\n\u0000\u0000be\u0003\u000e\u0007\u0000ce\u0005"+
+		"\n\u0000\u0000da\u0001\u0000\u0000\u0000dc\u0001\u0000\u0000\u0000e\u000f"+
+		"\u0001\u0000\u0000\u0000fg\u0003\u0012\t\u0000gh\u0005\u0001\u0000\u0000"+
+		"hi\u0003\u0010\b\u0000il\u0001\u0000\u0000\u0000jl\u0003\u0012\t\u0000"+
+		"kf\u0001\u0000\u0000\u0000kj\u0001\u0000\u0000\u0000l\u0011\u0001\u0000"+
+		"\u0000\u0000mn\u0005\u0002\u0000\u0000no\u0005\u0005\u0000\u0000op\u0005"+
+		"\u0003\u0000\u0000pq\u0005\u0005\u0000\u0000qr\u0005\u0004\u0000\u0000"+
+		"r\u0013\u0001\u0000\u0000\u0000st\u0003\u0016\u000b\u0000tu\u0003\u0014"+
+		"\n\u0000ux\u0001\u0000\u0000\u0000vx\u0003\u0016\u000b\u0000ws\u0001\u0000"+
+		"\u0000\u0000wv\u0001\u0000\u0000\u0000x\u0015\u0001\u0000\u0000\u0000"+
+		"yz\u0005\u0005\u0000\u0000z{\u0005\t\u0000\u0000{|\u0007\u0000\u0000\u0000"+
+		"|}\u0007\u0000\u0000\u0000}~\u0005\u0006\u0000\u0000~\u0086\u0005\u0005"+
+		"\u0000\u0000\u007f\u0080\u0005\u0005\u0000\u0000\u0080\u0081\u0005\t\u0000"+
+		"\u0000\u0081\u0082\u0007\u0000\u0000\u0000\u0082\u0083\u0007\u0000\u0000"+
+		"\u0000\u0083\u0084\u0005\u0005\u0000\u0000\u0084\u0086\u0005\u0005\u0000"+
+		"\u0000\u0085y\u0001\u0000\u0000\u0000\u0085\u007f\u0001\u0000\u0000\u0000"+
+		"\u0086\u0017\u0001\u0000\u0000\u0000\u0087\u0088\u0003\u001a\r\u0000\u0088"+
+		"\u0089\u0003\u0018\f\u0000\u0089\u008c\u0001\u0000\u0000\u0000\u008a\u008c"+
+		"\u0003\u001a\r\u0000\u008b\u0087\u0001\u0000\u0000\u0000\u008b\u008a\u0001"+
+		"\u0000\u0000\u0000\u008c\u0019\u0001\u0000\u0000\u0000\u008d\u008e\u0005"+
+		"\u0005\u0000\u0000\u008e\u008f\u0005\t\u0000\u0000\u008f\u0094\u0005\u0006"+
+		"\u0000\u0000\u0090\u0091\u0005\u0005\u0000\u0000\u0091\u0092\u0005\t\u0000"+
+		"\u0000\u0092\u0094\u0005\u0005\u0000\u0000\u0093\u008d\u0001\u0000\u0000"+
+		"\u0000\u0093\u0090\u0001\u0000\u0000\u0000\u0094\u001b\u0001\u0000\u0000"+
+		"\u0000\u0013!&*15<BGJOTW_dkw\u0085\u008b\u0093";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -3,7 +3,6 @@ package it.unicam.cs.twopie.tarnas.model.rnafile;
 import it.unicam.cs.twopie.tarnas.model.rnastructure.RNASecondaryStructure;
 import it.unicam.cs.twopie.tarnas.model.utils.Region;
 
-import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -180,7 +179,7 @@ public class RNAFileTranslator {
         for (int i = 1; i <= rnaSecondaryStructure.getSequence().length(); i++) {
             var line = i + " " +
                     rnaSecondaryStructure.getSequence().charAt(i - 1) + " " +
-                    rnaSecondaryStructure.getP()[i] + "\n";
+                    rnaSecondaryStructure.getP()[i];
             body.add(line);
         }
         return body;

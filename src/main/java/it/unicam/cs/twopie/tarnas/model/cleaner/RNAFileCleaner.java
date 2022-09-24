@@ -11,8 +11,7 @@ import java.util.function.Predicate;
 /**
  * A representation of an RNA files cleaner.<br>
  * This class provides several clean operations on {@link RNAFile } like {@link RNAFormat#DB} lines merging,
- * the removal of lines that starts with a specified word or symbol,
- * the removal of white spaces.
+ * the removal of lines that starts with a specified word or symbol, the removal of white spaces.
  *
  * @author Piero Hierro, Piermichele Rosati
  * @see RNAFile
@@ -21,19 +20,22 @@ import java.util.function.Predicate;
 public class RNAFileCleaner {
 
     /**
-     * Merges the lines ?????????
+     * Merges the lines of the specified {@code rnaFile} with {@link RNAFormat#DB} or {@link RNAFormat#DB_NO_SEQUENCE} format.
      *
-     * @param rnaFile
-     * @return
+     * @param rnaFile hte specified {@code RNAFile} to merge its lines.
+     * @return the list that will contain one element which represents the merged lines in one
      */
     public List<String> mergeDBLines(RNAFile rnaFile) {
-        return rnaFile.getFormat() == RNAFormat.DB ?
-                RNAFileTranslator.translateToDB(rnaFile).body() :
-                RNAFileTranslator.translateToDBNoSequence(rnaFile).body();
+        List<String> mergedLines = new ArrayList<>();
+        if (rnaFile.getFormat().equals(RNAFormat.DB))
+            mergedLines = RNAFileTranslator.translateToDB(rnaFile).body();
+        if (rnaFile.getFormat().equals(RNAFormat.DB_NO_SEQUENCE))
+            mergedLines = RNAFileTranslator.translateToDBNoSequence(rnaFile).body();
+        return mergedLines;
     }
 
     /**
-     * Removes all the header lines of the {@code rnafile} that starts with the specified {@code symbol}.
+     * Removes all the header lines of the {@code rnaFile} that starts with the specified {@code symbol}.
      *
      * @param rnaFile the {@link RNAFile} from which removing any header lines
      * @param symbol  the symbol filter to remove any lines from the header of the {@code rnafile}
@@ -65,7 +67,7 @@ public class RNAFileCleaner {
     }
 
     /**
-     * Removes all the lines that satisfy the {@code predicate} from the {@code header}.
+     * Removes all the lines that satisfies the {@code predicate} from the {@code header}.
      *
      * @param header    the header from which remove all the lines satisfy the {@code predicate}.
      * @param predicate the {@link Predicate} to satisfy for header lines removal
