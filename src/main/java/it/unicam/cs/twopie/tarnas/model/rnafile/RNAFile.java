@@ -2,11 +2,7 @@ package it.unicam.cs.twopie.tarnas.model.rnafile;
 
 import it.unicam.cs.twopie.tarnas.model.rnastructure.RNASecondaryStructure;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -41,7 +37,7 @@ public class RNAFile {
     private final RNASecondaryStructure structure;
     private final RNAFormat format;
     private final List<String> body;
-    private final List<String> content;
+    private List<String> content;
 
     /**
      * Create an RNAFile with specified file name, the header of the file,
@@ -52,13 +48,18 @@ public class RNAFile {
      * @param structure the represented {@code RNASecondaryStructure} in this {@code RNAFile}
      * @param format    the {@link RNAFormat} of this {@code RNAFile}
      */
-    public RNAFile(String fileName, List<String> header,List<String> body, RNASecondaryStructure structure, RNAFormat format) {
+    public RNAFile(String fileName, List<String> header, List<String> body, RNASecondaryStructure structure, RNAFormat format) {
         this.fileName = fileName;
         this.header = header;
         this.body = body;
         this.structure = structure;
         this.format = format;
-        this.content= Stream.concat(this.header.stream(), this.body.stream()).toList();
+        this.content = Stream.concat(this.header.stream(), this.body.stream()).toList();
+    }
+
+    public RNAFile(String fileName, List<String> fileContent, List<String> header, List<String> body, RNASecondaryStructure structure, RNAFormat format) {
+        this(fileName, header, body, structure, format);
+        this.content = fileContent;
     }
 
     /**
@@ -125,5 +126,10 @@ public class RNAFile {
         return this.content;
     }
 
-
+    /**
+     * @param content
+     */
+    public void setContent(List<String> content) {
+        this.content = content;
+    }
 }

@@ -6,35 +6,40 @@ import it.unicam.cs.twopie.tarnas.model.rnafile.RNAInputFileParserException;
 import it.unicam.cs.twopie.tarnas.model.rnastructure.RNASecondaryStructure;
 import it.unicam.cs.twopie.tarnas.model.rnastructure.WeakBond;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
 public class RNAFileListener extends RNASecondaryStructureBaseListener {
-
     private RNAFile rnaFile;
+
     private RNASecondaryStructure s;
     private StringBuffer sequenceBuffer;
     private StringBuffer edbnsBuffer;
     private List<String> header;
     private String fileName;
 
+    private List<String> content;
+
     public RNAFileListener() {
 
     }
 
-    public void setFileName(String fileName) {
+    public void setFilePath(Path filePath) throws IOException {
+        this.content = Files.readAllLines(filePath);
         this.s = new RNASecondaryStructure();
         this.sequenceBuffer = new StringBuffer();
         this.edbnsBuffer = new StringBuffer();
         this.header = new ArrayList<>();
-        this.fileName = fileName;
+        this.fileName = String.valueOf(filePath.getFileName());
     }
 
     public RNAFile getRnaFile() {
         return this.rnaFile;
     }
-
     //BPSEQ
+
     @Override
     public void enterBpseq(RNASecondaryStructureParser.BpseqContext ctx) {
         if (ctx.COMMENT() != null)
@@ -70,11 +75,11 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         this.s.setSize(this.s.getSequence().length());
         // everything has been added to the structure, finalise it
         this.s.finalise();
-        // create rnafile object
-        this.rnaFile = new RNAFile(fileName, this.header, this.s, RNAFormat.BPSEQ);
+        // create rnafile object with unnecessary empty body
+        this.rnaFile = new RNAFile(this.fileName, this.content, this.header, new ArrayList<>(), this.s, RNAFormat.BPSEQ);
     }
-
     //CT
+
     @Override
     public void enterCt(RNASecondaryStructureParser.CtContext ctx) {
         if (ctx.COMMENT() != null)
@@ -110,11 +115,11 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         this.s.setSize(this.s.getSequence().length());
         // everything has been added to the structure, finalise it
         this.s.finalise();
-        // create rnafile object
-        this.rnaFile = new RNAFile(fileName, this.header, this.s, RNAFormat.CT);
+        // create rnafile object with unnecessary empty body
+        this.rnaFile = new RNAFile(this.fileName, this.content, this.header, this.s, RNAFormat.CT);
     }
-
     //AAS
+
     @Override
     public void enterAas(RNASecondaryStructureParser.AasContext ctx) {
         ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
@@ -163,13 +168,13 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     public void exitAas(RNASecondaryStructureParser.AasContext ctx) {
         // everything has been added to the structure, finalise it
         this.s.finalise();
-        // create rnafile object
-        this.rnaFile = new RNAFile(fileName, this.header,
+        // create rnafile object with unnecessary empty body
+        this.rnaFile = new RNAFile(this.fileName, this.content, this.header,
                 this.s,
                 this.s.getSequence() == null ? RNAFormat.AAS_NO_SEQUENCE : RNAFormat.AAS);
     }
-
     // FASTA
+
     @Override
     public void enterFasta(RNASecondaryStructureParser.FastaContext ctx) {
         ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
@@ -177,11 +182,11 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     @Override
     public void exitFasta(RNASecondaryStructureParser.FastaContext ctx) {
-        // create rnafile object
-        this.rnaFile = new RNAFile(fileName, this.header, this.s, RNAFormat.FASTA);
+        // create rnafile object with unnecessary empty body
+        this.rnaFile = new RNAFile(this.fileName, this.content, this.header, this.s, RNAFormat.FASTA);
     }
-
     // EDBN
+
     @Override
     public void enterEdbnStructureContinue(RNASecondaryStructureParser.EdbnStructureContinueContext ctx) {
         String edbn = ctx.EDBN().getText();
@@ -215,7 +220,6 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     @Override
     public void enterEdbnStructureEnd(RNASecondaryStructureParser.EdbnStructureEndContext ctx) {
         var edbn = ctx.EDBN().getText();
-        System.out.println("EDBN: " + edbn);
         /*
          * Control if this part of string has been classified wrongly as EDBN
          * while originally it was a nucleotide part with non-recognised
@@ -263,12 +267,11 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     public void exitEdbn(RNASecondaryStructureParser.EdbnContext ctx) {
         // create rnafile object
         this.s.finalise();
-        // create rnafile object
-        this.rnaFile = new RNAFile(fileName, this.header,
+        // create rnafile object with unnecessary empty body
+        this.rnaFile = new RNAFile(this.fileName, this.content, this.header,
                 this.s,
                 this.s.getSequence() == null ? RNAFormat.DB_NO_SEQUENCE : RNAFormat.DB);
     }
-
     /*
      * Parse an Extended Dot-Bracket Notation string and transform it into a
      * list of weak bonds.
@@ -281,6 +284,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
      * @throws RNAInputFileParserException if the extended dot-bracket
      * notation contains errors
      */
+
     private static List<WeakBond> parseEDBN(String extendedDotBracketNotation) {
         var bonds = new ArrayList<WeakBond>();
         /*
@@ -326,29 +330,29 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         // return
         return bonds;
     }
-
     /*
      * Determine if the given character is a correct opening character of an
      * extended dot-bracket notation string.
      */
+
     private static boolean isOpeningChar(char c) {
         return c == '(' || c == '[' || c == '{' || c == '<'
                 || Character.isUpperCase(c);
     }
-
     /*
      * Determine if the given character is a correct closing character of an
      * extended dot-bracket notation string.
      */
+
     private static boolean isClosingChar(char c) {
         return c == ')' || c == ']' || c == '}' || c == '>'
                 || Character.isLowerCase(c);
     }
-
     /*
      * Given a closing character of an extended dot-bracket notation string,
      * returns the corresponding opening character.
      */
+
     private static char getCorrespondingOpening(char c) {
         return switch (c) {
             case ')' -> '(';
@@ -358,4 +362,5 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
             default -> Character.toUpperCase(c);
         };
     }
+
 }

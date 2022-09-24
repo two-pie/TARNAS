@@ -16,7 +16,7 @@ public class RNAFileConstructor {
 
     private static RNAFileConstructor instance;
     private final ParseTreeWalker walker;
-    private final RNAFileListener constructor;
+    private final RNAFileListener rnaFilelistener;
 
     /**
      * Invisible constructor.
@@ -25,7 +25,7 @@ public class RNAFileConstructor {
         // Create a generic parse tree walker that can trigger callbacks
         this.walker = new ParseTreeWalker();
         // Create the specialised listener for the RNA secondary structure
-        this.constructor = new RNAFileListener();
+        this.rnaFilelistener = new RNAFileListener();
     }
 
     /**
@@ -49,10 +49,10 @@ public class RNAFileConstructor {
         RNASecondaryStructureParser structureParser = new RNASecondaryStructureParser(tokens);
         // begin parsing at rna rule
         ParseTree tree = structureParser.rna_format();
-        this.constructor.setFileName(String.valueOf(filePath.getFileName()));
+        this.rnaFilelistener.setFilePath(filePath);
         // Walk the tree created during the parse, trigger callbacks
-        this.walker.walk(constructor, tree);
-        return constructor.getRnaFile();
+        this.walker.walk(rnaFilelistener, tree);
+        return rnaFilelistener.getRnaFile();
     }
 
 }
