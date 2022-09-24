@@ -3,8 +3,11 @@ package it.unicam.cs.twopie.tarnas.model.rnafile;
 import it.unicam.cs.twopie.tarnas.model.rnastructure.RNASecondaryStructure;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * A representation of file that contains an RNA secondary structure.<br>
@@ -37,6 +40,8 @@ public class RNAFile {
     private final List<String> header;
     private final RNASecondaryStructure structure;
     private final RNAFormat format;
+    private final List<String> body;
+    private final List<String> content;
 
     /**
      * Create an RNAFile with specified file name, the header of the file,
@@ -47,11 +52,13 @@ public class RNAFile {
      * @param structure the represented {@code RNASecondaryStructure} in this {@code RNAFile}
      * @param format    the {@link RNAFormat} of this {@code RNAFile}
      */
-    public RNAFile(String fileName, List<String> header, RNASecondaryStructure structure, RNAFormat format) {
+    public RNAFile(String fileName, List<String> header,List<String> body, RNASecondaryStructure structure, RNAFormat format) {
         this.fileName = fileName;
         this.header = header;
+        this.body = body;
         this.structure = structure;
         this.format = format;
+        this.content= Stream.concat(this.header.stream(), this.body.stream()).toList();
     }
 
     /**
@@ -69,6 +76,15 @@ public class RNAFile {
      * @return the header of this {@code RNAFile}
      */
     public List<String> getHeader() {
+        return this.header;
+    }
+
+    /**
+     * Returns the body of this {@code RNAFile}.
+     *
+     * @return the body of this {@code RNAFile}
+     */
+    public List<String> getBody() {
         return this.header;
     }
 
@@ -91,16 +107,23 @@ public class RNAFile {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RNAFile rnaFile = (RNAFile) o;
-        return Objects.equals(fileName, rnaFile.fileName) && Objects.equals(header, rnaFile.header) && Objects.equals(structure, rnaFile.structure) && format == rnaFile.format;
+    public int hashCode() {
+        return super.hashCode();
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(fileName, header, structure, format);
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
+
+    /**
+     * Returns the content of this {@code RNAFile}
+     *
+     * @return the content of this {@code RNAFile}
+     */
+    public List<String> getContent() {
+        return this.content;
+    }
+
 
 }

@@ -3,10 +3,9 @@ package it.unicam.cs.twopie.tarnas.view;
 import it.unicam.cs.twopie.App;
 import it.unicam.cs.twopie.tarnas.controller.CleanerController;
 import it.unicam.cs.twopie.tarnas.controller.TranslatorController;
-import it.unicam.cs.twopie.tarnas.model.rnafile.FormattedRNAFile;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat;
-import it.unicam.cs.twopie.tarnas.view.utils.TrashCell;
+import it.unicam.cs.twopie.tarnas.view.utils.ImageCell;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,6 +31,7 @@ public class HomeController {
 
     private TranslatorController translatorController;
     private CleanerController cleanerController;
+    private RNAFormat selectedFormat;
 
     @FXML
     private TableView<RNAFile> filesTable;
@@ -43,12 +43,17 @@ public class HomeController {
     private TableColumn<RNAFile, String> formatColumn;
 
     @FXML
-    private TableColumn<RNAFile, RNAFile> actionsColumn;
+    private TableColumn<RNAFile,RNAFile> previewColumn;
+
+    @FXML
+    private TableColumn<RNAFile, RNAFile> deleteColumn;
+
     @FXML
     public MenuButton btnSelectFormatTranslation;
-    private RNAFormat selectedFormat;
+
     @FXML
     public MenuItem itmAAS, itmAASNS, itmBPSEQ, itmCT, itmDB, itmDBNS, itmFASTA; // example: "AAS_NO_SEQUENCE" instead "AAS NO SEQUENCE" for enum recognition
+
     @FXML
     public Button btnTranslateAllLoadedFiles;
 
@@ -58,13 +63,18 @@ public class HomeController {
         this.createsControllers();
         // load trash image
         var trashImage = new Image(Objects.requireNonNull(App.class.getResource("/img/trash.png")).toExternalForm(), 18, 18, false, false);
+        var lenImage = new Image(Objects.requireNonNull(App.class.getResource("/img/lens-icon.jpeg")).toExternalForm(), 18, 18, false, false);
         //change table label
         this.filesTable.setPlaceholder(new Label("No loaded files"));
-        // init columns
+        // set column values
         this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
         this.formatColumn.setCellValueFactory(new PropertyValueFactory<>("format"));
-        this.actionsColumn.setCellValueFactory(rnaFile -> new ReadOnlyObjectWrapper<>(rnaFile.getValue()));
-        this.actionsColumn.setCellFactory(column -> new TrashCell(trashImage));
+        this.previewColumn.setCellValueFactory(rnaFile -> new ReadOnlyObjectWrapper<>(rnaFile.getValue()));
+        this.deleteColumn.setCellValueFactory(rnaFile -> new ReadOnlyObjectWrapper<>(rnaFile.getValue()));
+        // set custom cell
+        this.previewColumn.setCellFactory(column -> new ImageCell(lenImage));
+        this.deleteColumn.setCellFactory(column -> new ImageCell(trashImage));
+
         // add event to select ButtonItem for destination format translation
         this.initSelectEventOnButtonItems();
         this.btnTranslateAllLoadedFiles.setDisable(true);
@@ -82,7 +92,8 @@ public class HomeController {
         if (selectedFile != null) {
             var selectedRNAFile = Path.of(selectedFile.getPath());
             translatorController.loadFile(selectedRNAFile);
-            this.filesTable.getItems().add(translatorController.getRNAFileOf(selectedRNAFile));
+            var t = translatorController.getRNAFileOf(selectedRNAFile);
+            this.filesTable.getItems().add(t);
         }
     }
 
@@ -121,13 +132,13 @@ public class HomeController {
 
     @FXML
     public void translateAllLoadedFiles(ActionEvent event) {
-        List<FormattedRNAFile> formattedRNAFileList = null;
+        List<RNAFile> formattedRNAFileList = null;
         if (this.confirmAndTranslate())
             formattedRNAFileList = this.translatorController.translateAllLoadedFiles(this.selectedFormat);
         if (formattedRNAFileList != null) {
             formattedRNAFileList.forEach(f -> {
                 try {
-                    this.translatorController.saveFile(f, Path.of("C:\\Users\\Piermuz\\Documents\\GitHub\\TARNAS\\src\\main\\java\\it\\unicam\\cs\\twopie\\tarnas\\controller\\" + f.fileName()));
+                    this.translatorController.saveFile(f, Path.of("C:\\Users\\Piermuz\\Documents\\GitHub\\TARNAS\\src\\main\\java\\it\\unicam\\cs\\twopie\\tarnas\\controller\\" + f.getFileName()));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

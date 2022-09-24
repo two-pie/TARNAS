@@ -22,7 +22,6 @@ import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
  *
  * @author Piero Hierro, Piermichele Rosati
  * @see RNAFile
- * @see FormattedRNAFile
  * @see Stream#parallel()
  */
 public class TranslatorController {
@@ -35,7 +34,7 @@ public class TranslatorController {
     /**
      * Translated loaded {@link RNAFile}s.
      */
-    private final List<FormattedRNAFile> formattedLoadedRNAFiles;
+    private final List<RNAFile> formattedLoadedRNAFiles;
 
     /**
      * This conversion matrix has the X {@link RNAFormat} as key-map and
@@ -70,7 +69,7 @@ public class TranslatorController {
      */
     public void loadFile(Path srcFilePath) throws IOException {
         if (!Files.exists(srcFilePath))
-            throw new FileNotFoundException("Nonexistent file with path: " + srcFilePath);
+            throw new FileNotFoundException("Non existent file with path: " + srcFilePath);
         this.loadedRNAFiles.add(this.getRNAFileOf(srcFilePath));
     }
 
@@ -90,7 +89,7 @@ public class TranslatorController {
                         else if (Files.isDirectory(p))
                             this.loadDirectory(p);
                         else
-                            throw new FileNotFoundException("Nonexistent path: " + p);
+                            throw new FileNotFoundException("Non existent path: " + p);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -116,7 +115,7 @@ public class TranslatorController {
      * @param dstRNAFormat the destination {@link RNAFormat} to which translate all loaded files.
      * @return the list of all translated loaded files
      */
-    public List<FormattedRNAFile> translateAllLoadedFiles(RNAFormat dstRNAFormat) {
+    public List<RNAFile> translateAllLoadedFiles(RNAFormat dstRNAFormat) {
         this.loadedRNAFiles.parallelStream().forEach(f -> {
             try {
                 this.formattedLoadedRNAFiles.add(this.translateTo(f, dstRNAFormat));
@@ -129,15 +128,15 @@ public class TranslatorController {
 
     /**
      * Translates the specified {@link RNAFile} to the specified {@code dstRNAFormat} and
-     * returns the {@link FormattedRNAFile} that represents the translated specified {@code rnaFile}.
+     * returns the {@link RNAFile} that represents the translated specified {@code rnaFile}.
      *
      * @param rnaFile      the {@code RNAFile} to translate to the specified {@code dstRNAFormat}.
      * @param dstRNAFormat the destination {@link RNAFormat} to which translate the specified {@code rnaFile}
      * @return the {@code FormattedRNAFile}, so the translation of the specified {@code rnaFile}
      * @throws RNAFormatTranslationException if a translation error occurs
      */
-    private FormattedRNAFile translateTo(RNAFile rnaFile, RNAFormat dstRNAFormat) throws RNAFormatTranslationException {
-        FormattedRNAFile formattedRNAFile;
+    private RNAFile translateTo(RNAFile rnaFile, RNAFormat dstRNAFormat) throws RNAFormatTranslationException {
+        RNAFile formattedRNAFile;
         if (this.conversionMatrix.get(rnaFile.getFormat()).contains(dstRNAFormat))
             formattedRNAFile = this.noCheckingtranslateTo(rnaFile, dstRNAFormat);
         else
@@ -150,10 +149,10 @@ public class TranslatorController {
      *
      * @param rnaFile   the {@code RNAFile} to translate.
      * @param rnaFormat the destination {@link RNAFormat}
-     * @return the {@link FormattedRNAFile} that represent the translation of the specified {@code rnaFile}
+     * @return the {@link RNAFile} that represent the translation of the specified {@code rnaFile}
      * in the destination {@code rnaFormat}
      */
-    private FormattedRNAFile noCheckingtranslateTo(RNAFile rnaFile, RNAFormat rnaFormat) {
+    private RNAFile noCheckingtranslateTo(RNAFile rnaFile, RNAFormat rnaFormat) {
         return switch (rnaFormat) {
             case AAS -> RNAFileTranslator.translateToAAS(rnaFile);
             case AAS_NO_SEQUENCE -> RNAFileTranslator.translateToAASNoSequence(rnaFile);
@@ -167,17 +166,17 @@ public class TranslatorController {
 
     /**
      * Saves the specified {@code formattedRNAFile} to the specified {@code dstFilePath}.
-     * The file will be saved with its {@link FormattedRNAFile#fileName()} by default.
+     * The file will be saved with its {@link RNAFile#getFileName()} ()} by default.
      *
      * @param formattedRNAFile the file to save.
      * @param dstFilePath      the destination saving {@link Path}.
      * @throws IOException if an I/O error occurs
      */
-    public void saveFile(FormattedRNAFile formattedRNAFile, Path dstFilePath) throws IOException {
+    public void saveFile(RNAFile formattedRNAFile, Path dstFilePath) throws IOException {
         StringBuilder sb = new StringBuilder();
-        formattedRNAFile.header().forEach(l -> sb.append(l).append("\n"));
+        formattedRNAFile.getHeader().forEach(l -> sb.append(l).append("\n"));
         //sb.append("\n");
-        formattedRNAFile.body().forEach(l -> sb.append(l).append("\n"));
+        formattedRNAFile.getBody().forEach(l -> sb.append(l).append("\n"));
         Files.write(dstFilePath, sb.toString().getBytes());
         // TODO: mettersi d'accordo se fare gli \n qui per ogni linea o sul Translator...
     }
@@ -188,7 +187,7 @@ public class TranslatorController {
      * @return
      */
     // TODO: javadoc
-    public boolean saveDirectory(List<FormattedRNAFile> formattedRNAFiles, Path dstDirectoryPath) {
+    public boolean saveDirectory(List<RNAFile> formattedRNAFiles, Path dstDirectoryPath) {
         formattedRNAFiles.parallelStream().forEach(f -> {
             try {
                 this.saveFile(f, dstDirectoryPath);

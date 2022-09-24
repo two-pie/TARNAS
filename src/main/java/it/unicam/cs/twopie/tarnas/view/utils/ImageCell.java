@@ -9,14 +9,14 @@ import javafx.stage.Modality;
 
 import java.util.Optional;
 
-public class TrashCell extends TableCell<RNAFile, RNAFile> {
+public class ImageCell extends TableCell<RNAFile, RNAFile> {
 
-    private final TrashButton trashButton;
+    private final ImageButton imageButton;
 
     private final Alert trashAlert;
 
-    public TrashCell(Image image) {
-        this.trashButton = new TrashButton(image);
+    public ImageCell(Image image) {
+        this.imageButton = new ImageButton(image);
         this.trashAlert = new Alert(Alert.AlertType.CONFIRMATION);
     }
 
@@ -27,8 +27,8 @@ public class TrashCell extends TableCell<RNAFile, RNAFile> {
             setGraphic(null);
             return;
         }
-        setGraphic(trashButton);
-        this.trashButton.setOnMouseClicked(event -> {
+        setGraphic(imageButton);
+        this.imageButton.setOnMouseClicked(event -> {
             if (this.confirmAndRemoveFile(rnaFile))
                 getTableView().getItems().remove(rnaFile);
         });

@@ -28,9 +28,9 @@ public class RNAFileCleaner {
     public List<String> mergeDBLines(RNAFile rnaFile) {
         List<String> mergedLines = new ArrayList<>();
         if (rnaFile.getFormat().equals(RNAFormat.DB))
-            mergedLines = RNAFileTranslator.translateToDB(rnaFile).body();
+            mergedLines = RNAFileTranslator.translateToDB(rnaFile).getBody();
         if (rnaFile.getFormat().equals(RNAFormat.DB_NO_SEQUENCE))
-            mergedLines = RNAFileTranslator.translateToDBNoSequence(rnaFile).body();
+            mergedLines = RNAFileTranslator.translateToDBNoSequence(rnaFile).getBody();
         return mergedLines;
     }
 

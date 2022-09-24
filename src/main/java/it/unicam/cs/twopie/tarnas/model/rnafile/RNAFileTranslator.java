@@ -9,120 +9,119 @@ import java.util.*;
  * A representation of an RNA files translator.<br>
  * This class consists exclusively of static methods that operate on RNA secondary structure formats translations.<br>
  * Every static method has only a {@link RNAFile} parameter and translate it to the {@link RNAFormat} destination.<br>
- * The output of every static method is a {@link FormattedRNAFile}.
+ * The output of every static method is a {@link RNAFile}.
  *
  * @author Piero Hierro, Piermichele Rosati
  * @see RNAFile
  * @see RNAFormat
- * @see FormattedRNAFile
  */
 public class RNAFileTranslator {
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link FormattedRNAFile} with {@link RNAFormat#DB} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#DB} format.
      *
      * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#DB} format.
      * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#DB} format
      */
-    public static FormattedRNAFile translateToDB(RNAFile rnaFile) {
+    public static RNAFile translateToDB(RNAFile rnaFile) {
         // create DB header
         var header = createHeader(rnaFile.getHeader(), RNAFormat.DB);
         // create DB body
         var body = createDBBody(rnaFile.getStructure(), true);
         // return a formatted rna file object
-        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "db"), header, body, RNAFormat.DB);
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "db"), header, body, rnaFile.getStructure(), RNAFormat.DB);
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link FormattedRNAFile} with {@link RNAFormat#DB_NO_SEQUENCE} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#DB_NO_SEQUENCE} format.
      *
      * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#DB_NO_SEQUENCE} format.
      * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#DB_NO_SEQUENCE} format
      */
-    public static FormattedRNAFile translateToDBNoSequence(RNAFile rnaFile) {
+    public static RNAFile translateToDBNoSequence(RNAFile rnaFile) {
         // create DB no sequence header
         var header = createHeader(rnaFile.getHeader(), RNAFormat.DB_NO_SEQUENCE);
         // create DB no sequence body
         var body = createDBBody(rnaFile.getStructure(), false);
         // return a formatted rna file object
-        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "db"), header, body, RNAFormat.DB_NO_SEQUENCE);
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "db"), header, body, rnaFile.getStructure(), RNAFormat.DB_NO_SEQUENCE);
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link FormattedRNAFile} with {@link RNAFormat#BPSEQ} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#BPSEQ} format.
      *
      * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#BPSEQ} format.
      * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#BPSEQ} format
      */
-    public static FormattedRNAFile translateToBPSEQ(RNAFile rnaFile) {
+    public static RNAFile translateToBPSEQ(RNAFile rnaFile) {
         // create BPSEQ header
         var header = createHeader(rnaFile.getHeader(), RNAFormat.BPSEQ);
         //create BPSEQ body
         // create BPSEQ body
         var body = createBPSEQBody(rnaFile.getStructure());
         // return a formatted rna file object
-        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "bpseq"), header, body, RNAFormat.BPSEQ);
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "bpseq"), header, body, rnaFile.getStructure(), RNAFormat.BPSEQ);
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link FormattedRNAFile} with {@link RNAFormat#CT} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#CT} format.
      *
      * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#CT} format.
      * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#CT} format
      */
-    public static FormattedRNAFile translateToCT(RNAFile rnaFile) {
+    public static RNAFile translateToCT(RNAFile rnaFile) {
         // create CT header
         var header = createHeader(rnaFile.getHeader(), RNAFormat.CT);
         // create CT body
         var body = createCTBody(rnaFile.getStructure());
         // return a formatted rna file object
-        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "ct"), header, body, RNAFormat.CT);
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "ct"), header, body, rnaFile.getStructure(), RNAFormat.CT);
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link FormattedRNAFile} with {@link RNAFormat#AAS} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#AAS} format.
      *
      * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#AAS} format.
      * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#AAS} format
      */
-    public static FormattedRNAFile translateToAAS(RNAFile rnaFile) {
+    public static RNAFile translateToAAS(RNAFile rnaFile) {
         // create AAS header
         var header = createHeader(rnaFile.getHeader(), RNAFormat.AAS);
         // create AAS body
         var body = createAASBody(rnaFile.getStructure(), true);
         // return a formatted rna file object
-        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, body, RNAFormat.AAS);
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, body, rnaFile.getStructure(), RNAFormat.AAS);
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link FormattedRNAFile} with {@link RNAFormat#AAS_NO_SEQUENCE} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#AAS_NO_SEQUENCE} format.
      *
      * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#AAS_NO_SEQUENCE} format.
      * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#AAS_NO_SEQUENCE} format
      */
-    public static FormattedRNAFile translateToAASNoSequence(RNAFile rnaFile) {
+    public static RNAFile translateToAASNoSequence(RNAFile rnaFile) {
         // create ASS no sequence header
         var header = createHeader(rnaFile.getHeader(), RNAFormat.AAS_NO_SEQUENCE);
         // create ASS no sequence body
         var body = createAASBody(rnaFile.getStructure(), false);
         // return a formatted rna file object
-        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, List.of(body.toString()), RNAFormat.AAS_NO_SEQUENCE);
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, body, rnaFile.getStructure(), RNAFormat.AAS_NO_SEQUENCE);
     }
 
     /**
-     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link FormattedRNAFile} with {@link RNAFormat#FASTA} format.
+     * Translates an {@link RNAFile} of any {@link RNAFormat} to a {@link RNAFile} with {@link RNAFormat#FASTA} format.
      *
      * @param rnaFile the {@code RNAFile} to translate in a {@code FormattedRNAFile} with {@link RNAFormat#FASTA} format.
      * @return the translated {@code RNAFile} in a {@code FormattedRNAFile} with {@link RNAFormat#FASTA} format
      */
-    public static FormattedRNAFile translateToFASTA(RNAFile rnaFile) {
+    public static RNAFile translateToFASTA(RNAFile rnaFile) {
         var rnaSecondaryStructure = rnaFile.getStructure();
         // create FASTA header
         var header = createHeader(rnaFile.getHeader(), RNAFormat.FASTA);
         // create FASTA body
         var body = List.of(rnaFile.getStructure().getSequence());
         // return a formatted rna file object
-        return new FormattedRNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "fasta"), header, body, RNAFormat.FASTA);
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "fasta"), header, body, rnaFile.getStructure(), RNAFormat.FASTA);
     }
 
     /**

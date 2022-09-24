@@ -51,7 +51,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="729.0" prefWidth="1335.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+<VBox prefHeight="729.0" prefWidth="1335.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="it.unicam.cs.twopie.tarnas.view.HomeController">
     <children>
         <MenuBar prefHeight="0.0" prefWidth="500.0" VBox.vgrow="NEVER">
@@ -88,12 +88,13 @@
                 <TableView fx:id="filesTable" editable="true" layoutX="74.0" layoutY="129.0" prefHeight="263.0"
                            prefWidth="1227.0" stylesheets="@../css/home.css">
                     <columns>
-                        <TableColumn fx:id="nameColumn" prefWidth="262.40000915527344" resizable="false"
+                        <TableColumn fx:id="nameColumn" prefWidth="308.80003356933594" resizable="false"
                                      sortable="false" style="-fx-alignment: CENTER;" text="File Name"/>
-                        <TableColumn fx:id="formatColumn" minWidth="0.0" prefWidth="184.0" resizable="false"
-                                     sortable="false" style="-fx-alignment: CENTER;" text="Format"/>
-                        <TableColumn fx:id="actionsColumn" prefWidth="775.9998779296875" resizable="false"
-                                     sortable="false" style="-fx-alignment: CENTER;" text="actions"/>
+                        <TableColumn fx:id="formatColumn" minWidth="0.0" prefWidth="138.39996337890625"
+                                     resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Format"/>
+                        <TableColumn fx:id="previewColumn" prefWidth="222.39996337890625" text="Preview"/>
+                        <TableColumn fx:id="deleteColumn" prefWidth="556.7999755859375" resizable="false"
+                                     sortable="false" style="-fx-alignment: CENTER;" text="Delete"/>
                     </columns>
                 </TableView>
                 <Button layoutX="51.0" layoutY="429.0" mnemonicParsing="false" onAction="#handleAddFile"
