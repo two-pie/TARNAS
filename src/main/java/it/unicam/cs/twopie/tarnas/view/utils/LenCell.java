@@ -42,6 +42,7 @@ public class LenCell extends TableCell<RNAFile, RNAFile> {
                 stage.setTitle("Preview");
                 stage.setScene(new Scene(root, 600, 300));
                 rnaFile.getContent().forEach(l -> textArea.appendText(l + "\n"));
+                textArea.setScrollTop(Double.MAX_VALUE);
                 stage.showAndWait();
             } catch (IOException e) {
                 e.printStackTrace();
