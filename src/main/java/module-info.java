@@ -2,6 +2,7 @@ module it.unicam.cs.twopie {
     requires javafx.controls;
     requires javafx.fxml;
     requires org.antlr.antlr4.runtime;
+    requires java.logging;
 
     opens it.unicam.cs.twopie.tarnas.model.rnastructure to javafx.base;
     exports it.unicam.cs.twopie.tarnas.model.rnastructure;

@@ -23,16 +23,20 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
 
 public class HomeController {
+    private final Logger logger = Logger.getLogger("it.unicam.cs.two.pie.tarnas.view.HomeController");
+
     private TranslatorController translatorController;
+
     private IOController ioController;
+
     private CleanerController cleanerController;
 
     private RNAFormat selectedFormat;
@@ -88,6 +92,7 @@ public class HomeController {
 
     @FXML
     public void initialize() {
+        logger.info("Initializing...");
         // init controllers
         this.cleanerController = CleanerController.getInstance();
         this.ioController = IOController.getInstance();
@@ -117,10 +122,12 @@ public class HomeController {
         // add event to select ButtonItem for destination format translation
         this.initSelectEventOnButtonItems();
         this.btnTranslateAllLoadedFiles.setDisable(true);
+        logger.info("Initialization done");
     }
 
     @FXML
     public void handleAddFile() {
+        logger.info("AGGIUNGI FILE button clicked");
         try {
             var fileChooser = new FileChooser();
             var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
@@ -128,13 +135,16 @@ public class HomeController {
                 var selectedRNAFile = Path.of(selectedFile.getPath());
                 this.addFileToTable(selectedRNAFile);
             }
+            logger.info("File added successfully");
         } catch (Exception e) {
+            logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
     public void handleAddFolder() {
+        logger.info("AGGIUNGI CARTELLA button clicked");
         try {
             var directoryChooser = new DirectoryChooser();
             var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
@@ -145,13 +155,16 @@ public class HomeController {
                 for (var f : files)
                     this.addFileToTable(f);
             }
+            logger.info("Folder added successfully");
         } catch (Exception e) {
+            logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
     public void handleClean() {
+        logger.info("Pulisci button clicked");
         try {
             var cleanedFiles = this.filesTable.getItems().stream().toList();
             if (this.chbxRmLinesContainingWord.isSelected())
@@ -175,14 +188,16 @@ public class HomeController {
                         .map(f -> this.cleanerController.mergeDBLines(f))
                         .toList();
             this.saveFilesTo(cleanedFiles);
-
+            logger.info("Cleaned all files successfully");
         } catch (Exception e) {
+            logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
-    public void translateAllLoadedFiles(ActionEvent event) {
+    public void translateAllLoadedFiles() {
+        logger.info("TRADUCI button clicked");
         List<RNAFile> translatedRNAFiles;
         translatedRNAFiles = this.translatorController.translateAllLoadedFiles(this.ioController.getLoadedRNAFiles(), this.selectedFormat);
         try {
@@ -191,14 +206,17 @@ public class HomeController {
                         .map(f ->this.cleanerController.removeHeader(f))
                         .toList();
             this.saveFilesTo(translatedRNAFiles);
+            logger.info("Files translated successfully");
         }
         catch (IOException e) {
+            logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
     public void resetAll(ActionEvent event) {
+        logger.info("RESET button clicked");
         // Reset all data structures
         this.filesTable.getItems().clear();
         // Reset all buttons
@@ -215,6 +233,7 @@ public class HomeController {
         //reset recognized format
         this.lblRecognizedFormat.setText("");
         this.lblRecognizedFormat.setVisible(false);
+        logger.info("Reset done");
     }
 
     private Stage getPrimaryStage() {
