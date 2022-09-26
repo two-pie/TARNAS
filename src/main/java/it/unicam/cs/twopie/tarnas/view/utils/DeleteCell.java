@@ -2,13 +2,16 @@ package it.unicam.cs.twopie.tarnas.view.utils;
 
 import it.unicam.cs.twopie.tarnas.controller.IOController;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 
+import java.util.List;
 import java.util.Optional;
 
 public class DeleteCell extends TableCell<RNAFile, RNAFile> {
@@ -19,10 +22,16 @@ public class DeleteCell extends TableCell<RNAFile, RNAFile> {
 
     private final Label recognizedFormat;
 
-    public DeleteCell(Image image,Label recognizedFormat) {
+    private final Pane translator;
+
+    private final Pane cleaner;
+
+    public DeleteCell(Image image, Label recognizedFormat, Pane translator, Pane cleaner) {
         this.imageButton = new ImageButton(image);
         this.trashAlert = new Alert(Alert.AlertType.CONFIRMATION);
         this.recognizedFormat = recognizedFormat;
+        this.translator = translator;
+        this.cleaner = cleaner;
     }
 
     @Override
@@ -40,6 +49,8 @@ public class DeleteCell extends TableCell<RNAFile, RNAFile> {
                 if (IOController.getInstance().getLoadedRNAFiles().isEmpty()){
                     this.recognizedFormat.setVisible(false);
                     this.recognizedFormat.setText("");
+                    this.cleaner.setDisable(true);
+                    this.translator.setDisable(true);
                     getTableView().refresh();
                 }
             }

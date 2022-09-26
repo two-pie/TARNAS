@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -40,6 +41,12 @@ public class HomeController {
     private CleanerController cleanerController;
 
     private RNAFormat selectedFormat;
+
+    @FXML
+    private Pane paneTranslator;
+
+    @FXML
+    private Pane paneCleaner;
 
     @FXML
     private TableView<RNAFile> filesTable;
@@ -106,6 +113,8 @@ public class HomeController {
                 return change;
             }
         }));
+        // disable panes
+        this.setDisablePanes(true);
         // load trash image
         var trashImage = new Image(Objects.requireNonNull(App.class.getResource("/img/trash.png")).toExternalForm(), 18, 18, false, false);
         var lenImage = new Image(Objects.requireNonNull(App.class.getResource("/img/lens-icon.jpeg")).toExternalForm(), 18, 18, false, false);
@@ -118,7 +127,7 @@ public class HomeController {
         this.deleteColumn.setCellValueFactory(rnaFile -> new ReadOnlyObjectWrapper<>(rnaFile.getValue()));
         // set custom cell
         this.previewColumn.setCellFactory(column -> new LenCell(lenImage));
-        this.deleteColumn.setCellFactory(column -> new DeleteCell(trashImage,this.lblRecognizedFormat));
+        this.deleteColumn.setCellFactory(column -> new DeleteCell(trashImage, this.lblRecognizedFormat, this.paneTranslator, this.paneCleaner));
         // add event to select ButtonItem for destination format translation
         this.initSelectEventOnButtonItems();
         this.btnTranslateAllLoadedFiles.setDisable(true);
@@ -134,7 +143,10 @@ public class HomeController {
             if (selectedFile != null) {
                 var selectedRNAFile = Path.of(selectedFile.getPath());
                 this.addFileToTable(selectedRNAFile);
+                this.setDisablePanes(false);
+                this.chbxMergeLines.setDisable(this.ioController.getRecognizedFormat() != DB && this.ioController.getRecognizedFormat() != DB_NO_SEQUENCE);
             }
+
             logger.info("File added successfully");
         } catch (Exception e) {
             logger.severe(e.getMessage());
@@ -154,6 +166,7 @@ public class HomeController {
                         .toList();
                 for (var f : files)
                     this.addFileToTable(f);
+                this.setDisablePanes(false);
             }
             logger.info("Folder added successfully");
         } catch (Exception e) {
@@ -201,14 +214,13 @@ public class HomeController {
         List<RNAFile> translatedRNAFiles;
         translatedRNAFiles = this.translatorController.translateAllLoadedFiles(this.ioController.getLoadedRNAFiles(), this.selectedFormat);
         try {
-            if(!this.chbxIncludeHeader.isSelected())
+            if (!this.chbxIncludeHeader.isSelected())
                 translatedRNAFiles = translatedRNAFiles.parallelStream()
-                        .map(f ->this.cleanerController.removeHeader(f))
+                        .map(f -> this.cleanerController.removeHeader(f))
                         .toList();
             this.saveFilesTo(translatedRNAFiles);
             logger.info("Files translated successfully");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
@@ -219,15 +231,8 @@ public class HomeController {
         logger.info("RESET button clicked");
         // Reset all data structures
         this.filesTable.getItems().clear();
-        // Reset all buttons
-        this.btnSelectFormatTranslation.setText("TRANSLATE TO...");
-        this.btnTranslateAllLoadedFiles.setDisable(true);
-        //reset all checkbox
-        this.chbxIncludeHeader.setSelected(false);
-        this.chbxRmBlankLines.setSelected(false);
-        this.chbxRmLinesContainingPrefix.setSelected(false);
-        this.chbxRmLinesContainingWord.setSelected(false);
-        this.chbxMergeLines.setSelected(false);
+        // reset translation and cleaner panes
+        this.setDisablePanes(true);
         //reset controller files
         this.ioController.clearAllDataStructures();
         //reset recognized format
@@ -291,5 +296,10 @@ public class HomeController {
                     "Files saved successfully",
                     rnaFiles.size() + " files saved in: " + selectedDirectory.getPath());
         }
+    }
+
+    private void setDisablePanes(boolean b) {
+        this.paneTranslator.setDisable(b);
+        this.paneCleaner.setDisable(b);
     }
 }
