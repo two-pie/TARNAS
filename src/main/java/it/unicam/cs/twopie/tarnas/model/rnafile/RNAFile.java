@@ -3,6 +3,7 @@ package it.unicam.cs.twopie.tarnas.model.rnafile;
 import it.unicam.cs.twopie.tarnas.model.rnastructure.RNASecondaryStructure;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -102,16 +103,6 @@ public class RNAFile {
         return this.format;
     }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
     /**
      * Returns the content of this {@code RNAFile}
      *
@@ -128,4 +119,16 @@ public class RNAFile {
         this.content = content;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RNAFile rnaFile = (RNAFile) o;
+        return Objects.equals(fileName, rnaFile.fileName) && Objects.equals(header, rnaFile.header) && Objects.equals(structure, rnaFile.structure) && format == rnaFile.format && Objects.equals(body, rnaFile.body) && Objects.equals(content, rnaFile.content);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fileName, header, structure, format, body, content);
+    }
 }

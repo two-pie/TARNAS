@@ -12,6 +12,23 @@ import java.util.function.Predicate;
 
 public class CleanerController {
 
+    private static CleanerController instance;
+
+    private CleanerController() {
+
+    }
+
+    /**
+     * Factory method for the obtaining the {@link CleanerController} instance.
+     *
+     * @return the instance of this Singleton
+     */
+    public static CleanerController getInstance() {
+        if (instance == null)
+            instance = new CleanerController();
+        return instance;
+    }
+
     /**
      * Merges the lines of the specified {@code rnaFile} with {@link RNAFormat#DB} or {@link RNAFormat#DB_NO_SEQUENCE} format.
      *
@@ -71,7 +88,7 @@ public class CleanerController {
             for (var line : header)
                 if (!predicate.test(line))
                     newHeader.add(line);
-            return new RNAFile(rnaFile.getFileName(),newHeader,rnaFile.getBody(),rnaFile.getStructure(),rnaFile.getFormat());
+            return new RNAFile(rnaFile.getFileName(), newHeader, rnaFile.getBody(), rnaFile.getStructure(), rnaFile.getFormat());
         };
     }
 

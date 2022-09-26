@@ -1,5 +1,6 @@
 package it.unicam.cs.twopie.tarnas.view.utils;
 
+import it.unicam.cs.twopie.tarnas.controller.IOController;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -29,8 +30,10 @@ public class DeleteCell extends TableCell<RNAFile, RNAFile> {
         }
         setGraphic(imageButton);
         this.imageButton.setOnMouseClicked(event -> {
-            if (this.confirmAndRemoveFile(rnaFile))
+            if (this.confirmAndRemoveFile(rnaFile)) {
                 getTableView().getItems().remove(rnaFile);
+                IOController.getInstance().deleteFile(rnaFile);
+            }
         });
     }
 

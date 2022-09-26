@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,9 +31,6 @@ import java.util.Optional;
 import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
 
 public class HomeController {
-
-    private TranslatorController translatorController;
-    private CleanerController cleanerController;
     private RNAFormat selectedFormat;
     private RNAFormat loadedFilesFormat;
 
@@ -91,8 +89,6 @@ public class HomeController {
                 return change;
             }
         }));
-        // creates controllers
-        this.createsControllers();
         // load trash image
         var trashImage = new Image(Objects.requireNonNull(App.class.getResource("/img/trash.png")).toExternalForm(), 18, 18, false, false);
         var lenImage = new Image(Objects.requireNonNull(App.class.getResource("/img/lens-icon.jpeg")).toExternalForm(), 18, 18, false, false);
@@ -118,8 +114,8 @@ public class HomeController {
             var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
             if (selectedFile != null) {
                 var selectedRNAFile = Path.of(selectedFile.getPath());
-                translatorController.loadFile(selectedRNAFile);
-                var rnaFile = translatorController.getRNAFileOf(selectedRNAFile);
+                IOController.getInstance().loadFile(selectedRNAFile);
+                var rnaFile = IOController.getInstance().getRNAFileOf(selectedRNAFile);
                 this.addFile(rnaFile);
             }
         } catch (Exception e) {
@@ -137,8 +133,8 @@ public class HomeController {
                         .filter(Files::isRegularFile)
                         .toList();
                 for (var f : files)
-                    this.addFile(translatorController.getRNAFileOf(Path.of(String.valueOf(f))));
-                translatorController.loadDirectory(selectedDirectory.toPath());
+                    this.addFile(IOController.getInstance().getRNAFileOf(Path.of(String.valueOf(f))));
+                IOController.getInstance().loadDirectory(selectedDirectory.toPath());
             }
         } catch (Exception e) {
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
@@ -152,28 +148,28 @@ public class HomeController {
             if (this.chbxRmLinesContainingWord.isSelected())
                 cleanedFiles = cleanedFiles
                         .parallelStream()
-                        .map(f -> this.cleanerController.removeLinesContaining(f, this.txtfRmLinesContainingWord.getText()))
+                        .map(f -> CleanerController.getInstance().removeLinesContaining(f, this.txtfRmLinesContainingWord.getText()))
                         .toList();
             if (this.chbxRmLinesContainingPrefix.isSelected())
                 cleanedFiles = cleanedFiles
                         .parallelStream()
-                        .map(f -> this.cleanerController.removeLinesStartingWith(f, this.txtRmLinesContainingPrefix.getText()))
+                        .map(f -> CleanerController.getInstance().removeLinesStartingWith(f, this.txtRmLinesContainingPrefix.getText()))
                         .toList();
             if (this.chbxRmBlankLines.isSelected())
                 cleanedFiles = cleanedFiles
                         .parallelStream()
-                        .map(f -> this.cleanerController.removeWhiteSpaces(f))
+                        .map(f -> CleanerController.getInstance().removeWhiteSpaces(f))
                         .toList();
             if (this.chbxRmBlankLines.isSelected())
                 cleanedFiles = cleanedFiles
                         .parallelStream()
-                        .map(f -> this.cleanerController.mergeDBLines(f))
+                        .map(f -> CleanerController.getInstance().mergeDBLines(f))
                         .toList();
             this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the files");
             var directoryChooser = new DirectoryChooser();
             var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
             if (selectedDirectory != null) {
-                IOController.saveFilesTo(cleanedFiles, selectedDirectory);
+                IOController.getInstance().saveFilesTo(cleanedFiles, selectedDirectory.toPath());
                 this.showAlert(Alert.AlertType.INFORMATION,
                         "",
                         "Files saved successfully",
@@ -186,22 +182,20 @@ public class HomeController {
 
     @FXML
     public void translateAllLoadedFiles(ActionEvent event) {
-        List<RNAFile> formattedRNAFileList = null;
+        List<RNAFile> translatedRNAFiles = new ArrayList<>();
         var result = this.showAlert(Alert.AlertType.CONFIRMATION,
                 "TRANSLATION FILES CONFIRM",
                 "Translate all loaded files to " + this.selectedFormat + "?",
                 "Are you sure you want to translate all loaded files?");
 
         if (result.isPresent() && result.get() == ButtonType.OK)
-            formattedRNAFileList = this.translatorController.translateAllLoadedFiles(this.selectedFormat);
-        if (formattedRNAFileList != null) {
-            formattedRNAFileList.forEach(f -> {
-                try {
-                    this.translatorController.saveFile(f, Path.of("C:\\Users\\Piermuz\\Documents\\GitHub\\TARNAS\\src\\main\\java\\it\\unicam\\cs\\twopie\\tarnas\\controller\\" + f.getFileName()));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            translatedRNAFiles = TranslatorController.getInstance().translateAllLoadedFiles(IOController.getInstance().getLoadedRNAFiles(), this.selectedFormat);
+        if (translatedRNAFiles != null) {
+            try {
+                IOController.getInstance().saveFilesTo(translatedRNAFiles, Path.of("C:\\Users\\Piermuz\\Documents\\GitHub\\TARNAS\\src\\main\\java\\it\\unicam\\cs\\twopie\\tarnas\\controller\\"));
+            } catch (IOException e) {
+                this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
+            }
         }
     }
 
@@ -209,7 +203,6 @@ public class HomeController {
     @FXML
     public void resetAll(ActionEvent event) {
         // Reset all data structures
-        this.translatorController.resetAll();
         this.filesTable.getItems().clear();
         // Reset all buttons
         this.btnSelectFormatTranslation.setText("TRANSLATE TO...");
@@ -248,11 +241,6 @@ public class HomeController {
         };
         this.btnSelectFormatTranslation.getItems().forEach(f -> f.setOnAction(event1));
 
-    }
-
-    private void createsControllers() {
-        this.translatorController = new TranslatorController();
-        this.cleanerController = new CleanerController();
     }
 
     private void addFile(RNAFile rnaFile) {
