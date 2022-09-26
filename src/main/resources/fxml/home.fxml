@@ -85,7 +85,7 @@
                         <TableColumn fx:id="deleteColumn" prefWidth="556.7999755859375" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Delete" />
                     </columns>
                 </TableView>
-                <MenuButton fx:id="btnSelectFormatTranslation" layoutX="1160.0" layoutY="589.0" mnemonicParsing="false" text="TRANSLATE TO...">
+                <MenuButton fx:id="btnSelectFormatTranslation" layoutX="1162.0" layoutY="442.0" mnemonicParsing="false" text="Traduci in">
                     <items>
                         <MenuItem fx:id="itmAAS" mnemonicParsing="false" text="AAS" />
                         <MenuItem fx:id="itmAASNS" mnemonicParsing="false" text="AAS NO SEQUENCE" />
@@ -96,7 +96,7 @@
                         <MenuItem fx:id="itmFASTA" mnemonicParsing="false" text="FASTA" />
                     </items>
                 </MenuButton>
-                <GridPane layoutX="506.0" layoutY="435.0" prefHeight="137.0" prefWidth="512.0">
+                <GridPane layoutX="383.0" layoutY="431.0" prefHeight="142.0" prefWidth="473.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -110,23 +110,28 @@
                     <children>
                         <CheckBox fx:id="chbxRmLinesContainingWord" mnemonicParsing="false" prefHeight="25.0" prefWidth="234.0" text="Righe di “intestazione” che contengono" />
                         <CheckBox fx:id="chbxRmLinesContainingPrefix" mnemonicParsing="false" prefHeight="18.0" prefWidth="218.0" text="commenti: righe che iniziano con" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="chbxRmBlankLines" mnemonicParsing="false" prefHeight="21.0" prefWidth="256.0" text="accorpa le righe nel formato dot-bracket se sono spezzate" GridPane.rowIndex="3" />
+                        <CheckBox fx:id="chbxRmBlankLines" mnemonicParsing="false" prefHeight="21.0" prefWidth="256.0" text="accorpa le righe (DB)" GridPane.rowIndex="3" />
                         <CheckBox fx:id="chbxMergeLines" mnemonicParsing="false" text="righe vuote (anche con spazi, tab ecc)" GridPane.rowIndex="2" />
-                        <TextField fx:id="txtfRmLinesContainingWord" GridPane.columnIndex="1" />
-                        <TextField fx:id="txtRmLinesContainingPrefix" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtfRmLinesContainingWord" prefHeight="26.0" prefWidth="204.0" GridPane.columnIndex="1" />
+                        <TextField fx:id="txtRmLinesContainingPrefix" prefHeight="8.0" prefWidth="154.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>
-                <Button layoutX="51.0" layoutY="429.0" mnemonicParsing="false" onAction="#handleAddFile" prefHeight="25.0" prefWidth="92.0" text="ADD FILE" />
-                <Button layoutX="187.0" layoutY="429.0" mnemonicParsing="false" onAction="#handleAddFolder" prefHeight="25.0" prefWidth="92.0" text="ADD FOLDER" />
+                <Button layoutX="51.0" layoutY="429.0" mnemonicParsing="false" onAction="#handleAddFile" prefHeight="26.0" prefWidth="142.0" text="AGGIUNGI FILE" />
+                <Button layoutX="51.0" layoutY="480.0" mnemonicParsing="false" onAction="#handleAddFolder" prefHeight="26.0" prefWidth="142.0" text="AGGIUNGI CARTELLA" />
                 <Label alignment="CENTER" layoutX="561.0" layoutY="59.0" prefHeight="17.0" prefWidth="267.0" text="TARNAS" textAlignment="CENTER" textFill="#0088ff">
                     <font>
                         <Font size="36.0" />
                     </font>
                 </Label>
-                <Label fx:id="lblRecognizedFormat" layoutX="14.0" layoutY="95.0" prefHeight="18.0" prefWidth="415.0" visible="false" />
-                <Button layoutX="1018.0" layoutY="589.0" mnemonicParsing="false" onAction="#resetAll" prefHeight="25.0" prefWidth="92.0" text="RESET" />
-                <Button layoutX="506.0" layoutY="589.0" mnemonicParsing="false" onAction="#handleClean" prefHeight="25.0" prefWidth="92.0" text="CLEAN" />
-                <Button fx:id="btnTranslateAllLoadedFiles" layoutX="1160.0" layoutY="635.0" mnemonicParsing="false" onAction="#translateAllLoadedFiles" prefHeight="25.0" prefWidth="121.0" text="TRANSLATE" />
+                <Label fx:id="lblRecognizedFormat" layoutX="81.0" layoutY="95.0" prefHeight="18.0" prefWidth="385.0" visible="false" />
+                <Button layoutX="1188.0" layoutY="664.0" mnemonicParsing="false" onAction="#resetAll" prefHeight="25.0" prefWidth="92.0" text="RESET" />
+                <Button layoutX="383.0" layoutY="589.0" mnemonicParsing="false" onAction="#handleClean" prefHeight="25.0" prefWidth="92.0" text="Pulisci" />
+                <Button fx:id="btnTranslateAllLoadedFiles" layoutX="1024.0" layoutY="547.0" mnemonicParsing="false" onAction="#translateAllLoadedFiles" prefHeight="25.0" prefWidth="121.0" text="Traduci" />
+            <CheckBox fx:id="chbxIncludeHeader" layoutX="1024.0" layoutY="446.0" mnemonicParsing="false" text="includi header" />
+            <CheckBox layoutX="1023.0" layoutY="484.0" mnemonicParsing="false" text="salva come zip" />
+            <Label layoutX="383.0" layoutY="408.0" text="PULITURA" />
+            <Label layoutX="1024.0" layoutY="408.0" text="TRADUZIONE" />
+            <TextField layoutX="1148.0" layoutY="479.0" prefHeight="26.0" prefWidth="135.0" promptText="nome zip" />
             </children>
         </AnchorPane>
     </children>

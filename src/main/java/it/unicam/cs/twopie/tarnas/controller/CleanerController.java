@@ -41,6 +41,16 @@ public class CleanerController {
     }
 
     /**
+     * Remove the header from the {@code rnaFile}
+     *
+     * @param rnaFile an {@link RNAFile} from which to remove the header.
+     * @return an {@link RNAFile}
+     */
+    public RNAFile removeHeader(RNAFile rnaFile){
+        return new RNAFile(rnaFile.getFileName(),new ArrayList<>(),rnaFile.getBody(),rnaFile.getStructure(),rnaFile.getFormat());
+    }
+
+    /**
      * Removes all the header lines of the {@code rnaFile} that starts with the specified {@code prefix}.
      *
      * @param rnaFile the {@link RNAFile} from which removing any header lines

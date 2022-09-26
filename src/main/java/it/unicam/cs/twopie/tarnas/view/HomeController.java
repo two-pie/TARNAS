@@ -31,6 +31,10 @@ import java.util.Optional;
 import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
 
 public class HomeController {
+    private TranslatorController translatorController;
+    private IOController ioController;
+    private CleanerController cleanerController;
+
     private RNAFormat selectedFormat;
 
     @FXML
@@ -69,6 +73,10 @@ public class HomeController {
     @FXML
     public CheckBox chbxMergeLines;
 
+
+    @FXML
+    public CheckBox chbxIncludeHeader;
+
     @FXML
     public TextField txtfRmLinesContainingWord;
 
@@ -80,7 +88,11 @@ public class HomeController {
 
     @FXML
     public void initialize() {
-        //
+        // init controllers
+        this.cleanerController = CleanerController.getInstance();
+        this.ioController = IOController.getInstance();
+        this.translatorController = TranslatorController.getInstance();
+        // allow only one character in txtRmLinesContainingPrefix
         txtRmLinesContainingPrefix.setTextFormatter(new TextFormatter<String>((TextFormatter.Change change) -> {
             String newText = change.getControlNewText();
             if (newText.length() > 1) {
@@ -145,22 +157,22 @@ public class HomeController {
             if (this.chbxRmLinesContainingWord.isSelected())
                 cleanedFiles = cleanedFiles
                         .parallelStream()
-                        .map(f -> CleanerController.getInstance().removeLinesContaining(f, this.txtfRmLinesContainingWord.getText()))
+                        .map(f -> this.cleanerController.removeLinesContaining(f, this.txtfRmLinesContainingWord.getText()))
                         .toList();
             if (this.chbxRmLinesContainingPrefix.isSelected())
                 cleanedFiles = cleanedFiles
                         .parallelStream()
-                        .map(f -> CleanerController.getInstance().removeLinesStartingWith(f, this.txtRmLinesContainingPrefix.getText()))
+                        .map(f -> this.cleanerController.removeLinesStartingWith(f, this.txtRmLinesContainingPrefix.getText()))
                         .toList();
             if (this.chbxRmBlankLines.isSelected())
                 cleanedFiles = cleanedFiles
                         .parallelStream()
-                        .map(f -> CleanerController.getInstance().removeWhiteSpaces(f))
+                        .map(f -> this.cleanerController.removeWhiteSpaces(f))
                         .toList();
             if (this.chbxRmBlankLines.isSelected())
                 cleanedFiles = cleanedFiles
                         .parallelStream()
-                        .map(f -> CleanerController.getInstance().mergeDBLines(f))
+                        .map(f -> this.cleanerController.mergeDBLines(f))
                         .toList();
             this.saveFilesTo(cleanedFiles);
 
@@ -172,14 +184,16 @@ public class HomeController {
     @FXML
     public void translateAllLoadedFiles(ActionEvent event) {
         List<RNAFile> translatedRNAFiles;
-        translatedRNAFiles = TranslatorController.getInstance().translateAllLoadedFiles(IOController.getInstance().getLoadedRNAFiles(), this.selectedFormat);
-        this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the files");
+        translatedRNAFiles = this.translatorController.translateAllLoadedFiles(this.ioController.getLoadedRNAFiles(), this.selectedFormat);
         try {
+            if(!this.chbxIncludeHeader.isSelected())
+                translatedRNAFiles = translatedRNAFiles.parallelStream()
+                        .map(f ->this.cleanerController.removeHeader(f))
+                        .toList();
             this.saveFilesTo(translatedRNAFiles);
         }
         catch (IOException e) {
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
-
         }
     }
 
@@ -190,8 +204,14 @@ public class HomeController {
         // Reset all buttons
         this.btnSelectFormatTranslation.setText("TRANSLATE TO...");
         this.btnTranslateAllLoadedFiles.setDisable(true);
+        //reset all checkbox
+        this.chbxIncludeHeader.setSelected(false);
+        this.chbxRmBlankLines.setSelected(false);
+        this.chbxRmLinesContainingPrefix.setSelected(false);
+        this.chbxRmLinesContainingWord.setSelected(false);
+        this.chbxMergeLines.setSelected(false);
         //reset controller files
-        IOController.getInstance().clearAllDataStructures();
+        this.ioController.clearAllDataStructures();
         //reset recognized format
         this.lblRecognizedFormat.setText("");
         this.lblRecognizedFormat.setVisible(false);
@@ -231,8 +251,8 @@ public class HomeController {
     }
 
     private void addFileToTable(Path selectedRNAFile) throws IOException {
-        var rnaFile = IOController.getInstance().loadFile(selectedRNAFile);
-        var recognizedFormat = IOController.getInstance().getRecognizedFormat();
+        var rnaFile = this.ioController.loadFile(selectedRNAFile);
+        var recognizedFormat = this.ioController.getRecognizedFormat();
         if (recognizedFormat != null) {
             var labelText = recognizedFormat.toString();
             this.lblRecognizedFormat.setText("RECOGNIZED FORMAT: " + recognizedFormat.getName());
@@ -246,7 +266,7 @@ public class HomeController {
         var directoryChooser = new DirectoryChooser();
         var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
         if (selectedDirectory != null) {
-            IOController.getInstance().saveFilesTo(rnaFiles, selectedDirectory.toPath());
+            this.ioController.saveFilesTo(rnaFiles, selectedDirectory.toPath());
             this.showAlert(Alert.AlertType.INFORMATION,
                     "",
                     "Files saved successfully",
