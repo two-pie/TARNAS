@@ -32,7 +32,6 @@ import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
 
 public class HomeController {
     private RNAFormat selectedFormat;
-    private RNAFormat loadedFilesFormat;
 
     @FXML
     private TableView<RNAFile> filesTable;
@@ -81,6 +80,7 @@ public class HomeController {
 
     @FXML
     public void initialize() {
+        //
         txtRmLinesContainingPrefix.setTextFormatter(new TextFormatter<String>((TextFormatter.Change change) -> {
             String newText = change.getControlNewText();
             if (newText.length() > 1) {
@@ -114,9 +114,7 @@ public class HomeController {
             var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
             if (selectedFile != null) {
                 var selectedRNAFile = Path.of(selectedFile.getPath());
-                IOController.getInstance().loadFile(selectedRNAFile);
-                var rnaFile = IOController.getInstance().getRNAFileOf(selectedRNAFile);
-                this.addFile(rnaFile);
+                this.addFileToTable(selectedRNAFile);
             }
         } catch (Exception e) {
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
@@ -133,8 +131,7 @@ public class HomeController {
                         .filter(Files::isRegularFile)
                         .toList();
                 for (var f : files)
-                    this.addFile(IOController.getInstance().getRNAFileOf(Path.of(String.valueOf(f))));
-                IOController.getInstance().loadDirectory(selectedDirectory.toPath());
+                    this.addFileToTable(f);
             }
         } catch (Exception e) {
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
@@ -207,7 +204,11 @@ public class HomeController {
         // Reset all buttons
         this.btnSelectFormatTranslation.setText("TRANSLATE TO...");
         this.btnTranslateAllLoadedFiles.setDisable(true);
-        // TODO: insert clean options
+        //reset controller files
+        IOController.getInstance().clearAllDataStructures();
+        //reset recognized format
+        this.lblRecognizedFormat.setText("");
+        this.lblRecognizedFormat.setVisible(false);
     }
 
     private Stage getPrimaryStage() {
@@ -217,7 +218,7 @@ public class HomeController {
     private Optional<ButtonType> showAlert(Alert.AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         alert.initOwner(this.getPrimaryStage());
-        alert.initModality(Modality.WINDOW_MODAL);
+        alert.initModality(Modality.APPLICATION_MODAL);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
@@ -243,15 +244,14 @@ public class HomeController {
 
     }
 
-    private void addFile(RNAFile rnaFile) {
-        if (this.loadedFilesFormat == null) {
-            var labelText = this.lblRecognizedFormat.getText();
-            this.loadedFilesFormat = rnaFile.getFormat();
-            this.lblRecognizedFormat.setText(labelText + " " + this.loadedFilesFormat.toString());
+    private void addFileToTable(Path selectedRNAFile) throws IOException {
+        var rnaFile = IOController.getInstance().loadFile(selectedRNAFile);
+        var recognizedFormat = IOController.getInstance().getRecognizedFormat();
+        if (recognizedFormat != null) {
+            var labelText = recognizedFormat.toString();
+            this.lblRecognizedFormat.setText("RECOGNIZED FORMAT: " + recognizedFormat.getName());
             this.lblRecognizedFormat.setVisible(true);
         }
-        if (this.loadedFilesFormat != rnaFile.getFormat())
-            throw new IllegalArgumentException("All loaded files must be of the same format!");
         this.filesTable.getItems().add(rnaFile);
     }
 }

@@ -123,7 +123,7 @@
                         <Font size="36.0" />
                     </font>
                 </Label>
-                <Label fx:id="lblRecognizedFormat" layoutX="14.0" layoutY="95.0" prefHeight="17.0" prefWidth="163.0" text="RECOGNIZED FORMAT:" visible="false" />
+                <Label fx:id="lblRecognizedFormat" layoutX="14.0" layoutY="95.0" prefHeight="18.0" prefWidth="415.0" visible="false" />
                 <Button layoutX="1018.0" layoutY="589.0" mnemonicParsing="false" onAction="#resetAll" prefHeight="25.0" prefWidth="92.0" text="RESET" />
                 <Button layoutX="506.0" layoutY="589.0" mnemonicParsing="false" onAction="#handleClean" prefHeight="25.0" prefWidth="92.0" text="CLEAN" />
                 <Button fx:id="btnTranslateAllLoadedFiles" layoutX="1160.0" layoutY="635.0" mnemonicParsing="false" onAction="#translateAllLoadedFiles" prefHeight="25.0" prefWidth="121.0" text="TRANSLATE" />

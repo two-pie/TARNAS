@@ -38,7 +38,7 @@ public class RNAFile {
     private final RNASecondaryStructure structure;
     private final RNAFormat format;
     private final List<String> body;
-    private List<String> content;
+    private final List<String> content;
 
     /**
      * Create an RNAFile with specified file name, the header of the file,
@@ -112,23 +112,15 @@ public class RNAFile {
         return this.content;
     }
 
-    /**
-     * @param content
-     */
-    public void setContent(List<String> content) {
-        this.content = content;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RNAFile rnaFile = (RNAFile) o;
-        return Objects.equals(fileName, rnaFile.fileName) && Objects.equals(header, rnaFile.header) && Objects.equals(structure, rnaFile.structure) && format == rnaFile.format && Objects.equals(body, rnaFile.body) && Objects.equals(content, rnaFile.content);
+        if (!(o instanceof RNAFile rnaFile)) return false;
+        return getFileName().equals(rnaFile.getFileName()) && getHeader().equals(rnaFile.getHeader()) && getStructure().equals(rnaFile.getStructure()) && getFormat() == rnaFile.getFormat() && getBody().equals(rnaFile.getBody()) && getContent().equals(rnaFile.getContent());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fileName, header, structure, format, body, content);
+        return Objects.hash(getFileName(), getHeader(), getStructure(), getFormat(), getBody(), getContent());
     }
 }

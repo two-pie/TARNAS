@@ -59,7 +59,7 @@ package it.unicam.cs.twopie.tarnas.model.rnafile;
  *    may occur after the header.<br>
  *    Some databases and bioinformatics applications do not recognize these comments and follow the NCBI FASTA specification.<br>
  *    An example of a multiple sequence FASTA file follows:<br><br>
- *
+ * <p>
  *    >SEQUENCE_1<br>
  *    MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG<br>
  *    LVSVKVSDDFTIAAMRPSYLSYEDLDMTFVENEYKALVAELEKENEERRRLKDPNKPEHK<br>
@@ -71,20 +71,31 @@ package it.unicam.cs.twopie.tarnas.model.rnafile;
  *   </li>
  *   </ul>
  * <p>
- *
+ * <p>
  *   Refer to: <a href="https://github.com/bdslab/aspralign">ASPRALIGN</a>,
  *   <a href="https://www.ibi.vu.nl/programs/k2nwww/static/data_formats.html">Accepted Data Formats</a>,
  *   <a href="https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/rna_structure_notations.html">RNAlib</a>,
  *   <a href="https://en.wikipedia.org/wiki/FASTA_format">Fasta on Wikipedia</a>
- *
+ * <p>
  *   @author Piero Hierro, Piermichele Rosati
  */
 public enum RNAFormat {
-    AAS,
-    AAS_NO_SEQUENCE,
-    BPSEQ,
-    CT,
-    DB,
-    DB_NO_SEQUENCE,
-    FASTA;
+
+    AAS("ASS"),
+    AAS_NO_SEQUENCE("AAS NO SEQUENCE"),
+    BPSEQ("BPSEQ"),
+    CT("CT"),
+    DB("DOT BRACKET"),
+    DB_NO_SEQUENCE("DOT BRACKET NO SEQUENCE"),
+    FASTA("FASTA");
+
+    private final String name;
+
+    RNAFormat(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

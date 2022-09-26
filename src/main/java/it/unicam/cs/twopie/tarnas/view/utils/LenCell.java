@@ -38,7 +38,7 @@ public class LenCell extends TableCell<RNAFile, RNAFile> {
                 Parent root = loader.load();
                 var stage = new Stage();
                 var textArea = (TextArea) loader.getNamespace().get("rnaFileContent");
-                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initModality(Modality.WINDOW_MODAL);
                 stage.setTitle("Preview");
                 stage.setScene(new Scene(root, 600, 300));
                 rnaFile.getContent().forEach(l -> textArea.appendText(l + "\n"));

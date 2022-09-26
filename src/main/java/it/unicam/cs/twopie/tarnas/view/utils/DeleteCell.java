@@ -38,8 +38,7 @@ public class DeleteCell extends TableCell<RNAFile, RNAFile> {
     }
 
     private boolean confirmAndRemoveFile(RNAFile rnaFile) {
-        //alert.initOwner(stage);
-        this.trashAlert.initModality(Modality.WINDOW_MODAL);
+        this.trashAlert.initModality(Modality.APPLICATION_MODAL);
         this.trashAlert.setTitle("Deleting file confirmation");
         this.trashAlert.setHeaderText("Delete \"" + rnaFile.getFileName() + "\"?");
         this.trashAlert.setContentText("Are you sure you want to delete this file?");

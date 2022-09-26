@@ -25,9 +25,7 @@ package it.unicam.cs.twopie.tarnas.model.rnastructure;
 
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAInputFileParserException;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Representation of an RNA secondary structure with any kind of pseudoknot. It
@@ -230,4 +228,17 @@ public class RNASecondaryStructure {
         return this.p;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RNASecondaryStructure that)) return false;
+        return getSize() == that.getSize() && Objects.equals(getSequence(), that.getSequence()) && Objects.equals(getBonds(), that.getBonds()) && Arrays.equals(getP(), that.getP());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getSequence(), getBonds(), getSize());
+        result = 31 * result + Arrays.hashCode(getP());
+        return result;
+    }
 }

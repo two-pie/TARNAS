@@ -2,6 +2,7 @@ package it.unicam.cs.twopie.tarnas.controller;
 
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFileConstructor;
+import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,6 +25,9 @@ import java.util.stream.Stream;
  * @see Stream#parallel()
  */
 public class IOController {
+
+
+    private RNAFormat recognizedFormat;
 
     private static IOController instance;
 
@@ -75,13 +79,21 @@ public class IOController {
      * Loads a file from the specified {@code srcFilePath} and stores it in the list of loaded files to translate.
      *
      * @param srcFilePath the {@link Path} of the file to translate.
-     * @throws IOException           if an I/O error occurs
-     * @throws FileNotFoundException if the path not exists
+     * @throws IOException              if an I/O error occurs
+     * @throws FileNotFoundException    if the path not exists
+     * @throws IllegalArgumentException if the format of corresponding TODO
+     * @
      */
-    public void loadFile(Path srcFilePath) throws IOException {
+    public RNAFile loadFile(Path srcFilePath) throws IOException {
         if (!Files.exists(srcFilePath))
             throw new FileNotFoundException("Non existent file with path: " + srcFilePath);
-        this.loadedRNAFiles.add(this.getRNAFileOf(srcFilePath));
+        var rnaFile = this.getRNAFileOf(srcFilePath);
+        this.loadedRNAFiles.add(rnaFile);
+        if (this.recognizedFormat == null)
+            this.recognizedFormat = rnaFile.getFormat();
+        else if (this.recognizedFormat != rnaFile.getFormat())
+            throw new IllegalArgumentException("All loaded files must be of the same format!");
+        return rnaFile;
     }
 
     /**
@@ -133,6 +145,8 @@ public class IOController {
         if (!this.loadedRNAFiles.contains(rnaFile))
             throw new IllegalArgumentException("RNAFile not found in the list of loaded files");
         this.loadedRNAFiles.remove(rnaFile);
+        if (this.loadedRNAFiles.isEmpty())
+            this.recognizedFormat = null;
     }
 
     /**
@@ -140,6 +154,15 @@ public class IOController {
      */
     public void clearAllDataStructures() {
         this.loadedRNAFiles.clear();
+        this.recognizedFormat = null;
     }
 
+    /**
+     * Get the recognized format
+     *
+     * @return the recognized format
+     */
+    public RNAFormat getRecognizedFormat() {
+        return this.recognizedFormat;
+    }
 }
