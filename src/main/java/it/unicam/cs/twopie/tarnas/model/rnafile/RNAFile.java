@@ -132,4 +132,5 @@ public class RNAFile {
     public void setContent(List<String> content) {
         this.content = content;
     }
+
 }

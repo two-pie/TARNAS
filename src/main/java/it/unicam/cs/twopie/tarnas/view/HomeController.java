@@ -2,10 +2,12 @@ package it.unicam.cs.twopie.tarnas.view;
 
 import it.unicam.cs.twopie.App;
 import it.unicam.cs.twopie.tarnas.controller.CleanerController;
+import it.unicam.cs.twopie.tarnas.controller.IOController;
 import it.unicam.cs.twopie.tarnas.controller.TranslatorController;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat;
-import it.unicam.cs.twopie.tarnas.view.utils.ImageCell;
+import it.unicam.cs.twopie.tarnas.view.utils.DeleteCell;
+import it.unicam.cs.twopie.tarnas.view.utils.LenCell;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -43,7 +45,7 @@ public class HomeController {
     private TableColumn<RNAFile, String> formatColumn;
 
     @FXML
-    private TableColumn<RNAFile,RNAFile> previewColumn;
+    private TableColumn<RNAFile, RNAFile> previewColumn;
 
     @FXML
     private TableColumn<RNAFile, RNAFile> deleteColumn;
@@ -56,6 +58,24 @@ public class HomeController {
 
     @FXML
     public Button btnTranslateAllLoadedFiles;
+
+    @FXML
+    public CheckBox firstCheckboxOption;
+
+    @FXML
+    public CheckBox secondCheckboxOption;
+
+    @FXML
+    public CheckBox thirdCheckboxOption;
+
+    @FXML
+    public CheckBox fourthCheckboxOption;
+
+    @FXML
+    public TextField firstTextFieldOption;
+
+    @FXML
+    public TextField secondTextFieldOption;
 
     @FXML
     public void initialize() {
@@ -72,17 +92,11 @@ public class HomeController {
         this.previewColumn.setCellValueFactory(rnaFile -> new ReadOnlyObjectWrapper<>(rnaFile.getValue()));
         this.deleteColumn.setCellValueFactory(rnaFile -> new ReadOnlyObjectWrapper<>(rnaFile.getValue()));
         // set custom cell
-        this.previewColumn.setCellFactory(column -> new ImageCell(lenImage));
-        this.deleteColumn.setCellFactory(column -> new ImageCell(trashImage));
-
+        this.previewColumn.setCellFactory(column -> new LenCell(lenImage));
+        this.deleteColumn.setCellFactory(column -> new DeleteCell(trashImage));
         // add event to select ButtonItem for destination format translation
         this.initSelectEventOnButtonItems();
         this.btnTranslateAllLoadedFiles.setDisable(true);
-    }
-
-    private void createsControllers() {
-        this.translatorController = new TranslatorController();
-        this.cleanerController = new CleanerController();
     }
 
     @FXML
@@ -111,6 +125,85 @@ public class HomeController {
         }
     }
 
+    @FXML
+    public void handleClean() throws IOException {
+        var cleanedFiles = this.filesTable.getItems().stream().toList();
+        if (this.firstCheckboxOption.isSelected())
+            cleanedFiles = cleanedFiles
+                    .parallelStream()
+                    .map(f -> this.cleanerController.removeLinesContaining(f, this.firstTextFieldOption.getText()))
+                    .toList();
+        if (this.secondCheckboxOption.isSelected())
+            cleanedFiles = cleanedFiles
+                    .parallelStream()
+                    .map(f -> this.cleanerController.removeLinesStartingWith(f, this.secondTextFieldOption.getText()))
+                    .toList();
+        if (this.thirdCheckboxOption.isSelected())
+            cleanedFiles = cleanedFiles
+                    .parallelStream()
+                    .map(f -> this.cleanerController.removeWhiteSpaces(f))
+                    .toList();
+        if (this.thirdCheckboxOption.isSelected())
+            cleanedFiles = cleanedFiles
+                    .parallelStream()
+                    .map(f -> this.cleanerController.mergeDBLines(f))
+                    .toList();
+        var directoryChooser = new DirectoryChooser();
+        var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
+        IOController.saveFilesTo(cleanedFiles, selectedDirectory);
+        this.showAlert(Alert.AlertType.INFORMATION,
+                "",
+                "Files saved successfully",
+                cleanedFiles.size() + " files saved in: " + selectedDirectory.getPath());
+    }
+
+    @FXML
+    public void translateAllLoadedFiles(ActionEvent event) {
+        List<RNAFile> formattedRNAFileList = null;
+        var result = this.showAlert(Alert.AlertType.CONFIRMATION,
+                "TRANSLATION FILES CONFIRM",
+                "Translate all loaded files to " + this.selectedFormat + "?",
+                "Are you sure you want to translate all loaded files?");
+
+        if (result.isPresent() && result.get() == ButtonType.OK)
+            formattedRNAFileList = this.translatorController.translateAllLoadedFiles(this.selectedFormat);
+        if (formattedRNAFileList != null) {
+            formattedRNAFileList.forEach(f -> {
+                try {
+                    this.translatorController.saveFile(f, Path.of("C:\\Users\\Piermuz\\Documents\\GitHub\\TARNAS\\src\\main\\java\\it\\unicam\\cs\\twopie\\tarnas\\controller\\" + f.getFileName()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
+
+    @FXML
+    public void resetAll(ActionEvent event) {
+        // Reset all data structures
+        this.translatorController.resetAll();
+        this.filesTable.getItems().clear();
+        // Reset all buttons
+        this.btnSelectFormatTranslation.setText("TRANSLATE TO...");
+        this.btnTranslateAllLoadedFiles.setDisable(true);
+        // TODO: insert clean options
+    }
+
+    private Stage getPrimaryStage() {
+        return (Stage) this.filesTable.getScene().getWindow();
+    }
+
+    private Optional<ButtonType> showAlert(Alert.AlertType alertType, String title, String header, String content) {
+        Alert translateConfirmationAlert = new Alert(alertType);
+        translateConfirmationAlert.initOwner(this.getPrimaryStage());
+        translateConfirmationAlert.initModality(Modality.WINDOW_MODAL);
+        translateConfirmationAlert.setTitle(title);
+        translateConfirmationAlert.setHeaderText(header);
+        translateConfirmationAlert.setContentText(content);
+        return translateConfirmationAlert.showAndWait();
+    }
+
     private void initSelectEventOnButtonItems() {
         this.itmAAS.setId(AAS.toString());
         this.itmAASNS.setId(AAS_NO_SEQUENCE.toString());
@@ -130,46 +223,8 @@ public class HomeController {
 
     }
 
-    @FXML
-    public void translateAllLoadedFiles(ActionEvent event) {
-        List<RNAFile> formattedRNAFileList = null;
-        if (this.confirmAndTranslate())
-            formattedRNAFileList = this.translatorController.translateAllLoadedFiles(this.selectedFormat);
-        if (formattedRNAFileList != null) {
-            formattedRNAFileList.forEach(f -> {
-                try {
-                    this.translatorController.saveFile(f, Path.of("C:\\Users\\Piermuz\\Documents\\GitHub\\TARNAS\\src\\main\\java\\it\\unicam\\cs\\twopie\\tarnas\\controller\\" + f.getFileName()));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
-    }
-
-    private boolean confirmAndTranslate() {
-        Alert translateConfirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        translateConfirmationAlert.initOwner(this.getPrimaryStage());
-        translateConfirmationAlert.initModality(Modality.WINDOW_MODAL);
-        translateConfirmationAlert.setTitle("TRANSLATION FILES CONFIRM");
-        translateConfirmationAlert.setHeaderText("Translate all loaded files to " + this.selectedFormat + "?");
-        translateConfirmationAlert.setContentText("Are you sure you want to translate all loaded files?");
-        Optional<ButtonType> result = translateConfirmationAlert.showAndWait();
-        return result.isPresent() && result.get() == ButtonType.OK;
-    }
-
-    @FXML
-    public void resetAll(ActionEvent event) {
-        // Reset all data structures
-        this.translatorController.resetAll();
-        this.filesTable.getItems().clear();
-        // Reset all buttons
-        this.btnSelectFormatTranslation.setText("TRANSLATE TO...");
-        this.btnTranslateAllLoadedFiles.setDisable(true);
-        // TODO: insert clean options
-    }
-
-
-    private Stage getPrimaryStage() {
-        return (Stage) this.filesTable.getScene().getWindow();
+    private void createsControllers() {
+        this.translatorController = new TranslatorController();
+        this.cleanerController = new CleanerController();
     }
 }

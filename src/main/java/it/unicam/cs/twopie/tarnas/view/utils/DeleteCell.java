@@ -9,13 +9,13 @@ import javafx.stage.Modality;
 
 import java.util.Optional;
 
-public class ImageCell extends TableCell<RNAFile, RNAFile> {
+public class DeleteCell extends TableCell<RNAFile, RNAFile> {
 
     private final ImageButton imageButton;
 
     private final Alert trashAlert;
 
-    public ImageCell(Image image) {
+    public DeleteCell(Image image) {
         this.imageButton = new ImageButton(image);
         this.trashAlert = new Alert(Alert.AlertType.CONFIRMATION);
     }

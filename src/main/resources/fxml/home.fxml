@@ -92,7 +92,8 @@
                                      sortable="false" style="-fx-alignment: CENTER;" text="File Name"/>
                         <TableColumn fx:id="formatColumn" minWidth="0.0" prefWidth="138.39996337890625"
                                      resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Format"/>
-                        <TableColumn fx:id="previewColumn" prefWidth="222.39996337890625" text="Preview"/>
+                        <TableColumn fx:id="previewColumn" prefWidth="222.39996337890625" style="-fx-alignment: CENTER;"
+                                     text="Preview"/>
                         <TableColumn fx:id="deleteColumn" prefWidth="556.7999755859375" resizable="false"
                                      sortable="false" style="-fx-alignment: CENTER;" text="Delete"/>
                     </columns>
@@ -111,7 +112,7 @@
                         <MenuItem fx:id="itmFASTA" mnemonicParsing="false" text="FASTA"/>
                     </items>
                 </MenuButton>
-                <GridPane layoutX="632.0" layoutY="435.0" prefHeight="130.0" prefWidth="385.0">
+                <GridPane layoutX="506.0" layoutY="435.0" prefHeight="137.0" prefWidth="512.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -123,19 +124,17 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                     </rowConstraints>
                     <children>
-                        <CheckBox mnemonicParsing="false" prefHeight="25.0" prefWidth="234.0"
-                                  text="Righe di “intestazione” che contengono"/>
-                        <CheckBox mnemonicParsing="false" text="commenti: righe che iniziano con"
-                                  GridPane.rowIndex="1"/>
-                        <CheckBox mnemonicParsing="false"
-                                  text="accorpa le righe nel formato dot-bracket se sono spezzate"
+                        <CheckBox fx:id="firstCheckboxOption" mnemonicParsing="false" prefHeight="25.0"
+                                  prefWidth="234.0" text="Righe di “intestazione” che contengono"/>
+                        <CheckBox fx:id="secondCheckboxOption" mnemonicParsing="false" prefHeight="18.0"
+                                  prefWidth="218.0" text="commenti: righe che iniziano con" GridPane.rowIndex="1"/>
+                        <CheckBox fx:id="thirdCheckboxOption" mnemonicParsing="false" prefHeight="21.0"
+                                  prefWidth="256.0" text="accorpa le righe nel formato dot-bracket se sono spezzate"
                                   GridPane.rowIndex="3"/>
-                        <CheckBox mnemonicParsing="false" text="righe vuote (anche con spazi, tab ecc)"
-                                  GridPane.rowIndex="2"/>
-                        <TextField GridPane.columnIndex="1"/>
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <CheckBox fx:id="fourthCheckboxOption" mnemonicParsing="false"
+                                  text="righe vuote (anche con spazi, tab ecc)" GridPane.rowIndex="2"/>
+                        <TextField fx:id="firstTextFieldOption" GridPane.columnIndex="1"/>
+                        <TextField fx:id="secondTextFieldOption" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                     </children>
                 </GridPane>
                 <Button layoutX="187.0" layoutY="429.0" mnemonicParsing="false" onAction="#handleAddFolder"
@@ -149,8 +148,8 @@
                 <Label layoutX="14.0" layoutY="95.0" prefHeight="17.0" prefWidth="163.0" text="RECOGNIZED FORMAT"/>
                 <Button layoutX="1018.0" layoutY="589.0" mnemonicParsing="false" onAction="#resetAll" prefHeight="25.0"
                         prefWidth="92.0" text="RESET"/>
-                <Button layoutX="845.0" layoutY="589.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0"
-                        text="CLEAN"/>
+                <Button layoutX="506.0" layoutY="589.0" mnemonicParsing="false" onAction="#handleClean"
+                        prefHeight="25.0" prefWidth="92.0" text="CLEAN"/>
                 <Button fx:id="btnTranslateAllLoadedFiles" layoutX="1160.0" layoutY="635.0" mnemonicParsing="false"
                         onAction="#translateAllLoadedFiles" prefHeight="25.0" prefWidth="121.0" text="TRANSLATE"/>
             </children>
