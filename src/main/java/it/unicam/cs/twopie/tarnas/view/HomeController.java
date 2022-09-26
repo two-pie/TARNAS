@@ -101,7 +101,7 @@ public class HomeController {
         this.deleteColumn.setCellValueFactory(rnaFile -> new ReadOnlyObjectWrapper<>(rnaFile.getValue()));
         // set custom cell
         this.previewColumn.setCellFactory(column -> new LenCell(lenImage));
-        this.deleteColumn.setCellFactory(column -> new DeleteCell(trashImage));
+        this.deleteColumn.setCellFactory(column -> new DeleteCell(trashImage,this.lblRecognizedFormat));
         // add event to select ButtonItem for destination format translation
         this.initSelectEventOnButtonItems();
         this.btnTranslateAllLoadedFiles.setDisable(true);
@@ -182,7 +182,6 @@ public class HomeController {
 
         }
     }
-
 
     @FXML
     public void resetAll(ActionEvent event) {
