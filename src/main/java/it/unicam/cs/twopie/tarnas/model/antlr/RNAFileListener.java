@@ -76,7 +76,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         // everything has been added to the structure, finalise it
         this.s.finalise();
         // create rnafile object with unnecessary empty body
-        this.rnaFile = new RNAFile(this.fileName, this.header, body, new ArrayList<>(), this.s, RNAFormat.BPSEQ);
+        this.rnaFile = new RNAFile(this.fileName, this.header, body, this.s, RNAFormat.BPSEQ);
     }
     //CT
 
@@ -171,7 +171,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         // everything has been added to the structure, finalise it
         this.s.finalise();
         // create rnafile object with unnecessary empty body
-        this.rnaFile = new RNAFile(this.fileName, this.header, body, new ArrayList<>(), this.s, this.s.getSequence() == null ? RNAFormat.AAS_NO_SEQUENCE : RNAFormat.AAS);
+        this.rnaFile = new RNAFile(this.fileName, this.header, body, this.s, this.s.getSequence() == null ? RNAFormat.AAS_NO_SEQUENCE : RNAFormat.AAS);
     }
     // FASTA
 

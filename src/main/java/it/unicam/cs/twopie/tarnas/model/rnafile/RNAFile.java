@@ -57,11 +57,6 @@ public class RNAFile {
         this.content = Stream.concat(this.header.stream(), this.body.stream()).toList();
     }
 
-    public RNAFile(String fileName, List<String> fileContent, List<String> header, List<String> body, RNASecondaryStructure structure, RNAFormat format) {
-        this(fileName, header, body, structure, format);
-        this.content = fileContent;
-    }
-
     /**
      * Returns the name of this {@code RNAFile}, included its extension.
      *
