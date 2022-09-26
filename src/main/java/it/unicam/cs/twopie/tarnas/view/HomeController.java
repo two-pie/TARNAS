@@ -86,9 +86,9 @@ public class HomeController {
         txtRmLinesContainingPrefix.setTextFormatter(new TextFormatter<String>((TextFormatter.Change change) -> {
             String newText = change.getControlNewText();
             if (newText.length() > 1) {
-                return null ;
+                return null;
             } else {
-                return change ;
+                return change;
             }
         }));
         // creates controllers
@@ -112,8 +112,8 @@ public class HomeController {
     }
 
     @FXML
-    public void handleAddFile(){
-        try{
+    public void handleAddFile() {
+        try {
             var fileChooser = new FileChooser();
             var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
             if (selectedFile != null) {
@@ -122,15 +122,14 @@ public class HomeController {
                 var rnaFile = translatorController.getRNAFileOf(selectedRNAFile);
                 this.addFile(rnaFile);
             }
-        }
-        catch (Exception e){
-            this.showAlert(Alert.AlertType.ERROR,"Error","",e.getMessage());
+        } catch (Exception e) {
+            this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
-    public void handleAddFolder(){
-        try{
+    public void handleAddFolder() {
+        try {
             var directoryChooser = new DirectoryChooser();
             var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
             if (selectedDirectory != null) {
@@ -141,15 +140,14 @@ public class HomeController {
                     this.addFile(translatorController.getRNAFileOf(Path.of(String.valueOf(f))));
                 translatorController.loadDirectory(selectedDirectory.toPath());
             }
-        }
-        catch (Exception e){
-            this.showAlert(Alert.AlertType.ERROR,"Error","",e.getMessage());
+        } catch (Exception e) {
+            this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
     public void handleClean() {
-        try{
+        try {
             var cleanedFiles = this.filesTable.getItems().stream().toList();
             if (this.chbxRmLinesContainingWord.isSelected())
                 cleanedFiles = cleanedFiles
@@ -171,16 +169,18 @@ public class HomeController {
                         .parallelStream()
                         .map(f -> this.cleanerController.mergeDBLines(f))
                         .toList();
+            this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the files");
             var directoryChooser = new DirectoryChooser();
             var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
-            IOController.saveFilesTo(cleanedFiles, selectedDirectory);
-            this.showAlert(Alert.AlertType.INFORMATION,
-                    "",
-                    "Files saved successfully",
-                    cleanedFiles.size() + " files saved in: " + selectedDirectory.getPath());
-        }
-        catch (Exception e){
-            this.showAlert(Alert.AlertType.ERROR,"Error","",e.getMessage());
+            if (selectedDirectory != null) {
+                IOController.saveFilesTo(cleanedFiles, selectedDirectory);
+                this.showAlert(Alert.AlertType.INFORMATION,
+                        "",
+                        "Files saved successfully",
+                        cleanedFiles.size() + " files saved in: " + selectedDirectory.getPath());
+            }
+        } catch (Exception e) {
+            this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
@@ -255,11 +255,11 @@ public class HomeController {
         this.cleanerController = new CleanerController();
     }
 
-    private void addFile(RNAFile rnaFile){
-        if(this.loadedFilesFormat == null) {
+    private void addFile(RNAFile rnaFile) {
+        if (this.loadedFilesFormat == null) {
             var labelText = this.lblRecognizedFormat.getText();
             this.loadedFilesFormat = rnaFile.getFormat();
-            this.lblRecognizedFormat.setText(labelText+" "+this.loadedFilesFormat.toString());
+            this.lblRecognizedFormat.setText(labelText + " " + this.loadedFilesFormat.toString());
             this.lblRecognizedFormat.setVisible(true);
         }
         if (this.loadedFilesFormat != rnaFile.getFormat())
