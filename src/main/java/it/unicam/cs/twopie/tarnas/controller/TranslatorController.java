@@ -1,11 +1,6 @@
 package it.unicam.cs.twopie.tarnas.controller;
 
 import it.unicam.cs.twopie.tarnas.model.rnafile.*;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +9,8 @@ import java.util.stream.Stream;
 import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
 
 /**
- * An implementation of Translator Controller that accepts input like files, format translation and converts that
+ * // TODO: javadoc
+ * An implementation of Translator Controller that accepts input from the {@link IOController} and converts that
  * input to commands for the Model or View.
  * This Controller takes care translation operations and file loading/saving/deleting and directory loading/saving.
  * In particular, it provides paralleled translation operations when multiple files are loaded, to have better performance.
@@ -26,15 +22,7 @@ import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
  */
 public class TranslatorController {
 
-    /**
-     * Loaded {@link RNAFile}s to translate.
-     */
-    private final List<RNAFile> loadedRNAFiles;
-
-    /**
-     * Translated loaded {@link RNAFile}s.
-     */
-    private final List<RNAFile> formattedLoadedRNAFiles;
+    private static TranslatorController instance;
 
     /**
      * This conversion matrix has the X {@link RNAFormat} as key-map and
@@ -46,9 +34,7 @@ public class TranslatorController {
      * Creates a Translator Controller.
      * It initializes the conversion matrix for translation operations.
      */
-    public TranslatorController() {
-        loadedRNAFiles = new ArrayList<>();
-        formattedLoadedRNAFiles = new ArrayList<>();
+    private TranslatorController() {
         conversionMatrix = Map.of(
                 AAS, List.of(AAS_NO_SEQUENCE, BPSEQ, CT, DB, DB_NO_SEQUENCE, FASTA),
                 AAS_NO_SEQUENCE, List.of(DB_NO_SEQUENCE),
@@ -59,71 +45,35 @@ public class TranslatorController {
                 FASTA, List.of());
     }
 
-
     /**
-     * Loads a file from the specified {@code srcFilePath} and stores it in the list of loaded files to translate.
+     * Factory method for the obtaining the {@link TranslatorController} instance.
      *
-     * @param srcFilePath the {@link Path} of the file to translate.
-     * @throws IOException           if an I/O error occurs
-     * @throws FileNotFoundException if the path not exists
+     * @return the instance of this Singleton
      */
-    public void loadFile(Path srcFilePath) throws IOException {
-        if (!Files.exists(srcFilePath))
-            throw new FileNotFoundException("Non existent file with path: " + srcFilePath);
-        this.loadedRNAFiles.add(this.getRNAFileOf(srcFilePath));
+    public static TranslatorController getInstance() {
+        if (instance == null)
+            instance = new TranslatorController();
+        return instance;
     }
 
     /**
-     * Loads a directory from the specified {@code srcDirectoryPath} and stores all the contained files in the list of loaded files to translate.
-     *
-     * @param srcDirectoryPath the {@link Path} of the directory to translate.
-     * @throws IOException           if an I/O error occurs
-     * @throws FileNotFoundException if the path not exists
-     */
-    public void loadDirectory(Path srcDirectoryPath) throws IOException {
-        Files.newDirectoryStream(srcDirectoryPath).forEach(
-                p -> {
-                    try {
-                        if (Files.isRegularFile(p))
-                            this.loadFile(p);
-                        else if (Files.isDirectory(p))
-                            this.loadDirectory(p);
-                        else
-                            throw new FileNotFoundException("Non existent path: " + p);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-        );
-    }
-
-    /**
-     * Reads the content of the specified {@code srcFilePath} and gets the corresponding {@link RNAFile}.
-     *
-     * @param srcFilePath the {@link Path} of file to get the {@code RNAFile}.
-     * @return the {@code RNAFile} that represents the content of the {@code srcFilePath}
-     * @throws IOException if an I/O error occurs
-     */
-    public RNAFile getRNAFileOf(Path srcFilePath) throws IOException {
-        return RNAFileConstructor.getInstance().construct(srcFilePath);
-    }
-
-    /**
-     * Translates all loaded files to the specified {@code dstRNAFormat} and
+     * Translates all files corresponding specified file paths to the specified {@code dstRNAFormat} and
      * returns the list of all translated loaded files.
      *
+     * @param rnaFiles     the list of file paths to translate
      * @param dstRNAFormat the destination {@link RNAFormat} to which translate all loaded files.
      * @return the list of all translated loaded files
      */
-    public List<RNAFile> translateAllLoadedFiles(RNAFormat dstRNAFormat) {
-        this.loadedRNAFiles.parallelStream().forEach(f -> {
+    public List<RNAFile> translateAllLoadedFiles(List<RNAFile> rnaFiles, RNAFormat dstRNAFormat) {
+        List<RNAFile> translatedtedLoadedRNAFiles = new ArrayList<>();
+        rnaFiles.parallelStream().forEach(f -> {
             try {
-                this.formattedLoadedRNAFiles.add(this.translateTo(f, dstRNAFormat));
+                translatedtedLoadedRNAFiles.add(this.translateTo(f, dstRNAFormat));
             } catch (RNAFormatTranslationException e) {
                 throw new RuntimeException(e);
             }
         });
-        return this.formattedLoadedRNAFiles;
+        return translatedtedLoadedRNAFiles;
     }
 
     /**
@@ -163,60 +113,4 @@ public class TranslatorController {
             case FASTA -> RNAFileTranslator.translateToFASTA(rnaFile);
         };
     }
-
-    /**
-     * Saves the specified {@code formattedRNAFile} to the specified {@code dstFilePath}.
-     * The file will be saved with its {@link RNAFile#getFileName()} ()} by default.
-     *
-     * @param formattedRNAFile the file to save.
-     * @param dstFilePath      the destination saving {@link Path}.
-     * @throws IOException if an I/O error occurs
-     */
-    public void saveFile(RNAFile formattedRNAFile, Path dstFilePath) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        formattedRNAFile.getHeader().forEach(l -> sb.append(l).append("\n"));
-        //sb.append("\n");
-        formattedRNAFile.getBody().forEach(l -> sb.append(l).append("\n"));
-        Files.write(dstFilePath, sb.toString().getBytes());
-        // TODO: mettersi d'accordo se fare gli \n qui per ogni linea o sul Translator...
-    }
-
-    /**
-     * @param formattedRNAFiles
-     * @param dstDirectoryPath
-     * @return
-     */
-    // TODO: javadoc
-    public boolean saveDirectory(List<RNAFile> formattedRNAFiles, Path dstDirectoryPath) {
-        formattedRNAFiles.parallelStream().forEach(f -> {
-            try {
-                this.saveFile(f, dstDirectoryPath);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        return true;
-    }
-
-    /**
-     * Removes the specified {@code rnaFile} from loaded files.
-     *
-     * @param rnaFile the {@link RNAFile} to remove
-     * @throw IllegalArgumentException if the list of loaded files not contains the specified {@code rnaFile}
-     */
-    public void deleteFile(RNAFile rnaFile) {
-        if (!this.loadedRNAFiles.contains(rnaFile))
-            throw new IllegalArgumentException("RNAFile not found in the list of loaded files");
-        this.loadedRNAFiles.remove(rnaFile);
-    }
-
-    /**
-     * Resets all data structures of this Controller.
-     */
-    public void resetAll() {
-        this.loadedRNAFiles.clear();
-        this.formattedLoadedRNAFiles.clear();
-    }
-
-
 }
