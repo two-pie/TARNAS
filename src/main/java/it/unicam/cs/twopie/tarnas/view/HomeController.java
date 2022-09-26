@@ -34,6 +34,7 @@ public class HomeController {
     private TranslatorController translatorController;
     private CleanerController cleanerController;
     private RNAFormat selectedFormat;
+    private RNAFormat loadedFilesFormat;
 
     @FXML
     private TableView<RNAFile> filesTable;
@@ -78,13 +79,16 @@ public class HomeController {
     public TextField txtRmLinesContainingPrefix;
 
     @FXML
+    public Label lblRecognizedFormat;
+
+    @FXML
     public void initialize() {
         txtRmLinesContainingPrefix.setTextFormatter(new TextFormatter<String>((TextFormatter.Change change) -> {
             String newText = change.getControlNewText();
             if (newText.length() > 1) {
-                return null ;
+                return null;
             } else {
-                return change ;
+                return change;
             }
         }));
         // creates controllers
@@ -108,61 +112,76 @@ public class HomeController {
     }
 
     @FXML
-    public void handleAddFile() throws IOException {
-        var fileChooser = new FileChooser();
-        var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
-        if (selectedFile != null) {
-            var selectedRNAFile = Path.of(selectedFile.getPath());
-            translatorController.loadFile(selectedRNAFile);
-            var t = translatorController.getRNAFileOf(selectedRNAFile);
-            this.filesTable.getItems().add(t);
+    public void handleAddFile() {
+        try {
+            var fileChooser = new FileChooser();
+            var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
+            if (selectedFile != null) {
+                var selectedRNAFile = Path.of(selectedFile.getPath());
+                translatorController.loadFile(selectedRNAFile);
+                var rnaFile = translatorController.getRNAFileOf(selectedRNAFile);
+                this.addFile(rnaFile);
+            }
+        } catch (Exception e) {
+            this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
-    public void handleAddFolder() throws IOException {
-        var directoryChooser = new DirectoryChooser();
-        var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
-        if (selectedDirectory != null) {
-            var files = Files.walk(selectedDirectory.toPath())
-                    .filter(Files::isRegularFile)
-                    .toList();
-            for (var f : files)
-                this.filesTable.getItems().add(translatorController.getRNAFileOf(Path.of(String.valueOf(f))));
-            translatorController.loadDirectory(selectedDirectory.toPath());
+    public void handleAddFolder() {
+        try {
+            var directoryChooser = new DirectoryChooser();
+            var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
+            if (selectedDirectory != null) {
+                var files = Files.walk(selectedDirectory.toPath())
+                        .filter(Files::isRegularFile)
+                        .toList();
+                for (var f : files)
+                    this.addFile(translatorController.getRNAFileOf(Path.of(String.valueOf(f))));
+                translatorController.loadDirectory(selectedDirectory.toPath());
+            }
+        } catch (Exception e) {
+            this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
-    public void handleClean() throws IOException {
-        var cleanedFiles = this.filesTable.getItems().stream().toList();
-        if (this.chbxRmLinesContainingWord.isSelected())
-            cleanedFiles = cleanedFiles
-                    .parallelStream()
-                    .map(f -> this.cleanerController.removeLinesContaining(f, this.txtfRmLinesContainingWord.getText()))
-                    .toList();
-        if (this.chbxRmLinesContainingPrefix.isSelected())
-            cleanedFiles = cleanedFiles
-                    .parallelStream()
-                    .map(f -> this.cleanerController.removeLinesStartingWith(f, this.txtRmLinesContainingPrefix.getText()))
-                    .toList();
-        if (this.chbxRmBlankLines.isSelected())
-            cleanedFiles = cleanedFiles
-                    .parallelStream()
-                    .map(f -> this.cleanerController.removeWhiteSpaces(f))
-                    .toList();
-        if (this.chbxRmBlankLines.isSelected())
-            cleanedFiles = cleanedFiles
-                    .parallelStream()
-                    .map(f -> this.cleanerController.mergeDBLines(f))
-                    .toList();
-        var directoryChooser = new DirectoryChooser();
-        var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
-        IOController.saveFilesTo(cleanedFiles, selectedDirectory);
-        this.showAlert(Alert.AlertType.INFORMATION,
-                "",
-                "Files saved successfully",
-                cleanedFiles.size() + " files saved in: " + selectedDirectory.getPath());
+    public void handleClean() {
+        try {
+            var cleanedFiles = this.filesTable.getItems().stream().toList();
+            if (this.chbxRmLinesContainingWord.isSelected())
+                cleanedFiles = cleanedFiles
+                        .parallelStream()
+                        .map(f -> this.cleanerController.removeLinesContaining(f, this.txtfRmLinesContainingWord.getText()))
+                        .toList();
+            if (this.chbxRmLinesContainingPrefix.isSelected())
+                cleanedFiles = cleanedFiles
+                        .parallelStream()
+                        .map(f -> this.cleanerController.removeLinesStartingWith(f, this.txtRmLinesContainingPrefix.getText()))
+                        .toList();
+            if (this.chbxRmBlankLines.isSelected())
+                cleanedFiles = cleanedFiles
+                        .parallelStream()
+                        .map(f -> this.cleanerController.removeWhiteSpaces(f))
+                        .toList();
+            if (this.chbxRmBlankLines.isSelected())
+                cleanedFiles = cleanedFiles
+                        .parallelStream()
+                        .map(f -> this.cleanerController.mergeDBLines(f))
+                        .toList();
+            this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the files");
+            var directoryChooser = new DirectoryChooser();
+            var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
+            if (selectedDirectory != null) {
+                IOController.saveFilesTo(cleanedFiles, selectedDirectory);
+                this.showAlert(Alert.AlertType.INFORMATION,
+                        "",
+                        "Files saved successfully",
+                        cleanedFiles.size() + " files saved in: " + selectedDirectory.getPath());
+            }
+        } catch (Exception e) {
+            this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
+        }
     }
 
     @FXML
@@ -203,13 +222,13 @@ public class HomeController {
     }
 
     private Optional<ButtonType> showAlert(Alert.AlertType alertType, String title, String header, String content) {
-        Alert translateConfirmationAlert = new Alert(alertType);
-        translateConfirmationAlert.initOwner(this.getPrimaryStage());
-        translateConfirmationAlert.initModality(Modality.WINDOW_MODAL);
-        translateConfirmationAlert.setTitle(title);
-        translateConfirmationAlert.setHeaderText(header);
-        translateConfirmationAlert.setContentText(content);
-        return translateConfirmationAlert.showAndWait();
+        Alert alert = new Alert(alertType);
+        alert.initOwner(this.getPrimaryStage());
+        alert.initModality(Modality.WINDOW_MODAL);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        return alert.showAndWait();
     }
 
     private void initSelectEventOnButtonItems() {
@@ -234,5 +253,17 @@ public class HomeController {
     private void createsControllers() {
         this.translatorController = new TranslatorController();
         this.cleanerController = new CleanerController();
+    }
+
+    private void addFile(RNAFile rnaFile) {
+        if (this.loadedFilesFormat == null) {
+            var labelText = this.lblRecognizedFormat.getText();
+            this.loadedFilesFormat = rnaFile.getFormat();
+            this.lblRecognizedFormat.setText(labelText + " " + this.loadedFilesFormat.toString());
+            this.lblRecognizedFormat.setVisible(true);
+        }
+        if (this.loadedFilesFormat != rnaFile.getFormat())
+            throw new IllegalArgumentException("All loaded files must be of the same format!");
+        this.filesTable.getItems().add(rnaFile);
     }
 }
