@@ -162,16 +162,8 @@ public class HomeController {
                         .parallelStream()
                         .map(f -> CleanerController.getInstance().mergeDBLines(f))
                         .toList();
-            this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the files");
-            var directoryChooser = new DirectoryChooser();
-            var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
-            if (selectedDirectory != null) {
-                IOController.getInstance().saveFilesTo(cleanedFiles, selectedDirectory.toPath());
-                this.showAlert(Alert.AlertType.INFORMATION,
-                        "",
-                        "Files saved successfully",
-                        cleanedFiles.size() + " files saved in: " + selectedDirectory.getPath());
-            }
+            this.saveFilesTo(cleanedFiles);
+
         } catch (Exception e) {
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
@@ -179,20 +171,15 @@ public class HomeController {
 
     @FXML
     public void translateAllLoadedFiles(ActionEvent event) {
-        List<RNAFile> translatedRNAFiles = new ArrayList<>();
-        var result = this.showAlert(Alert.AlertType.CONFIRMATION,
-                "TRANSLATION FILES CONFIRM",
-                "Translate all loaded files to " + this.selectedFormat + "?",
-                "Are you sure you want to translate all loaded files?");
+        List<RNAFile> translatedRNAFiles;
+        translatedRNAFiles = TranslatorController.getInstance().translateAllLoadedFiles(IOController.getInstance().getLoadedRNAFiles(), this.selectedFormat);
+        this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the files");
+        try {
+            this.saveFilesTo(translatedRNAFiles);
+        }
+        catch (IOException e) {
+            this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
 
-        if (result.isPresent() && result.get() == ButtonType.OK)
-            translatedRNAFiles = TranslatorController.getInstance().translateAllLoadedFiles(IOController.getInstance().getLoadedRNAFiles(), this.selectedFormat);
-        if (translatedRNAFiles != null) {
-            try {
-                IOController.getInstance().saveFilesTo(translatedRNAFiles, Path.of("C:\\Users\\Piermuz\\Documents\\GitHub\\TARNAS\\src\\main\\java\\it\\unicam\\cs\\twopie\\tarnas\\controller\\"));
-            } catch (IOException e) {
-                this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
-            }
         }
     }
 
@@ -253,5 +240,18 @@ public class HomeController {
             this.lblRecognizedFormat.setVisible(true);
         }
         this.filesTable.getItems().add(rnaFile);
+    }
+
+    private void saveFilesTo(List<RNAFile> rnaFiles) throws IOException {
+        this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the files");
+        var directoryChooser = new DirectoryChooser();
+        var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
+        if (selectedDirectory != null) {
+            IOController.getInstance().saveFilesTo(rnaFiles, selectedDirectory.toPath());
+            this.showAlert(Alert.AlertType.INFORMATION,
+                    "",
+                    "Files saved successfully",
+                    rnaFiles.size() + " files saved in: " + selectedDirectory.getPath());
+        }
     }
 }
