@@ -12,6 +12,12 @@ import java.util.List;
  */
 public class IOController {
 
+    /**
+     *
+     * @param rnaFiles
+     * @param folder
+     * @throws IOException
+     */
     public static void saveFilesTo(List<RNAFile> rnaFiles, File folder) throws IOException {
         if (!folder.isDirectory())
             throw new IllegalArgumentException("Not a folder!");

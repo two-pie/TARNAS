@@ -19,8 +19,8 @@ public class RNASecondaryStructureParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, INDEX=5, ZERO_INDEX=6, CTLINES=7, LINECT=8, 
-		IUPAC_CODE=9, NUCLEOTIDE=10, EDBN=11, LINE1BPSEQCT=12, LINE2BPSEQCT=13, 
+		T__0=1, T__1=2, T__2=3, T__3=4, INDEX=5, ZERO_INDEX=6, BPSEQCTLINES=7, 
+		LINECT=8, IUPAC_CODE=9, NUCLEOTIDE=10, EDBN=11, LINE1BPSEQCT=12, LINE2BPSEQCT=13, 
 		LINE3BPSEQCT=14, LINE4BPSEQCT=15, COMMENT=16, WS=17;
 	public static final int
 		RULE_rna_format = 0, RULE_aas = 1, RULE_edbn = 2, RULE_fasta = 3, RULE_bpseq = 4, 
@@ -44,9 +44,9 @@ public class RNASecondaryStructureParser extends Parser {
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, null, null, "INDEX", "ZERO_INDEX", "CTLINES", "LINECT", 
-			"IUPAC_CODE", "NUCLEOTIDE", "EDBN", "LINE1BPSEQCT", "LINE2BPSEQCT", "LINE3BPSEQCT", 
-			"LINE4BPSEQCT", "COMMENT", "WS"
+			null, null, null, null, null, "INDEX", "ZERO_INDEX", "BPSEQCTLINES", 
+			"LINECT", "IUPAC_CODE", "NUCLEOTIDE", "EDBN", "LINE1BPSEQCT", "LINE2BPSEQCT", 
+			"LINE3BPSEQCT", "LINE4BPSEQCT", "COMMENT", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -394,7 +394,7 @@ public class RNASecondaryStructureParser extends Parser {
 		public Bpseq_structureContext bpseq_structure() {
 			return getRuleContext(Bpseq_structureContext.class,0);
 		}
-		public TerminalNode CTLINES() { return getToken(RNASecondaryStructureParser.CTLINES, 0); }
+		public TerminalNode BPSEQCTLINES() { return getToken(RNASecondaryStructureParser.BPSEQCTLINES, 0); }
 		public List<TerminalNode> COMMENT() { return getTokens(RNASecondaryStructureParser.COMMENT); }
 		public TerminalNode COMMENT(int i) {
 			return getToken(RNASecondaryStructureParser.COMMENT, i);
@@ -428,10 +428,10 @@ public class RNASecondaryStructureParser extends Parser {
 				setState(66);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if (_la==CTLINES) {
+				if (_la==BPSEQCTLINES) {
 					{
 					setState(65);
-					match(CTLINES);
+					match(BPSEQCTLINES);
 					}
 				}
 
@@ -477,7 +477,7 @@ public class RNASecondaryStructureParser extends Parser {
 		public Ct_structureContext ct_structure() {
 			return getRuleContext(Ct_structureContext.class,0);
 		}
-		public TerminalNode CTLINES() { return getToken(RNASecondaryStructureParser.CTLINES, 0); }
+		public TerminalNode BPSEQCTLINES() { return getToken(RNASecondaryStructureParser.BPSEQCTLINES, 0); }
 		public List<TerminalNode> COMMENT() { return getTokens(RNASecondaryStructureParser.COMMENT); }
 		public TerminalNode COMMENT(int i) {
 			return getToken(RNASecondaryStructureParser.COMMENT, i);
@@ -511,10 +511,10 @@ public class RNASecondaryStructureParser extends Parser {
 				setState(79);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if (_la==CTLINES) {
+				if (_la==BPSEQCTLINES) {
 					{
 					setState(78);
-					match(CTLINES);
+					match(BPSEQCTLINES);
 					}
 				}
 

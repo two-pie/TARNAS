@@ -124,17 +124,17 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                     </rowConstraints>
                     <children>
-                        <CheckBox fx:id="firstCheckboxOption" mnemonicParsing="false" prefHeight="25.0"
+                        <CheckBox fx:id="chbxRmLinesContainingWord" mnemonicParsing="false" prefHeight="25.0"
                                   prefWidth="234.0" text="Righe di “intestazione” che contengono"/>
-                        <CheckBox fx:id="secondCheckboxOption" mnemonicParsing="false" prefHeight="18.0"
+                        <CheckBox fx:id="chbxRmLinesContainingPrefix" mnemonicParsing="false" prefHeight="18.0"
                                   prefWidth="218.0" text="commenti: righe che iniziano con" GridPane.rowIndex="1"/>
-                        <CheckBox fx:id="thirdCheckboxOption" mnemonicParsing="false" prefHeight="21.0"
+                        <CheckBox fx:id="chbxRmBlankLines" mnemonicParsing="false" prefHeight="21.0"
                                   prefWidth="256.0" text="accorpa le righe nel formato dot-bracket se sono spezzate"
                                   GridPane.rowIndex="3"/>
-                        <CheckBox fx:id="fourthCheckboxOption" mnemonicParsing="false"
+                        <CheckBox fx:id="chbxMergeLines" mnemonicParsing="false"
                                   text="righe vuote (anche con spazi, tab ecc)" GridPane.rowIndex="2"/>
-                        <TextField fx:id="firstTextFieldOption" GridPane.columnIndex="1"/>
-                        <TextField fx:id="secondTextFieldOption" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <TextField fx:id="txtfRmLinesContainingWord" GridPane.columnIndex="1"/>
+                        <TextField fx:id="txtRmLinesContainingPrefix" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                     </children>
                 </GridPane>
                 <Button layoutX="187.0" layoutY="429.0" mnemonicParsing="false" onAction="#handleAddFolder"

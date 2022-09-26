@@ -86,7 +86,7 @@ public class RNAFile {
      * @return the body of this {@code RNAFile}
      */
     public List<String> getBody() {
-        return this.header;
+        return this.body;
     }
 
     /**

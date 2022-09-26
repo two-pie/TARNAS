@@ -19,8 +19,8 @@ public class RNASecondaryStructureLexer extends Lexer {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, INDEX=5, ZERO_INDEX=6, CTLINES=7, LINECT=8, 
-		IUPAC_CODE=9, NUCLEOTIDE=10, EDBN=11, LINE1BPSEQCT=12, LINE2BPSEQCT=13, 
+		T__0=1, T__1=2, T__2=3, T__3=4, INDEX=5, ZERO_INDEX=6, BPSEQCTLINES=7, 
+		LINECT=8, IUPAC_CODE=9, NUCLEOTIDE=10, EDBN=11, LINE1BPSEQCT=12, LINE2BPSEQCT=13, 
 		LINE3BPSEQCT=14, LINE4BPSEQCT=15, COMMENT=16, WS=17;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
@@ -32,10 +32,10 @@ public class RNASecondaryStructureLexer extends Lexer {
 
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"T__0", "T__1", "T__2", "T__3", "INDEX", "ZERO_INDEX", "CTLINES", "LINECT", 
-			"NONEWLINE", "IUPAC_CODE", "NUCLEOTIDE", "NON_STANDARD_CODE", "EDBN_CODE", 
-			"EDBN", "LINE1BPSEQCT", "LINE2BPSEQCT", "LINE3BPSEQCT", "LINE4BPSEQCT", 
-			"COMMENT", "WS"
+			"T__0", "T__1", "T__2", "T__3", "INDEX", "ZERO_INDEX", "BPSEQCTLINES", 
+			"LINECT", "NONEWLINE", "IUPAC_CODE", "NUCLEOTIDE", "NON_STANDARD_CODE", 
+			"EDBN_CODE", "EDBN", "LINE1BPSEQCT", "LINE2BPSEQCT", "LINE3BPSEQCT", 
+			"LINE4BPSEQCT", "COMMENT", "WS"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -48,9 +48,9 @@ public class RNASecondaryStructureLexer extends Lexer {
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, null, null, "INDEX", "ZERO_INDEX", "CTLINES", "LINECT", 
-			"IUPAC_CODE", "NUCLEOTIDE", "EDBN", "LINE1BPSEQCT", "LINE2BPSEQCT", "LINE3BPSEQCT", 
-			"LINE4BPSEQCT", "COMMENT", "WS"
+			null, null, null, null, null, "INDEX", "ZERO_INDEX", "BPSEQCTLINES", 
+			"LINECT", "IUPAC_CODE", "NUCLEOTIDE", "EDBN", "LINE1BPSEQCT", "LINE2BPSEQCT", 
+			"LINE3BPSEQCT", "LINE4BPSEQCT", "COMMENT", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();

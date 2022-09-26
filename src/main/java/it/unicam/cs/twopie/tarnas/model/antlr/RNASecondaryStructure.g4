@@ -40,11 +40,11 @@ fasta:
 ;
 
 bpseq:
-    (CTLINES? | COMMENT*) bpseq_structure
+    (BPSEQCTLINES? | COMMENT*) bpseq_structure
 ;
 
 ct:
-    (CTLINES? | COMMENT*) LINECT ct_structure
+    (BPSEQCTLINES? | COMMENT*) LINECT ct_structure
 ;
 
 edbn_structure:
@@ -108,7 +108,7 @@ ZERO_INDEX:
     '0'
 ;
 
-CTLINES:
+BPSEQCTLINES:
     LINE1BPSEQCT LINE2BPSEQCT LINE3BPSEQCT LINE4BPSEQCT
 ;
 

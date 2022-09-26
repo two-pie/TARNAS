@@ -60,25 +60,33 @@ public class HomeController {
     public Button btnTranslateAllLoadedFiles;
 
     @FXML
-    public CheckBox firstCheckboxOption;
+    public CheckBox chbxRmLinesContainingWord;
 
     @FXML
-    public CheckBox secondCheckboxOption;
+    public CheckBox chbxRmLinesContainingPrefix;
 
     @FXML
-    public CheckBox thirdCheckboxOption;
+    public CheckBox chbxRmBlankLines;
 
     @FXML
-    public CheckBox fourthCheckboxOption;
+    public CheckBox chbxMergeLines;
 
     @FXML
-    public TextField firstTextFieldOption;
+    public TextField txtfRmLinesContainingWord;
 
     @FXML
-    public TextField secondTextFieldOption;
+    public TextField txtRmLinesContainingPrefix;
 
     @FXML
     public void initialize() {
+        txtRmLinesContainingPrefix.setTextFormatter(new TextFormatter<String>((TextFormatter.Change change) -> {
+            String newText = change.getControlNewText();
+            if (newText.length() > 1) {
+                return null ;
+            } else {
+                return change ;
+            }
+        }));
         // creates controllers
         this.createsControllers();
         // load trash image
@@ -128,22 +136,22 @@ public class HomeController {
     @FXML
     public void handleClean() throws IOException {
         var cleanedFiles = this.filesTable.getItems().stream().toList();
-        if (this.firstCheckboxOption.isSelected())
+        if (this.chbxRmLinesContainingWord.isSelected())
             cleanedFiles = cleanedFiles
                     .parallelStream()
-                    .map(f -> this.cleanerController.removeLinesContaining(f, this.firstTextFieldOption.getText()))
+                    .map(f -> this.cleanerController.removeLinesContaining(f, this.txtfRmLinesContainingWord.getText()))
                     .toList();
-        if (this.secondCheckboxOption.isSelected())
+        if (this.chbxRmLinesContainingPrefix.isSelected())
             cleanedFiles = cleanedFiles
                     .parallelStream()
-                    .map(f -> this.cleanerController.removeLinesStartingWith(f, this.secondTextFieldOption.getText()))
+                    .map(f -> this.cleanerController.removeLinesStartingWith(f, this.txtRmLinesContainingPrefix.getText()))
                     .toList();
-        if (this.thirdCheckboxOption.isSelected())
+        if (this.chbxRmBlankLines.isSelected())
             cleanedFiles = cleanedFiles
                     .parallelStream()
                     .map(f -> this.cleanerController.removeWhiteSpaces(f))
                     .toList();
-        if (this.thirdCheckboxOption.isSelected())
+        if (this.chbxRmBlankLines.isSelected())
             cleanedFiles = cleanedFiles
                     .parallelStream()
                     .map(f -> this.cleanerController.mergeDBLines(f))

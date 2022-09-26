@@ -41,10 +41,9 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     @Override
     public void enterBpseq(RNASecondaryStructureParser.BpseqContext ctx) {
-        if (ctx.COMMENT() != null)
-            ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
-        if (ctx.CTLINES() != null)
-            this.header.addAll(Arrays.stream(ctx.CTLINES().getText().split("\n")).map(String::trim).toList());
+        if (ctx.COMMENT() != null) ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
+        if (ctx.BPSEQCTLINES() != null)
+            this.header.addAll(Arrays.stream(ctx.BPSEQCTLINES().getText().split("\n")).map(String::trim).toList());
     }
 
     @Override
@@ -68,6 +67,8 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     @Override
     public void exitBpseq(RNASecondaryStructureParser.BpseqContext ctx) {
+        // create body
+        var body = this.content.subList(this.header.size(), this.content.size());
         // assign the whole sequence to the RNASecondaryStructure
         this.s.setSequence(this.sequenceBuffer.toString());
         // set the size of the structure to the length of the sequence
@@ -75,16 +76,14 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         // everything has been added to the structure, finalise it
         this.s.finalise();
         // create rnafile object with unnecessary empty body
-        this.rnaFile = new RNAFile(this.fileName, this.content, this.header, new ArrayList<>(), this.s, RNAFormat.BPSEQ);
+        this.rnaFile = new RNAFile(this.fileName, this.header, body, new ArrayList<>(), this.s, RNAFormat.BPSEQ);
     }
     //CT
 
     @Override
     public void enterCt(RNASecondaryStructureParser.CtContext ctx) {
-        if (ctx.COMMENT() != null)
-            ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
-        if (ctx.CTLINES() != null)
-            this.header.add(ctx.CTLINES().getText());
+        if (ctx.COMMENT() != null) ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
+        if (ctx.BPSEQCTLINES() != null) this.header.add(ctx.BPSEQCTLINES().getText());
     }
 
     @Override
@@ -108,6 +107,8 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     @Override
     public void exitCt(RNASecondaryStructureParser.CtContext ctx) {
+        // create body
+        var body = this.content.subList(this.header.size(), this.content.size());
         // assign the whole sequence to the RNASecondaryStructure
         this.s.setSequence(this.sequenceBuffer.toString());
         // set the size of the structure to the length of the sequence
@@ -115,7 +116,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         // everything has been added to the structure, finalise it
         this.s.finalise();
         // create rnafile object with unnecessary empty body
-        this.rnaFile = new RNAFile(this.fileName, this.content, this.header, this.s, RNAFormat.CT);
+        this.rnaFile = new RNAFile(this.fileName, this.header, body, this.s, RNAFormat.CT);
     }
     //AAS
 
@@ -165,12 +166,12 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     @Override
     public void exitAas(RNASecondaryStructureParser.AasContext ctx) {
+        // create body
+        var body = this.content.subList(this.header.size(), this.content.size());
         // everything has been added to the structure, finalise it
         this.s.finalise();
         // create rnafile object with unnecessary empty body
-        this.rnaFile = new RNAFile(this.fileName, this.content, this.header, new ArrayList<>(),
-                this.s,
-                this.s.getSequence() == null ? RNAFormat.AAS_NO_SEQUENCE : RNAFormat.AAS);
+        this.rnaFile = new RNAFile(this.fileName, this.header, body, new ArrayList<>(), this.s, this.s.getSequence() == null ? RNAFormat.AAS_NO_SEQUENCE : RNAFormat.AAS);
     }
     // FASTA
 
@@ -181,8 +182,10 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     @Override
     public void exitFasta(RNASecondaryStructureParser.FastaContext ctx) {
+        // create body
+        var body = this.content.subList(this.header.size(), this.content.size());
         // create rnafile object with unnecessary empty body
-        this.rnaFile = new RNAFile(this.fileName, this.content, this.header, this.s, RNAFormat.FASTA);
+        this.rnaFile = new RNAFile(this.fileName, this.header, body, this.s, RNAFormat.FASTA);
     }
     // EDBN
 
@@ -196,15 +199,11 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
          */
         if (!edbn.contains(".")) {
             // there are no dots, check if there is at least one bracket
-            if (!edbn.contains("(") && !edbn.contains(")")
-                    && !edbn.contains("[") && !edbn.contains("]")
-                    && !edbn.contains("{") && !edbn.contains("}")) {
+            if (!edbn.contains("(") && !edbn.contains(")") && !edbn.contains("[") && !edbn.contains("]") && !edbn.contains("{") && !edbn.contains("}")) {
                 // there are no brackets, check if the string is very short
                 if (edbn.length() >= 5) {
                     // ok, it is not considered edbn, the exception is thrown
-                    String m = "Line " + ctx.start.getLine() + " Character "
-                            + (ctx.start.getCharPositionInLine() + 1) + ": "
-                            + "unrecognised nucleotide code in " + edbn;
+                    String m = "Line " + ctx.start.getLine() + " Character " + (ctx.start.getCharPositionInLine() + 1) + ": " + "unrecognised nucleotide code in " + edbn;
                     throw new RNAInputFileParserException(m);
                 }
             }
@@ -226,15 +225,11 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
          */
         if (!edbn.contains(".")) {
             // there are no dots, check if there is at least one bracket
-            if (!edbn.contains("(") && !edbn.contains(")")
-                    && !edbn.contains("[") && !edbn.contains("]")
-                    && !edbn.contains("{") && !edbn.contains("}")) {
+            if (!edbn.contains("(") && !edbn.contains(")") && !edbn.contains("[") && !edbn.contains("]") && !edbn.contains("{") && !edbn.contains("}")) {
                 // there are no brackets, check if the string is very short
                 if (edbn.length() >= 5) {
                     // ok, it is not considered edbn, the exception is thrown
-                    String m = "Line " + ctx.start.getLine() + " Character "
-                            + (ctx.start.getCharPositionInLine() + 1) + ": "
-                            + "unrecognised nucleotide code in " + edbn;
+                    String m = "Line " + ctx.start.getLine() + " Character " + (ctx.start.getCharPositionInLine() + 1) + ": " + "unrecognised nucleotide code in " + edbn;
                     throw new RNAInputFileParserException(m);
                 }
             }
@@ -250,11 +245,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
             this.s.setSize(this.edbnsBuffer.length());
         else // the structure has a sequence, check if the length are the same
             if (this.edbnsBuffer.length() != this.s.getSize())
-                throw new RNAInputFileParserException(
-                        "Extended Dot-Bracket Notation Structure is of length "
-                                + this.edbnsBuffer.length()
-                                + " while the sequence of nucleotides is of length "
-                                + this.s.getSize());
+                throw new RNAInputFileParserException("Extended Dot-Bracket Notation Structure is of length " + this.edbnsBuffer.length() + " while the sequence of nucleotides is of length " + this.s.getSize());
         // parse edbn and create weak bonds in the structure
         var bonds = parseEDBN(this.edbnsBuffer.toString());
         // add all the bonds to the structure
@@ -263,13 +254,20 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     }
 
     @Override
+    public void enterEdbn(RNASecondaryStructureParser.EdbnContext ctx) {
+        ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
+    }
+
+    @Override
     public void exitEdbn(RNASecondaryStructureParser.EdbnContext ctx) {
         // create rnafile object
         this.s.finalise();
+
+        // create body
+        var body = this.content.subList(this.header.size(), this.content.size());
+
         // create rnafile object with unnecessary empty body
-        this.rnaFile = new RNAFile(this.fileName, this.content, this.header, new ArrayList<>(),
-                this.s,
-                this.s.getSequence() == null ? RNAFormat.DB_NO_SEQUENCE : RNAFormat.DB);
+        this.rnaFile = new RNAFile(this.fileName, this.header, body, this.s, this.s.getSequence() == null ? RNAFormat.DB_NO_SEQUENCE : RNAFormat.DB);
     }
     /*
      * Parse an Extended Dot-Bracket Notation string and transform it into a
@@ -295,18 +293,13 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
             var c = extendedDotBracketNotation.charAt(i);
             Character oc = c;
             if (isOpeningChar(c)) {
-                if (!stacks.containsKey(oc))
-                    stacks.put(oc, new Stack<>());
+                if (!stacks.containsKey(oc)) stacks.put(oc, new Stack<>());
                 stacks.get(oc).push(i);
             }
             if (isClosingChar(c)) {
                 Character opening = getCorrespondingOpening(c);
-                if (stacks.get(opening) == null
-                        || stacks.get(opening).isEmpty()) {
-                    throw new RNAInputFileParserException(
-                            "Extended dot-bracket notation parsing: closing character at position "
-                                    + (i + 1)
-                                    + " does not have a corresponding opening character");
+                if (stacks.get(opening) == null || stacks.get(opening).isEmpty()) {
+                    throw new RNAInputFileParserException("Extended dot-bracket notation parsing: closing character at position " + (i + 1) + " does not have a corresponding opening character");
                 }
                 int leftPosition = stacks.get(opening).pop();
                 // add this weak bond to bonds
@@ -318,10 +311,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
         var ks = stacks.keySet();
         for (var c : ks)
             if (!stacks.get(c).isEmpty()) {
-                var msg = new StringBuilder("Extended dot-bracket notation parsing: "
-                        + stacks.get(c).size()
-                        + " missing closing occurrence(s) of " + c
-                        + " symbol, left opening symbol(s) at position(s) ");
+                var msg = new StringBuilder("Extended dot-bracket notation parsing: " + stacks.get(c).size() + " missing closing occurrence(s) of " + c + " symbol, left opening symbol(s) at position(s) ");
                 for (Integer i : stacks.get(c))
                     msg.append(i + 1).append(" ");
                 throw new RNAInputFileParserException(msg.toString());
@@ -335,8 +325,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
      */
 
     private static boolean isOpeningChar(char c) {
-        return c == '(' || c == '[' || c == '{' || c == '<'
-                || Character.isUpperCase(c);
+        return c == '(' || c == '[' || c == '{' || c == '<' || Character.isUpperCase(c);
     }
     /*
      * Determine if the given character is a correct closing character of an
@@ -344,8 +333,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
      */
 
     private static boolean isClosingChar(char c) {
-        return c == ')' || c == ']' || c == '}' || c == '>'
-                || Character.isLowerCase(c);
+        return c == ')' || c == ']' || c == '}' || c == '>' || Character.isLowerCase(c);
     }
     /*
      * Given a closing character of an extended dot-bracket notation string,
