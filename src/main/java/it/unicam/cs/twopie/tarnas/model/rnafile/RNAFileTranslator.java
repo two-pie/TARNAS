@@ -253,9 +253,7 @@ public class RNAFileTranslator {
     private static boolean areRegionsConflicting(Region r1, Region r2) {
         var wb1 = r1.getWeakBond();
         var wb2 = r2.getWeakBond();
-        // ( [ ) ]
         var firstCase = wb1.getLeft() < wb2.getLeft() && wb1.getRight() > wb2.getLeft() && wb2.getRight() > wb1.getRight();
-        // [ ( ] )
         var secondCase = wb2.getLeft() < wb1.getLeft() && wb2.getRight() > wb1.getLeft() && wb1.getRight() > wb2.getRight();
         return firstCase || secondCase;
     }
