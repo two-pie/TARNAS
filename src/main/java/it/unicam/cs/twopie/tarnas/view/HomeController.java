@@ -150,41 +150,32 @@ public class HomeController {
     @FXML
     public void handleAddFile() {
         this.logger.info("AGGIUNGI FILE button clicked");
-        try {
-            var fileChooser = new FileChooser();
-            var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
-            if (selectedFile != null) {
-                var selectedRNAFile = Path.of(selectedFile.getPath());
-                this.addFileToTable(selectedRNAFile);
-                this.setDisablePanes(false);
-                this.chbxMergeLines.setDisable(this.ioController.getRecognizedFormat() != DB && this.ioController.getRecognizedFormat() != DB_NO_SEQUENCE);
-            }
-            this.logger.info("File added successfully");
-        } catch (Exception e) {
-            this.logger.severe(e.getMessage());
-            this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
+        var fileChooser = new FileChooser();
+        var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
+        if (selectedFile != null) {
+            var selectedRNAFile = Path.of(selectedFile.getPath());
+            this.addFileToTable(selectedRNAFile);
         }
+        this.logger.info("File added successfully");
     }
 
     @FXML
     public void handleAddFolder() {
         this.logger.info("AGGIUNGI CARTELLA button clicked");
-        try {
-            var directoryChooser = new DirectoryChooser();
-            var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
-            if (selectedDirectory != null) {
+        var directoryChooser = new DirectoryChooser();
+        var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
+        if (selectedDirectory != null) {
+            try {
                 var files = Files.walk(selectedDirectory.toPath())
                         .filter(Files::isRegularFile)
                         .toList();
-                for (var f : files)
-                    this.addFileToTable(f);
-                this.setDisablePanes(false);
+                files.forEach(this::addFileToTable);
+            } catch (Exception e) {
+                this.logger.severe(e.getMessage());
+                this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
             }
-            this.logger.info("Folder added successfully");
-        } catch (Exception e) {
-            this.logger.severe(e.getMessage());
-            this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
+        this.logger.info("Folder added successfully");
     }
 
     @FXML
@@ -286,15 +277,21 @@ public class HomeController {
 
     }
 
-    private void addFileToTable(Path selectedRNAFile) throws IOException {
-        var rnaFile = this.ioController.loadFile(selectedRNAFile);
-        var recognizedFormat = this.ioController.getRecognizedFormat();
-        if (recognizedFormat != null) {
-            var labelText = recognizedFormat.toString();
-            this.lblRecognizedFormat.setText("RECOGNIZED FORMAT: " + recognizedFormat.getName());
-            this.lblRecognizedFormat.setVisible(true);
+    private void addFileToTable(Path selectedRNAFile) {
+        try {
+            var rnaFile = this.ioController.loadFile(selectedRNAFile);
+            var recognizedFormat = this.ioController.getRecognizedFormat();
+            if (recognizedFormat != null) {
+                this.lblRecognizedFormat.setText("RECOGNIZED FORMAT: " + recognizedFormat.getName());
+                this.lblRecognizedFormat.setVisible(true);
+            }
+            this.filesTable.getItems().add(rnaFile);
+            this.setDisablePanes(false);
+            this.chbxMergeLines.setDisable(this.ioController.getRecognizedFormat() != DB && this.ioController.getRecognizedFormat() != DB_NO_SEQUENCE);
+        } catch (Exception e) {
+            this.logger.severe(e.getMessage());
+            this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
-        this.filesTable.getItems().add(rnaFile);
     }
 
     private void saveFilesTo(List<RNAFile> rnaFiles) throws IOException {
@@ -357,31 +354,35 @@ public class HomeController {
     /**
      * Action for saving file content in the TableView.
      */
-    public void handleSaveWroteContent() throws IOException {
+    public void handleSaveWroteContent() {
         this.logger.info(this.btnSaveWroteContent.getText() + " button clicked");
-        String fileName;
         TextInputDialog nameFileContent = new TextInputDialog("example.bpseq");
         nameFileContent.setHeaderText("Inserisci il nome del file");
+        nameFileContent.initModality(Modality.APPLICATION_MODAL);
         this.btnSaveWroteContent.setOnMouseClicked(e -> {
-            nameFileContent.initModality(Modality.APPLICATION_MODAL);
-            nameFileContent.showAndWait();
+            try {
+                String fileName;
+                nameFileContent.showAndWait();
+                if (this.txtAreaWriteContent.getText().isEmpty()) {
+                    this.showAlert(Alert.AlertType.ERROR, "Error", "", "Il file da salvare non deve essere vuoto");
+                    this.logger.severe(this.txtAreaWriteContent.getId() + " is empty");
+                } else {
+                    fileName = nameFileContent.getEditor().getText();
+                    this.logger.info(fileName + " created");
+                    File tmp = new File(Path.of(System.getProperty("user.dir")).resolve(fileName).toUri());
+                    this.logger.info("write content on " + fileName);
+                    Files.write(tmp.toPath(), this.txtAreaWriteContent.getText().getBytes());
+                    var selectedRNAFile = Path.of(tmp.getPath());
+                    this.addFileToTable(selectedRNAFile);
+                    Files.delete(tmp.toPath());
+                    this.logger.info(fileName + " deleted");
+                    // clear
+                    this.txtAreaWriteContent.clear();
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
-        if (this.txtAreaWriteContent.getText().isEmpty()) {
-            this.showAlert(Alert.AlertType.ERROR, "Error", "", "Il file da salvare non deve essere vuoto");
-            this.logger.severe(this.txtAreaWriteContent.getId() + " is empty");
-        } else {
-            fileName = nameFileContent.getEditor().getText();
-            this.logger.info(fileName + " created");
-            File tmp = new File(Path.of(System.getProperty("user.dir")).resolve(fileName).toUri());
-            this.logger.info("write content on " + fileName);
-            Files.write(tmp.toPath(), this.txtAreaWriteContent.getText().getBytes());
-            var selectedRNAFile = Path.of(tmp.getPath());
-            this.addFileToTable(selectedRNAFile);
-            Files.delete(tmp.toPath());
-            this.logger.info(fileName + " deleted");
-            // clear
-            this.txtAreaWriteContent.clear();
-        }
     }
 
     private void setDisablePanes(boolean b) {
