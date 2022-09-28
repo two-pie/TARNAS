@@ -135,7 +135,7 @@ public class RNAFileTranslator {
     private static List<String> createDBBody(RNASecondaryStructure rnaSecondaryStructure, boolean addSequence) {
         var regs = findAllPairedRegions(rnaSecondaryStructure);
         var n = regs.size();
-        sortRegionsByStartPoint(regs);
+        regs = sortRegionsByStartPoint(regs);
         setRegionsOrder(regs, n);
         var structure = encodeBasePairs(regs, rnaSecondaryStructure.getSize());
         return addSequence ?
@@ -228,8 +228,10 @@ public class RNAFileTranslator {
     /**
      * @param regs
      */
-    private static void sortRegionsByStartPoint(List<Region> regs) {
-        regs.sort(Comparator.comparingInt(r -> r.getWeakBond().getLeft()));
+    private static List<Region> sortRegionsByStartPoint(List<Region> regs) {
+        var tmp = new ArrayList<>(regs);
+        tmp.sort(Comparator.comparingInt(r -> r.getWeakBond().getLeft()));
+        return tmp;
     }
 
     /**
@@ -248,11 +250,12 @@ public class RNAFileTranslator {
             regs.get(i).setOrder(globalOrder);
         }
     }
-
     private static boolean areRegionsConflicting(Region r1, Region r2) {
         var wb1 = r1.getWeakBond();
         var wb2 = r2.getWeakBond();
+        // ( [ ) ]
         var firstCase = wb1.getLeft() < wb2.getLeft() && wb1.getRight() > wb2.getLeft() && wb2.getRight() > wb1.getRight();
+        // [ ( ] )
         var secondCase = wb2.getLeft() < wb1.getLeft() && wb2.getRight() > wb1.getLeft() && wb1.getRight() > wb2.getRight();
         return firstCase || secondCase;
     }
@@ -261,8 +264,8 @@ public class RNAFileTranslator {
         var structure = new StringBuilder();
         structure.append(".".repeat(size));
         for (var r : regs) {
-            structure.setCharAt(r.getWeakBond().getLeft(), getOpeningBracket(r.getOrder()));
-            structure.setCharAt(r.getWeakBond().getRight(), getClosingBracket(r.getOrder()));
+            structure.setCharAt(r.getWeakBond().getLeft() - 1, getOpeningBracket(r.getOrder()));
+            structure.setCharAt(r.getWeakBond().getRight() - 1, getClosingBracket(r.getOrder()));
         }
         return structure.toString();
     }
