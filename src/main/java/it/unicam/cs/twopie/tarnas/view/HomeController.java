@@ -23,8 +23,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -70,7 +68,7 @@ public class HomeController {
     public MenuItem itmAAS, itmAASNS, itmBPSEQ, itmCT, itmDB, itmDBNS, itmFASTA; // example: "AAS_NO_SEQUENCE" instead "AAS NO SEQUENCE" for enum recognition
 
     @FXML
-    public Button btnTranslateAllLoadedFiles;
+    public Button btnTranslate;
 
     @FXML
     public CheckBox chbxRmLinesContainingWord;
@@ -95,19 +93,22 @@ public class HomeController {
     public TextField txtRmLinesContainingPrefix;
 
     @FXML
-    public Label lblRecognizedFormat;
-    @FXML
     public CheckBox chkbxSaveAsZIP;
+
     @FXML
     public TextField lblArchiveName;
-    @FXML
+
+    /*@FXML
     public Button btnCancelWriteContent;
+
     @FXML
     public Button btnSaveWroteContent;
+
     @FXML
     public TextArea txtAreaWriteContent;
+
     @FXML
-    public Button btnWriteContent;
+    public Button btnWriteContent; TODO*/
 
     @FXML
     public void initialize() {
@@ -125,8 +126,6 @@ public class HomeController {
                 return change;
             }
         }));
-        // disable panes
-        this.setDisablePanes(true);
         // load trash image
         var trashImage = new Image(Objects.requireNonNull(App.class.getResource("/img/trash.png")).toExternalForm(), 18, 18, false, false);
         var lenImage = new Image(Objects.requireNonNull(App.class.getResource("/img/lens-icon.jpeg")).toExternalForm(), 18, 18, false, false);
@@ -139,11 +138,9 @@ public class HomeController {
         this.deleteColumn.setCellValueFactory(rnaFile -> new ReadOnlyObjectWrapper<>(rnaFile.getValue()));
         // set custom cell
         this.previewColumn.setCellFactory(column -> new LenCell(lenImage));
-        this.deleteColumn.setCellFactory(column -> new DeleteCell(trashImage, this.lblRecognizedFormat, this.paneTranslator, this.paneCleaner));
+        this.deleteColumn.setCellFactory(column -> new DeleteCell(trashImage, this.paneTranslator, this.paneCleaner));
         // add event to select ButtonItem for destination format translation
         this.initSelectEventOnButtonItems();
-        this.btnTranslateAllLoadedFiles.setDisable(true);
-        this.initBtnWriteContent();
         this.logger.info("Initialization done");
     }
 
@@ -212,7 +209,7 @@ public class HomeController {
     }
 
     @FXML
-    public void translateAllLoadedFiles() {
+    public void handleTranslate() {
         this.logger.info("TRADUCI button clicked");
         List<RNAFile> translatedRNAFiles;
         translatedRNAFiles = this.translatorController.translateAllLoadedFiles(this.ioController.getLoadedRNAFiles(), this.selectedFormat);
@@ -230,17 +227,12 @@ public class HomeController {
     }
 
     @FXML
-    public void resetAll(ActionEvent event) {
+    public void handleReset(ActionEvent event) {
         this.logger.info("RESET button clicked");
         // Reset all data structures
         this.filesTable.getItems().clear();
-        // reset translation and cleaner panes
-        this.setDisablePanes(true);
         //reset controller files
         this.ioController.clearAllDataStructures();
-        //reset recognized format
-        this.lblRecognizedFormat.setText("");
-        this.lblRecognizedFormat.setVisible(false);
         this.logger.info("Reset done");
     }
 
@@ -271,7 +263,7 @@ public class HomeController {
             this.selectedFormat = RNAFormat.valueOf((((MenuItem) e.getSource()).getId()));  // set RNAFormat enum
             //System.out.println("sel: " + selectedFormat);
             this.btnSelectFormatTranslation.setText(String.valueOf((((MenuItem) e.getSource()).getText()))); // set String to display in MenuItem
-            this.btnTranslateAllLoadedFiles.setDisable(false);  // when format translation is selected, translate btn is enabled
+            this.btnTranslate.setDisable(false);  // when format translation is selected, translate btn is enabled
         };
         this.btnSelectFormatTranslation.getItems().forEach(f -> f.setOnAction(event1));
 
@@ -280,13 +272,7 @@ public class HomeController {
     private void addFileToTable(Path selectedRNAFile) {
         try {
             var rnaFile = this.ioController.loadFile(selectedRNAFile);
-            var recognizedFormat = this.ioController.getRecognizedFormat();
-            if (recognizedFormat != null) {
-                this.lblRecognizedFormat.setText("RECOGNIZED FORMAT: " + recognizedFormat.getName());
-                this.lblRecognizedFormat.setVisible(true);
-            }
             this.filesTable.getItems().add(rnaFile);
-            this.setDisablePanes(false);
             this.chbxMergeLines.setDisable(this.ioController.getRecognizedFormat() != DB && this.ioController.getRecognizedFormat() != DB_NO_SEQUENCE);
         } catch (Exception e) {
             this.logger.severe(e.getMessage());
@@ -321,40 +307,40 @@ public class HomeController {
     /**
      * Inits btn write content and hides btn cancel, save and text area.
      */
-    private void initBtnWriteContent() {
+    /*private void initBtnWriteContent() {
         this.logger.info(this.btnWriteContent.getText() + " visible, other btns are invisible");
         this.btnCancelWriteContent.setVisible(false);
         this.btnSaveWroteContent.setVisible(false);
         this.txtAreaWriteContent.setVisible(false);
-    }
+    }*/
 
     /**
      * Action for showing btns cancel, save and text area.
      */
-    public void handleWriteContent() {
+    /*public void handleWriteContent() {
         this.logger.info(this.btnWriteContent.getText() + " button clicked");
         this.btnWriteContent.setVisible(false);
         this.btnCancelWriteContent.setVisible(true);
         this.btnSaveWroteContent.setVisible(true);
         this.txtAreaWriteContent.setVisible(true);
-    }
+    }*/
 
     /**
      * Action for cancel write file content.
      */
-    public void handleCancelWriteContent() {
+   /* public void handleCancelWriteContent() {
         this.logger.info(this.btnCancelWriteContent.getText() + " button clicked");
         this.btnWriteContent.setVisible(true);
         this.btnCancelWriteContent.setVisible(false);
         this.btnSaveWroteContent.setVisible(false);
         this.txtAreaWriteContent.clear();
         this.txtAreaWriteContent.setVisible(false);
-    }
+    }*/
 
     /**
      * Action for saving file content in the TableView.
      */
-    public void handleSaveWroteContent() {
+    /*public void handleSaveWroteContent() {
         this.logger.info(this.btnSaveWroteContent.getText() + " button clicked");
         TextInputDialog nameFileContent = new TextInputDialog("example.bpseq");
         nameFileContent.setHeaderText("Inserisci il nome del file");
@@ -383,10 +369,5 @@ public class HomeController {
                 throw new RuntimeException(ex);
             }
         });
-    }
-
-    private void setDisablePanes(boolean b) {
-        this.paneTranslator.setDisable(b);
-        this.paneCleaner.setDisable(b);
-    }
+    }*/
 }

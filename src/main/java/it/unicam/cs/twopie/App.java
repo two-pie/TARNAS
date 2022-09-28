@@ -20,7 +20,9 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(App.class.getResource("/fxml/home.fxml")));
         stage.setTitle("TARNAS");
-        stage.setScene(new Scene(root, 1000, 600));
+        stage.setScene(new Scene(root));
+        stage.setMinWidth(1100);
+        stage.setMinHeight(700);
         stage.show();
     }
 

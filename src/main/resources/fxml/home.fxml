@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="574.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="574.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.cs.twopie.tarnas.view.HomeController">
    <top>
       <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <top>
@@ -45,12 +45,12 @@
             <Label text="TARNAS" BorderPane.alignment="CENTER" />
          </center>
          <bottom>
-            <TableView prefHeight="470.0" prefWidth="897.0" BorderPane.alignment="CENTER">
+            <TableView fx:id="filesTable" prefHeight="386.0" prefWidth="897.0" BorderPane.alignment="CENTER">
               <columns>
-                <TableColumn prefWidth="235.99997556209564" text="File Name" />
-                <TableColumn prefWidth="144.79998779296875" text="Formato" />
-                  <TableColumn minWidth="0.0" prefWidth="188.79995727539062" text="Preview" />
-                  <TableColumn prefWidth="336.800048828125" text="Remove" />
+                <TableColumn fx:id="nameColumn" prefWidth="235.99997556209564" text="Nome File" />
+                <TableColumn fx:id="formatColumn" prefWidth="144.79998779296875" text="Formato" />
+                  <TableColumn fx:id="previewColumn" minWidth="0.0" prefWidth="188.79995727539062" text="Preview" />
+                  <TableColumn fx:id="deleteColumn" prefWidth="336.800048828125" text="Rimuovi" />
               </columns>
                <BorderPane.margin>
                   <Insets left="5.0" right="5.0" />
@@ -78,24 +78,29 @@
                       <RowConstraints maxHeight="62.400000000000006" minHeight="10.0" prefHeight="62.400000000000006" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <CheckBox mnemonicParsing="false" text="Includi header" />
-                        <CheckBox mnemonicParsing="false" text="salva come zip" GridPane.rowIndex="1" />
-                        <TextField prefHeight="26.0" prefWidth="0.0" promptText="nome zip" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <CheckBox fx:id="chbxIncludeHeader" mnemonicParsing="false" text="Includi header" />
+                        <CheckBox fx:id="chkbxSaveAsZIP" mnemonicParsing="false" text="salva come zip" GridPane.rowIndex="1" />
+                        <TextField fx:id="lblArchiveName" prefHeight="26.0" prefWidth="0.0" promptText="nome zip" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin>
                         </TextField>
-                        <MenuButton mnemonicParsing="false" text="Traduci in" GridPane.rowIndex="2">
+                        <MenuButton fx:id="btnSelectFormatTranslation" mnemonicParsing="false" text="Traduci in" GridPane.rowIndex="2">
                           <items>
-                            <MenuItem mnemonicParsing="false" text="Action 1" />
-                            <MenuItem mnemonicParsing="false" text="Action 2" />
+                            <MenuItem fx:id="itmBPSEQ" mnemonicParsing="false" text="BPSEQ" />
+                            <MenuItem fx:id="itmCT" mnemonicParsing="false" text="CT" />
+                              <MenuItem fx:id="itmDB" mnemonicParsing="false" text="DOT BRACKET" />
+                              <MenuItem fx:id="itmDBNS" mnemonicParsing="false" text="DOT BRACKET NO SEQUENCE" />
+                              <MenuItem fx:id="itmFASTA" mnemonicParsing="false" text="FASTA" />
+                              <MenuItem fx:id="itmAAS" mnemonicParsing="false" text="AAS" />
+                              <MenuItem fx:id="itmAASNS" mnemonicParsing="false" text="AAS NO SEQUENCE" />
                           </items>
                         </MenuButton>
                      </children>
                   </GridPane>
                </center>
                <bottom>
-                  <Button mnemonicParsing="false" text="TRADUCI" BorderPane.alignment="CENTER" />
+                  <Button fx:id="btnTranslate" mnemonicParsing="false" onAction="#handleTranslate" text="TRADUCI" BorderPane.alignment="CENTER" />
                </bottom>
             </BorderPane>
          </right>
@@ -105,7 +110,7 @@
                   <Label text="PULITURA" BorderPane.alignment="CENTER" />
                </top>
                <bottom>
-                  <Button mnemonicParsing="false" text="PULISCI" BorderPane.alignment="CENTER" />
+                  <Button mnemonicParsing="false" onAction="#handleClean" text="PULISCI" BorderPane.alignment="CENTER" />
                </bottom>
                <center>
                   <GridPane BorderPane.alignment="CENTER">
@@ -120,28 +125,28 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <CheckBox mnemonicParsing="false" text="Righe di “intestazione” che contengono">
+                        <CheckBox fx:id="chbxRmLinesContainingWord" mnemonicParsing="false" text="Righe di “intestazione” che contengono">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </CheckBox>
-                        <CheckBox mnemonicParsing="false" text="commenti: righe che iniziano con" GridPane.rowIndex="1">
+                        <CheckBox fx:id="chbxRmLinesContainingPrefix" mnemonicParsing="false" text="commenti: righe che iniziano con" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </CheckBox>
-                        <CheckBox mnemonicParsing="false" text="righe vuote (anche con spazi, tab ecc)" GridPane.rowIndex="2">
+                        <CheckBox fx:id="chbxRmBlankLines" mnemonicParsing="false" text="righe vuote (anche con spazi, tab ecc)" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </CheckBox>
-                        <CheckBox mnemonicParsing="false" text="accorpa le righe (DB/DB NO SEQUENCE)" GridPane.rowIndex="3">
+                        <CheckBox fx:id="chbxMergeLines" mnemonicParsing="false" text="accorpa le righe (DB/DB NO SEQUENCE)" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </CheckBox>
-                        <TextField promptText="parola" GridPane.columnIndex="1" />
-                        <TextField promptText="carattere" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtfRmLinesContainingWord" promptText="parola" GridPane.columnIndex="1" />
+                        <TextField fx:id="txtRmLinesContainingPrefix" promptText="carattere" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </center>
@@ -154,10 +159,10 @@
          <bottom>
             <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
               <buttons>
-                <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="522.0" text="AGGIUNGI FILE" />
-                  <Button mnemonicParsing="false" text="AGGIUNGI CARTELLA" />
+                <Button onAction="#handleAddFile" mnemonicParsing="false" prefHeight="26.0" prefWidth="522.0" text="AGGIUNGI FILE" />
+                  <Button onAction="#handleAddFolder" mnemonicParsing="false" text="AGGIUNGI CARTELLA" />
                   <Button mnemonicParsing="false" text="SCRIVI FILE" />
-                  <Button mnemonicParsing="false" text="RESET" />
+                  <Button onAction="#handleReset" mnemonicParsing="false" text="RESET" />
               </buttons>
             </ButtonBar>
          </bottom>

@@ -20,16 +20,13 @@ public class DeleteCell extends TableCell<RNAFile, RNAFile> {
 
     private final Alert trashAlert;
 
-    private final Label recognizedFormat;
-
     private final Pane translator;
 
     private final Pane cleaner;
 
-    public DeleteCell(Image image, Label recognizedFormat, Pane translator, Pane cleaner) {
+    public DeleteCell(Image image, Pane translator, Pane cleaner) {
         this.imageButton = new ImageButton(image);
         this.trashAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        this.recognizedFormat = recognizedFormat;
         this.translator = translator;
         this.cleaner = cleaner;
     }
@@ -47,8 +44,6 @@ public class DeleteCell extends TableCell<RNAFile, RNAFile> {
                 getTableView().getItems().remove(rnaFile);
                 IOController.getInstance().deleteFile(rnaFile);
                 if (IOController.getInstance().getLoadedRNAFiles().isEmpty()){
-                    this.recognizedFormat.setVisible(false);
-                    this.recognizedFormat.setText("");
                     this.cleaner.setDisable(true);
                     this.translator.setDisable(true);
                     getTableView().refresh();
