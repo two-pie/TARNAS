@@ -116,11 +116,23 @@ public class RNAFile {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RNAFile rnaFile)) return false;
-        return getFileName().equals(rnaFile.getFileName()) && getHeader().equals(rnaFile.getHeader()) && getStructure().equals(rnaFile.getStructure()) && getFormat() == rnaFile.getFormat() && getBody().equals(rnaFile.getBody()) && getContent().equals(rnaFile.getContent());
+        return getFileName().equals(rnaFile.getFileName()) && getHeader().equals(rnaFile.getHeader()) && getStructure().equals(rnaFile.getStructure()) && getFormat().equals(rnaFile.getFormat()) && getBody().equals(rnaFile.getBody()) && getContent().equals(rnaFile.getContent());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getFileName(), getHeader(), getStructure(), getFormat(), getBody(), getContent());
+    }
+
+    @Override
+    public String toString() {
+        return "RNAFile{" +
+                "fileName='" + fileName + '\'' +
+                ", header=" + header +
+                ", structure=" + structure +
+                ", format=" + format +
+                ", body=" + body +
+                ", content=" + content +
+                '}';
     }
 }

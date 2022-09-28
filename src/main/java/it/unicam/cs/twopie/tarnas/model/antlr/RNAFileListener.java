@@ -13,7 +13,6 @@ import java.util.*;
 
 public class RNAFileListener extends RNASecondaryStructureBaseListener {
     private RNAFile rnaFile;
-
     private RNASecondaryStructure s;
     private StringBuffer sequenceBuffer;
     private StringBuffer edbnsBuffer;
@@ -49,13 +48,13 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     @Override
     public void enterBpseqLineUnpaired(RNASecondaryStructureParser.BpseqLineUnpairedContext ctx) {
         // add the current nucleotide to the sequence
-        this.sequenceBuffer.append(ctx.IUPAC_CODE().getText().trim());
+        this.sequenceBuffer.append(ctx.NUCLEOTIDE().getText().trim());
     }
 
     @Override
     public void enterBpseqLineBond(RNASecondaryStructureParser.BpseqLineBondContext ctx) {
         // add the current nucleotide to the sequence
-        this.sequenceBuffer.append(ctx.IUPAC_CODE().getText().trim());
+        this.sequenceBuffer.append(ctx.NUCLEOTIDE().getText().trim());
         // determines the indexes of this bond
         int left = Integer.parseInt(ctx.INDEX(0).getText());
         int right = Integer.parseInt(ctx.INDEX(1).getText());
@@ -83,19 +82,20 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     @Override
     public void enterCt(RNASecondaryStructureParser.CtContext ctx) {
         if (ctx.COMMENT() != null) ctx.COMMENT().forEach(line -> this.header.add(line.getText().trim()));
-        if (ctx.BPSEQCTLINES() != null) this.header.add(ctx.BPSEQCTLINES().getText());
+        if (ctx.BPSEQCTLINES() != null)
+            this.header.addAll(Arrays.stream(ctx.BPSEQCTLINES().getText().split("\n")).map(String::trim).toList());
     }
 
     @Override
     public void enterCtLineUnpaired(RNASecondaryStructureParser.CtLineUnpairedContext ctx) {
         // add the current nucleotide to the sequence
-        this.sequenceBuffer.append(ctx.IUPAC_CODE().getText().trim());
+        this.sequenceBuffer.append(ctx.NUCLEOTIDE().getText().trim());
     }
 
     @Override
     public void enterCtLineBond(RNASecondaryStructureParser.CtLineBondContext ctx) {
         // add the current nucleotide to the sequence
-        this.sequenceBuffer.append(ctx.IUPAC_CODE().getText().trim());
+        this.sequenceBuffer.append(ctx.NUCLEOTIDE().getText().trim());
         // determines the indexes of this bond
         int left = Integer.parseInt(ctx.INDEX(0).getText());
         int right = Integer.parseInt(ctx.getChild(4).getText());

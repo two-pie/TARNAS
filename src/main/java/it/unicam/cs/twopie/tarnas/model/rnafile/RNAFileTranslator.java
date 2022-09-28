@@ -5,6 +5,8 @@ import it.unicam.cs.twopie.tarnas.model.utils.Region;
 
 import java.util.*;
 
+import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
+
 /**
  * A representation of an RNA files translator.<br>
  * This class consists exclusively of static methods that operate on RNA secondary structure formats translations.<br>
@@ -55,12 +57,11 @@ public class RNAFileTranslator {
      */
     public static RNAFile translateToBPSEQ(RNAFile rnaFile) {
         // create BPSEQ header
-        var header = createHeader(rnaFile.getHeader(), RNAFormat.BPSEQ);
-        //create BPSEQ body
+        var header = createHeader(rnaFile.getHeader(), BPSEQ);
         // create BPSEQ body
         var body = createBPSEQBody(rnaFile.getStructure());
         // return a formatted rna file object
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "bpseq"), header, body, rnaFile.getStructure(), RNAFormat.BPSEQ);
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "bpseq"), header, body, rnaFile.getStructure(), BPSEQ);
     }
 
     /**
@@ -71,11 +72,11 @@ public class RNAFileTranslator {
      */
     public static RNAFile translateToCT(RNAFile rnaFile) {
         // create CT header
-        var header = createHeader(rnaFile.getHeader(), RNAFormat.CT);
+        var header = createHeader(rnaFile.getHeader(), CT);
         // create CT body
         var body = createCTBody(rnaFile.getStructure());
         // return a formatted rna file object
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "ct"), header, body, rnaFile.getStructure(), RNAFormat.CT);
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "ct"), header, body, rnaFile.getStructure(), CT);
     }
 
     /**
@@ -105,7 +106,10 @@ public class RNAFileTranslator {
         // create ASS no sequence body
         var body = createAASBody(rnaFile.getStructure(), false);
         // return a formatted rna file object
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, body, rnaFile.getStructure(), RNAFormat.AAS_NO_SEQUENCE);
+        var secondaryStructureWithoutSequence = new RNASecondaryStructure();
+        secondaryStructureWithoutSequence.setSize(rnaFile.getStructure().getSize());
+        secondaryStructureWithoutSequence.setBonds(rnaFile.getStructure().getBonds());
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, body,secondaryStructureWithoutSequence , RNAFormat.AAS_NO_SEQUENCE);
     }
 
     /**
@@ -121,7 +125,9 @@ public class RNAFileTranslator {
         // create FASTA body
         var body = List.of(rnaFile.getStructure().getSequence());
         // return a formatted rna file object
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "fasta"), header, body, rnaFile.getStructure(), RNAFormat.FASTA);
+        var secondaryStructureOnlySize = new RNASecondaryStructure();
+        secondaryStructureOnlySize.setSize(rnaSecondaryStructure.getSize());
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "fasta"), header, body, secondaryStructureOnlySize, RNAFormat.FASTA);
     }
 
     /**
@@ -211,12 +217,18 @@ public class RNAFileTranslator {
      */
     private static List<String> createHeader(List<String> header, RNAFormat destinationFormat) {
         var newHeader = new ArrayList<String>();
+        String[] finalLine = {""};
         for (var line : header) {
             var isNotComment = !line.startsWith("#");
-            if (destinationFormat != RNAFormat.BPSEQ && destinationFormat != RNAFormat.CT && isNotComment) {
-                line = "#" + line;
+            if (destinationFormat != BPSEQ && destinationFormat != CT && isNotComment)
+                newHeader.add(finalLine[0] = "#" + line);
+            else if (destinationFormat.equals(BPSEQ) || destinationFormat.equals(CT)) {
+                var BPSEQLines = List.of("Filename", "Organism", "Accession", "Citation");
+                BPSEQLines.forEach(bpl -> {
+                    if (finalLine[0].startsWith("#" + bpl))
+                        newHeader.add(finalLine[0].substring(1));
+                });
             }
-            newHeader.add(line);
         }
         return newHeader;
     }
@@ -241,19 +253,22 @@ public class RNAFileTranslator {
     private static void setRegionsOrder(List<Region> regs, int n) {
         if (n < 2) return;
         regs.get(0).setOrder(0);
-        for (int i = 1; i <n; i++) {
+        for (int i = 1; i < n; i++) {
             var globalOrder = 0;
-            for (int j = 0; j <= i-1 ; j++) {
+            for (int j = 0; j <= i - 1; j++) {
                 if (regs.get(j).getOrder() == globalOrder && areRegionsConflicting(regs.get(i), regs.get(j)))
                     globalOrder += 1;
             }
             regs.get(i).setOrder(globalOrder);
         }
     }
+
     private static boolean areRegionsConflicting(Region r1, Region r2) {
         var wb1 = r1.getWeakBond();
         var wb2 = r2.getWeakBond();
+        // ( [ ) ]
         var firstCase = wb1.getLeft() < wb2.getLeft() && wb1.getRight() > wb2.getLeft() && wb2.getRight() > wb1.getRight();
+        // [ ( ] )
         var secondCase = wb2.getLeft() < wb1.getLeft() && wb2.getRight() > wb1.getLeft() && wb1.getRight() > wb2.getRight();
         return firstCase || secondCase;
     }

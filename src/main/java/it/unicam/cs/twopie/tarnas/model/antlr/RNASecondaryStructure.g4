@@ -74,14 +74,14 @@ ct_structure:
 
 ct_line:
 	INDEX                       // First column: sequence index
-	IUPAC_CODE                  // Second column: base in one-letter notation
+	NUCLEOTIDE                  // Second column: base in one-letter notation
 	( ZERO_INDEX | INDEX )      // Third column: sequence indices (plus/minus one)
 	( ZERO_INDEX | INDEX )      // Fourth column: sequence indices (plus/minus one)
 	ZERO_INDEX                  // Fifth column: pairing partner of this base if it involved in a base pair
 	INDEX # ctLineUnpaired      // Sixth column: sequence indices (plus/minus one)
 	|
 	INDEX
-	IUPAC_CODE
+	NUCLEOTIDE
 	( ZERO_INDEX | INDEX )
 	( ZERO_INDEX | INDEX )
 	INDEX                       // Fifth column: no pairing partner of this base if it not involved in a base pair
@@ -94,8 +94,8 @@ bpseq_structure:
 ;
 
 bpseq_line:
-	INDEX IUPAC_CODE ZERO_INDEX # bpseqLineUnpaired
-	| INDEX IUPAC_CODE INDEX # bpseqLineBond
+	INDEX NUCLEOTIDE ZERO_INDEX # bpseqLineUnpaired
+	| INDEX NUCLEOTIDE INDEX # bpseqLineBond
 ;
 
 
@@ -127,7 +127,7 @@ NONEWLINE
 	~( '\r' | '\n' )
 ;
 
-IUPAC_CODE:
+fragment IUPAC_CODE:
 	[ACGUacguTtRrYysSWwKkMmBbDdHhVvNn-]
 ;
 

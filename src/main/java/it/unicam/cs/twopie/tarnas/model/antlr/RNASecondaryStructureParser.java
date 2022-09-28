@@ -20,8 +20,8 @@ public class RNASecondaryStructureParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, INDEX=5, ZERO_INDEX=6, BPSEQCTLINES=7, 
-		LINECT=8, IUPAC_CODE=9, NUCLEOTIDE=10, EDBN=11, LINE1BPSEQCT=12, LINE2BPSEQCT=13, 
-		LINE3BPSEQCT=14, LINE4BPSEQCT=15, COMMENT=16, WS=17;
+		LINECT=8, NUCLEOTIDE=9, EDBN=10, LINE1BPSEQCT=11, LINE2BPSEQCT=12, LINE3BPSEQCT=13, 
+		LINE4BPSEQCT=14, COMMENT=15, WS=16;
 	public static final int
 		RULE_rna_format = 0, RULE_aas = 1, RULE_edbn = 2, RULE_fasta = 3, RULE_bpseq = 4, 
 		RULE_ct = 5, RULE_edbn_structure = 6, RULE_sequence = 7, RULE_bonds = 8, 
@@ -45,8 +45,8 @@ public class RNASecondaryStructureParser extends Parser {
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, "INDEX", "ZERO_INDEX", "BPSEQCTLINES", 
-			"LINECT", "IUPAC_CODE", "NUCLEOTIDE", "EDBN", "LINE1BPSEQCT", "LINE2BPSEQCT", 
-			"LINE3BPSEQCT", "LINE4BPSEQCT", "COMMENT", "WS"
+			"LINECT", "NUCLEOTIDE", "EDBN", "LINE1BPSEQCT", "LINE2BPSEQCT", "LINE3BPSEQCT", 
+			"LINE4BPSEQCT", "COMMENT", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -953,7 +953,7 @@ public class RNASecondaryStructureParser extends Parser {
 		public TerminalNode INDEX(int i) {
 			return getToken(RNASecondaryStructureParser.INDEX, i);
 		}
-		public TerminalNode IUPAC_CODE() { return getToken(RNASecondaryStructureParser.IUPAC_CODE, 0); }
+		public TerminalNode NUCLEOTIDE() { return getToken(RNASecondaryStructureParser.NUCLEOTIDE, 0); }
 		public List<TerminalNode> ZERO_INDEX() { return getTokens(RNASecondaryStructureParser.ZERO_INDEX); }
 		public TerminalNode ZERO_INDEX(int i) {
 			return getToken(RNASecondaryStructureParser.ZERO_INDEX, i);
@@ -974,7 +974,7 @@ public class RNASecondaryStructureParser extends Parser {
 		public TerminalNode INDEX(int i) {
 			return getToken(RNASecondaryStructureParser.INDEX, i);
 		}
-		public TerminalNode IUPAC_CODE() { return getToken(RNASecondaryStructureParser.IUPAC_CODE, 0); }
+		public TerminalNode NUCLEOTIDE() { return getToken(RNASecondaryStructureParser.NUCLEOTIDE, 0); }
 		public List<TerminalNode> ZERO_INDEX() { return getTokens(RNASecondaryStructureParser.ZERO_INDEX); }
 		public TerminalNode ZERO_INDEX(int i) {
 			return getToken(RNASecondaryStructureParser.ZERO_INDEX, i);
@@ -1005,7 +1005,7 @@ public class RNASecondaryStructureParser extends Parser {
 				setState(121);
 				match(INDEX);
 				setState(122);
-				match(IUPAC_CODE);
+				match(NUCLEOTIDE);
 				setState(123);
 				_la = _input.LA(1);
 				if ( !(_la==INDEX || _la==ZERO_INDEX) ) {
@@ -1039,7 +1039,7 @@ public class RNASecondaryStructureParser extends Parser {
 				setState(127);
 				match(INDEX);
 				setState(128);
-				match(IUPAC_CODE);
+				match(NUCLEOTIDE);
 				setState(129);
 				_la = _input.LA(1);
 				if ( !(_la==INDEX || _la==ZERO_INDEX) ) {
@@ -1178,7 +1178,7 @@ public class RNASecondaryStructureParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class BpseqLineUnpairedContext extends Bpseq_lineContext {
 		public TerminalNode INDEX() { return getToken(RNASecondaryStructureParser.INDEX, 0); }
-		public TerminalNode IUPAC_CODE() { return getToken(RNASecondaryStructureParser.IUPAC_CODE, 0); }
+		public TerminalNode NUCLEOTIDE() { return getToken(RNASecondaryStructureParser.NUCLEOTIDE, 0); }
 		public TerminalNode ZERO_INDEX() { return getToken(RNASecondaryStructureParser.ZERO_INDEX, 0); }
 		public BpseqLineUnpairedContext(Bpseq_lineContext ctx) { copyFrom(ctx); }
 		@Override
@@ -1196,7 +1196,7 @@ public class RNASecondaryStructureParser extends Parser {
 		public TerminalNode INDEX(int i) {
 			return getToken(RNASecondaryStructureParser.INDEX, i);
 		}
-		public TerminalNode IUPAC_CODE() { return getToken(RNASecondaryStructureParser.IUPAC_CODE, 0); }
+		public TerminalNode NUCLEOTIDE() { return getToken(RNASecondaryStructureParser.NUCLEOTIDE, 0); }
 		public BpseqLineBondContext(Bpseq_lineContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -1222,7 +1222,7 @@ public class RNASecondaryStructureParser extends Parser {
 				setState(141);
 				match(INDEX);
 				setState(142);
-				match(IUPAC_CODE);
+				match(NUCLEOTIDE);
 				setState(143);
 				match(ZERO_INDEX);
 				}
@@ -1234,7 +1234,7 @@ public class RNASecondaryStructureParser extends Parser {
 				setState(144);
 				match(INDEX);
 				setState(145);
-				match(IUPAC_CODE);
+				match(NUCLEOTIDE);
 				setState(146);
 				match(INDEX);
 				}
@@ -1253,7 +1253,7 @@ public class RNASecondaryStructureParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u0011\u0096\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
+		"\u0004\u0001\u0010\u0096\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
 		"\u0002\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004"+
 		"\u0002\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007"+
 		"\u0002\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b"+
@@ -1287,58 +1287,58 @@ public class RNASecondaryStructureParser extends Parser {
 		"\u001f\"\u0003\b\u0004\u0000 \"\u0003\u0006\u0003\u0000!\u001c\u0001\u0000"+
 		"\u0000\u0000!\u001d\u0001\u0000\u0000\u0000!\u001e\u0001\u0000\u0000\u0000"+
 		"!\u001f\u0001\u0000\u0000\u0000! \u0001\u0000\u0000\u0000\"\u0001\u0001"+
-		"\u0000\u0000\u0000#%\u0005\u0010\u0000\u0000$#\u0001\u0000\u0000\u0000"+
+		"\u0000\u0000\u0000#%\u0005\u000f\u0000\u0000$#\u0001\u0000\u0000\u0000"+
 		"%(\u0001\u0000\u0000\u0000&$\u0001\u0000\u0000\u0000&\'\u0001\u0000\u0000"+
 		"\u0000\'*\u0001\u0000\u0000\u0000(&\u0001\u0000\u0000\u0000)+\u0003\u000e"+
 		"\u0007\u0000*)\u0001\u0000\u0000\u0000*+\u0001\u0000\u0000\u0000+,\u0001"+
 		"\u0000\u0000\u0000,-\u0003\u0010\b\u0000-\u0003\u0001\u0000\u0000\u0000"+
-		".0\u0005\u0010\u0000\u0000/.\u0001\u0000\u0000\u000003\u0001\u0000\u0000"+
+		".0\u0005\u000f\u0000\u0000/.\u0001\u0000\u0000\u000003\u0001\u0000\u0000"+
 		"\u00001/\u0001\u0000\u0000\u000012\u0001\u0000\u0000\u000025\u0001\u0000"+
 		"\u0000\u000031\u0001\u0000\u0000\u000046\u0003\u000e\u0007\u000054\u0001"+
 		"\u0000\u0000\u000056\u0001\u0000\u0000\u000067\u0001\u0000\u0000\u0000"+
-		"78\u0003\f\u0006\u00008\u0005\u0001\u0000\u0000\u00009;\u0005\u0010\u0000"+
+		"78\u0003\f\u0006\u00008\u0005\u0001\u0000\u0000\u00009;\u0005\u000f\u0000"+
 		"\u0000:9\u0001\u0000\u0000\u0000;>\u0001\u0000\u0000\u0000<:\u0001\u0000"+
 		"\u0000\u0000<=\u0001\u0000\u0000\u0000=?\u0001\u0000\u0000\u0000><\u0001"+
 		"\u0000\u0000\u0000?@\u0003\u000e\u0007\u0000@\u0007\u0001\u0000\u0000"+
 		"\u0000AC\u0005\u0007\u0000\u0000BA\u0001\u0000\u0000\u0000BC\u0001\u0000"+
-		"\u0000\u0000CK\u0001\u0000\u0000\u0000DF\u0005\u0010\u0000\u0000ED\u0001"+
+		"\u0000\u0000CK\u0001\u0000\u0000\u0000DF\u0005\u000f\u0000\u0000ED\u0001"+
 		"\u0000\u0000\u0000FI\u0001\u0000\u0000\u0000GE\u0001\u0000\u0000\u0000"+
 		"GH\u0001\u0000\u0000\u0000HK\u0001\u0000\u0000\u0000IG\u0001\u0000\u0000"+
 		"\u0000JB\u0001\u0000\u0000\u0000JG\u0001\u0000\u0000\u0000KL\u0001\u0000"+
 		"\u0000\u0000LM\u0003\u0018\f\u0000M\t\u0001\u0000\u0000\u0000NP\u0005"+
 		"\u0007\u0000\u0000ON\u0001\u0000\u0000\u0000OP\u0001\u0000\u0000\u0000"+
-		"PX\u0001\u0000\u0000\u0000QS\u0005\u0010\u0000\u0000RQ\u0001\u0000\u0000"+
+		"PX\u0001\u0000\u0000\u0000QS\u0005\u000f\u0000\u0000RQ\u0001\u0000\u0000"+
 		"\u0000SV\u0001\u0000\u0000\u0000TR\u0001\u0000\u0000\u0000TU\u0001\u0000"+
 		"\u0000\u0000UX\u0001\u0000\u0000\u0000VT\u0001\u0000\u0000\u0000WO\u0001"+
 		"\u0000\u0000\u0000WT\u0001\u0000\u0000\u0000XY\u0001\u0000\u0000\u0000"+
 		"YZ\u0005\b\u0000\u0000Z[\u0003\u0014\n\u0000[\u000b\u0001\u0000\u0000"+
-		"\u0000\\]\u0005\u000b\u0000\u0000]`\u0003\f\u0006\u0000^`\u0005\u000b"+
-		"\u0000\u0000_\\\u0001\u0000\u0000\u0000_^\u0001\u0000\u0000\u0000`\r\u0001"+
-		"\u0000\u0000\u0000ab\u0005\n\u0000\u0000be\u0003\u000e\u0007\u0000ce\u0005"+
-		"\n\u0000\u0000da\u0001\u0000\u0000\u0000dc\u0001\u0000\u0000\u0000e\u000f"+
-		"\u0001\u0000\u0000\u0000fg\u0003\u0012\t\u0000gh\u0005\u0001\u0000\u0000"+
-		"hi\u0003\u0010\b\u0000il\u0001\u0000\u0000\u0000jl\u0003\u0012\t\u0000"+
-		"kf\u0001\u0000\u0000\u0000kj\u0001\u0000\u0000\u0000l\u0011\u0001\u0000"+
-		"\u0000\u0000mn\u0005\u0002\u0000\u0000no\u0005\u0005\u0000\u0000op\u0005"+
-		"\u0003\u0000\u0000pq\u0005\u0005\u0000\u0000qr\u0005\u0004\u0000\u0000"+
-		"r\u0013\u0001\u0000\u0000\u0000st\u0003\u0016\u000b\u0000tu\u0003\u0014"+
-		"\n\u0000ux\u0001\u0000\u0000\u0000vx\u0003\u0016\u000b\u0000ws\u0001\u0000"+
-		"\u0000\u0000wv\u0001\u0000\u0000\u0000x\u0015\u0001\u0000\u0000\u0000"+
-		"yz\u0005\u0005\u0000\u0000z{\u0005\t\u0000\u0000{|\u0007\u0000\u0000\u0000"+
-		"|}\u0007\u0000\u0000\u0000}~\u0005\u0006\u0000\u0000~\u0086\u0005\u0005"+
-		"\u0000\u0000\u007f\u0080\u0005\u0005\u0000\u0000\u0080\u0081\u0005\t\u0000"+
-		"\u0000\u0081\u0082\u0007\u0000\u0000\u0000\u0082\u0083\u0007\u0000\u0000"+
-		"\u0000\u0083\u0084\u0005\u0005\u0000\u0000\u0084\u0086\u0005\u0005\u0000"+
-		"\u0000\u0085y\u0001\u0000\u0000\u0000\u0085\u007f\u0001\u0000\u0000\u0000"+
-		"\u0086\u0017\u0001\u0000\u0000\u0000\u0087\u0088\u0003\u001a\r\u0000\u0088"+
-		"\u0089\u0003\u0018\f\u0000\u0089\u008c\u0001\u0000\u0000\u0000\u008a\u008c"+
-		"\u0003\u001a\r\u0000\u008b\u0087\u0001\u0000\u0000\u0000\u008b\u008a\u0001"+
-		"\u0000\u0000\u0000\u008c\u0019\u0001\u0000\u0000\u0000\u008d\u008e\u0005"+
-		"\u0005\u0000\u0000\u008e\u008f\u0005\t\u0000\u0000\u008f\u0094\u0005\u0006"+
-		"\u0000\u0000\u0090\u0091\u0005\u0005\u0000\u0000\u0091\u0092\u0005\t\u0000"+
-		"\u0000\u0092\u0094\u0005\u0005\u0000\u0000\u0093\u008d\u0001\u0000\u0000"+
-		"\u0000\u0093\u0090\u0001\u0000\u0000\u0000\u0094\u001b\u0001\u0000\u0000"+
-		"\u0000\u0013!&*15<BGJOTW_dkw\u0085\u008b\u0093";
+		"\u0000\\]\u0005\n\u0000\u0000]`\u0003\f\u0006\u0000^`\u0005\n\u0000\u0000"+
+		"_\\\u0001\u0000\u0000\u0000_^\u0001\u0000\u0000\u0000`\r\u0001\u0000\u0000"+
+		"\u0000ab\u0005\t\u0000\u0000be\u0003\u000e\u0007\u0000ce\u0005\t\u0000"+
+		"\u0000da\u0001\u0000\u0000\u0000dc\u0001\u0000\u0000\u0000e\u000f\u0001"+
+		"\u0000\u0000\u0000fg\u0003\u0012\t\u0000gh\u0005\u0001\u0000\u0000hi\u0003"+
+		"\u0010\b\u0000il\u0001\u0000\u0000\u0000jl\u0003\u0012\t\u0000kf\u0001"+
+		"\u0000\u0000\u0000kj\u0001\u0000\u0000\u0000l\u0011\u0001\u0000\u0000"+
+		"\u0000mn\u0005\u0002\u0000\u0000no\u0005\u0005\u0000\u0000op\u0005\u0003"+
+		"\u0000\u0000pq\u0005\u0005\u0000\u0000qr\u0005\u0004\u0000\u0000r\u0013"+
+		"\u0001\u0000\u0000\u0000st\u0003\u0016\u000b\u0000tu\u0003\u0014\n\u0000"+
+		"ux\u0001\u0000\u0000\u0000vx\u0003\u0016\u000b\u0000ws\u0001\u0000\u0000"+
+		"\u0000wv\u0001\u0000\u0000\u0000x\u0015\u0001\u0000\u0000\u0000yz\u0005"+
+		"\u0005\u0000\u0000z{\u0005\t\u0000\u0000{|\u0007\u0000\u0000\u0000|}\u0007"+
+		"\u0000\u0000\u0000}~\u0005\u0006\u0000\u0000~\u0086\u0005\u0005\u0000"+
+		"\u0000\u007f\u0080\u0005\u0005\u0000\u0000\u0080\u0081\u0005\t\u0000\u0000"+
+		"\u0081\u0082\u0007\u0000\u0000\u0000\u0082\u0083\u0007\u0000\u0000\u0000"+
+		"\u0083\u0084\u0005\u0005\u0000\u0000\u0084\u0086\u0005\u0005\u0000\u0000"+
+		"\u0085y\u0001\u0000\u0000\u0000\u0085\u007f\u0001\u0000\u0000\u0000\u0086"+
+		"\u0017\u0001\u0000\u0000\u0000\u0087\u0088\u0003\u001a\r\u0000\u0088\u0089"+
+		"\u0003\u0018\f\u0000\u0089\u008c\u0001\u0000\u0000\u0000\u008a\u008c\u0003"+
+		"\u001a\r\u0000\u008b\u0087\u0001\u0000\u0000\u0000\u008b\u008a\u0001\u0000"+
+		"\u0000\u0000\u008c\u0019\u0001\u0000\u0000\u0000\u008d\u008e\u0005\u0005"+
+		"\u0000\u0000\u008e\u008f\u0005\t\u0000\u0000\u008f\u0094\u0005\u0006\u0000"+
+		"\u0000\u0090\u0091\u0005\u0005\u0000\u0000\u0091\u0092\u0005\t\u0000\u0000"+
+		"\u0092\u0094\u0005\u0005\u0000\u0000\u0093\u008d\u0001\u0000\u0000\u0000"+
+		"\u0093\u0090\u0001\u0000\u0000\u0000\u0094\u001b\u0001\u0000\u0000\u0000"+
+		"\u0013!&*15<BGJOTW_dkw\u0085\u008b\u0093";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

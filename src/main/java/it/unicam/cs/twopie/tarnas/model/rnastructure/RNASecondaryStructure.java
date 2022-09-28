@@ -44,7 +44,7 @@ public class RNASecondaryStructure {
     private String sequence;
 
     // list of the weak bonds of this structure
-    private final List<WeakBond> bonds;
+    private List<WeakBond> bonds;
 
     // length of the sequence; if this structure has no sequence a sub-approximation
     // is computed from the bonds
@@ -77,7 +77,6 @@ public class RNASecondaryStructure {
     }
 
     /**
-     *
      * @param sequence
      */
     public void setSequence(String sequence) {
@@ -92,7 +91,6 @@ public class RNASecondaryStructure {
     }
 
     /**
-     *
      * @param size
      */
     public void setSize(int size) {
@@ -240,5 +238,19 @@ public class RNASecondaryStructure {
         int result = Objects.hash(getSequence(), getBonds(), getSize());
         result = 31 * result + Arrays.hashCode(getP());
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "RNASecondaryStructure{" +
+                "sequence='" + sequence + '\'' +
+                ", bonds=" + bonds +
+                ", size=" + size +
+                ", p=" + Arrays.toString(p) +
+                '}';
+    }
+
+    public void setBonds(List<WeakBond> bonds) {
+        this.bonds = bonds;
     }
 }

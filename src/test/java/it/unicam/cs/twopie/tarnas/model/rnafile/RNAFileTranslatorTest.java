@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -42,9 +43,10 @@ class RNAFileTranslatorTest {
                                     this.getFileNameWithoutExtension(f.getFileName()) + expectedExtension.get(i);
                             if (Files.exists(Paths.get(tmp))) {
                                 RNAFile expected = RNAFileConstructor.getInstance().construct(Paths.get(tmp));
-                                System.out.println("actual: " + toTranslate.getFileName());
-                                System.out.println("expected: " + expected.getFileName());
-                                System.out.println("FORMAT = " + rnaFormat.get(i));
+                                if (toTranslate.getHeader().isEmpty() || expected.getHeader().isEmpty()) {
+                                    toTranslate = new RNAFile(toTranslate.getFileName(), new ArrayList<>(), toTranslate.getBody(), toTranslate.getStructure(), toTranslate.getFormat());
+                                    expected = new RNAFile(expected.getFileName(), new ArrayList<>(), expected.getBody(), expected.getStructure(), expected.getFormat());
+                                }
                                 switch (rnaFormat.get(i)) {
                                     case AAS -> this.translateToAAS(toTranslate, expected);
                                     case AAS_NO_SEQUENCE -> this.translateToAASNoSequence(toTranslate, expected);
@@ -68,12 +70,12 @@ class RNAFileTranslatorTest {
                 // BPSSeqFiles
                 Arguments.of(archaea90110AllType, archaea90110AllType + fs + "BPSeqFiles",
                         List.of(fs + "CTFiles" + fs, fs + "CTFilesNH" + fs, fs + "DBNFiles" + fs, fs + "DBNFilesNH" + fs, fs + "FastaFiles" + fs),
-                        List.of(".ct", ".ct", ".dbn", ".dbn", ".fasta"),
+                        List.of(".ct", ".ct", ".db", ".db", ".fasta"),
                         List.of(RNAFormat.CT, RNAFormat.CT, RNAFormat.DB, RNAFormat.DB, RNAFormat.FASTA)),
                 // CTFiles
                 Arguments.of(archaea90110AllType, archaea90110AllType + fs + "CTFiles",
                         List.of(fs + "BPSeqFiles" + fs, fs + "DBNFiles" + fs, fs + "DBNFilesNH" + fs, fs + "FastaFiles" + fs),
-                        List.of(".bpseq", ".dbn", ".dbn", ".fasta"),
+                        List.of(".bpseq", ".db", ".db", ".fasta"),
                         List.of(RNAFormat.BPSEQ, RNAFormat.DB, RNAFormat.DB, RNAFormat.FASTA)),
                 // DBFiles
                 Arguments.of(archaea90110AllType, archaea90110AllType + "/DBNFiles",
@@ -98,35 +100,29 @@ class RNAFileTranslatorTest {
     private static Stream<Arguments> benchmarkDatasetFunctional() {
         return Stream.of(
                 // BPSSeqFiles
-                /*Arguments.of(datasetFunctional, datasetFunctional + fs + "BPSeqFiles",
+                Arguments.of(datasetFunctional, datasetFunctional + fs + "BPSeqFiles",
                         List.of(fs + "CTFiles" + fs, fs + "CTFilesNoHeader" + fs, fs + "DBNFiles" + fs, fs + "DBNFilesNoHeader" + fs),
-                        List.of(".ct", ".ct", ".dbn", ".dbn"),
-                        List.of(RNAFormat.CT, RNAFormat.CT, RNAFormat.DB, RNAFormat.DB))/*,
-
-                Arguments.of(datasetFunctional, datasetFunctional + "/BPSeqFiles",
-                        List.of("/CTFiles/", "/CTFilesNoHeader/", "/DBNFiles/", "/DBNFilesNoHeader/"),
-                        List.of(".ct", ".ct", ".dbn", ".dbn"),
-                        List.of(RNAFormat.CT, RNAFormat.CT, RNAFormat.DB, RNAFormat.DB))*/
+                        List.of(".ct", ".ct", ".db", ".db"),
+                        List.of(RNAFormat.CT, RNAFormat.CT, RNAFormat.DB, RNAFormat.DB)),
+                Arguments.of(datasetFunctional, datasetFunctional + fs + "BPSeqFiles",
+                        List.of(fs + "CTFiles" + fs, fs + "CTFilesNoHeader" + fs, fs + "DBNFiles" + fs, fs + "DBNFilesNoHeader" + fs),
+                        List.of(".ct", ".ct", ".db", ".db"),
+                        List.of(RNAFormat.CT, RNAFormat.CT, RNAFormat.DB, RNAFormat.DB)),
                 // CTFiles
-                /*Arguments.of(archaea90110AllType + "/CTFiles",
-                        List.of("/BPSeqFiles/", "/DBNFiles/", "/DBNFilesNH/", "/FastaFiles/"),
-                        List.of(".bpseq", ".dbn", ".dbn", ".fasta"),
-                        List.of(RNAFormat.BPSEQ, RNAFormat.DB, RNAFormat.DB, RNAFormat.FASTA)),*/
-                // DBFiles
-                /*Arguments.of(archaea90110AllType + "/DBNFiles",
-                        List.of("/BPSeqFiles/", "/CTFiles/", "/CTFilesNH/", "/FastaFiles/"),
-                        List.of(".bpseq", ".ct", ".ct", ".fasta"),
-                        List.of(RNAFormat.BPSEQ, RNAFormat.CT, RNAFormat.CT, RNAFormat.FASTA)),*/
-                // DBFilesNH
-                /*Arguments.of(archaea90110AllType + "/DBNFilesNH",
-                        List.of("/BPSeqFiles/", "/CTFiles/", "/CTFilesNH/", "/FastaFiles/"),
-                        List.of(".bpseq", ".ct", ".ct", ".fasta"),
-                        List.of(RNAFormat.BPSEQ, RNAFormat.CT, RNAFormat.CT, RNAFormat.FASTA)),*/
-                // FastaFiles
-               /* Arguments.of(archaea90110AllType + "/FastaFiles",
-                        List.of("/BPSeqFiles/", "/CTFiles/", "/CTFilesNH/", "/DBNFiles/", "/DBNFilesNH/"),
-                        List.of(".bpseq", ".ct", ".ct", ".dbn", "dbn"),
-                        List.of(RNAFormat.BPSEQ, RNAFormat.CT, RNAFormat.CT, RNAFormat.DB, RNAFormat.DB))*/
+                Arguments.of(datasetFunctional, datasetFunctional + fs + "CTFiles",
+                        List.of(fs + "BPSeqFiles" + fs, fs + "CTFiles" + fs, fs + "CTFilesNoHeader" + fs, fs + "DBNFiles" + fs, fs + "DBNFilesNoHeader" + fs),
+                        List.of(".bpseq", ".ct", ".ct", ".db", ".db"),
+                        List.of(RNAFormat.BPSEQ, RNAFormat.CT, RNAFormat.CT, RNAFormat.DB, RNAFormat.DB)),
+                // DBNFiles
+                Arguments.of(datasetFunctional, datasetFunctional + fs + "DBNFiles",
+                        List.of(fs + "BPSeqFiles" + fs, fs + "CTFiles" + fs, fs + "CTFilesNoHeader" + fs),
+                        List.of(".bpseq", ".ct", ".ct"),
+                        List.of(RNAFormat.BPSEQ, RNAFormat.CT, RNAFormat.CT)),
+                // DBNFilesNoHeader
+                Arguments.of(datasetFunctional, datasetFunctional + fs + "DBNFilesNoHeader",
+                        List.of(fs + "BPSeqFiles" + fs, fs + "CTFiles" + fs, fs + "CTFilesNoHeader" + fs),
+                        List.of(".bpseq", ".ct", ".ct"),
+                        List.of(RNAFormat.BPSEQ, RNAFormat.CT, RNAFormat.CT))
         );
     }
 
@@ -195,12 +191,12 @@ class RNAFileTranslatorTest {
 
 
     private void translateToDB(RNAFile rnaFile, RNAFile expectedRNAFile) throws IOException {
-        //System.out.println("translated: "+RNAFileTranslator.translateToDB(rnaFile));
-        //System.out.println("expected: "+ RNAFileTranslator.translateToDB(expectedRNAFile));
+        //System.out.println("INSIDE\nr: " + rnaFile + "\nt: " + expectedRNAFile);
         var fRNAFile = RNAFileTranslator.translateToDB(rnaFile);
-        var fExpectedRNAFile = RNAFileTranslator.translateToDB(expectedRNAFile);
-        System.out.println("E: " + fExpectedRNAFile);
-        assertEquals(fExpectedRNAFile, fRNAFile);
+        //System.out.println("translated: " + fRNAFile);
+        //var fExpectedRNAFile = RNAFileTranslator.translateToDB(expectedRNAFile);
+        //System.out.println("\ntranslated: " + fExpectedRNAFile);
+        assertEquals(expectedRNAFile, fRNAFile);
     }
 
 
@@ -236,7 +232,6 @@ class RNAFileTranslatorTest {
         var fRNAFile = RNAFileTranslator.translateToAASNoSequence(rnaFile);
         var fExpectedRNAFile = RNAFileTranslator.translateToAASNoSequence(expectedRNAFile);
         assertEquals(fExpectedRNAFile, fRNAFile);
-
     }
 
     private void translateToFASTA(RNAFile rnaFile, RNAFile expectedRNAFile) throws IOException {
