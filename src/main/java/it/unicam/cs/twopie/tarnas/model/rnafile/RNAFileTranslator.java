@@ -241,9 +241,9 @@ public class RNAFileTranslator {
     private static void setRegionsOrder(List<Region> regs, int n) {
         if (n < 2) return;
         regs.get(0).setOrder(0);
-        for (int i = 1; i < n; i++) {
+        for (int i = 1; i <n; i++) {
             var globalOrder = 0;
-            for (int j = 0; j < i - 1; j++) {
+            for (int j = 0; j <= i-1 ; j++) {
                 if (regs.get(j).getOrder() == globalOrder && areRegionsConflicting(regs.get(i), regs.get(j)))
                     globalOrder += 1;
             }
