@@ -4,13 +4,15 @@ import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFileConstructor;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * // TODO: javadoc
@@ -76,6 +78,15 @@ public class IOController {
     }
 
     /**
+     * Get the recognized format
+     *
+     * @return the recognized format
+     */
+    public RNAFormat getRecognizedFormat() {
+        return this.recognizedFormat;
+    }
+
+    /**
      * Loads a file from the specified {@code srcFilePath} and stores it in the list of loaded files to translate.
      *
      * @param srcFilePath the {@link Path} of the file to translate.
@@ -135,6 +146,35 @@ public class IOController {
             Files.write(dstPath.resolve(f.getFileName()), f.getContent());
     }
 
+    public Path zipFiles(Path dstZipPath, String zipName, List<RNAFile> rnaFiles) throws IOException {
+        if (!Files.exists(dstZipPath) || !Files.isDirectory(dstZipPath))
+            throw new IllegalArgumentException(dstZipPath + " is not a directory or non existent path");
+        List<Path> tmpFiles = new ArrayList<>();
+        for (RNAFile f : rnaFiles) {
+            File tmp = new File(dstZipPath.toUri().resolve(f.getFileName()));
+            Files.write(dstZipPath.resolve(f.getFileName()), f.getContent());
+            tmpFiles.add(dstZipPath.resolve(Paths.get(f.getFileName())));
+        }
+        Path zipPath = dstZipPath.resolve(zipName + ".zip");
+        FileOutputStream fos = new FileOutputStream(zipPath.toFile());
+        ZipOutputStream zipOut = new ZipOutputStream(fos);
+        for (Path srcFile : tmpFiles) {
+            File fileToZip = new File(srcFile.toUri());
+            FileInputStream fis = new FileInputStream(fileToZip);
+            ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+            zipOut.putNextEntry(zipEntry);
+            byte[] bytes = new byte[1024];
+            int length;
+            while ((length = fis.read(bytes)) >= 0)
+                zipOut.write(bytes, 0, length);
+            fis.close();
+            Files.delete(srcFile);  // delete tmp file
+        }
+        zipOut.close();
+        fos.close();
+        return zipPath;
+    }
+
     /**
      * Removes the specified {@code rnaFile} from loaded rnaFiles.
      *
@@ -155,14 +195,5 @@ public class IOController {
     public void clearAllDataStructures() {
         this.loadedRNAFiles.clear();
         this.recognizedFormat = null;
-    }
-
-    /**
-     * Get the recognized format
-     *
-     * @return the recognized format
-     */
-    public RNAFormat getRecognizedFormat() {
-        return this.recognizedFormat;
     }
 }

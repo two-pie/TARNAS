@@ -21,19 +21,19 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
 
 public class HomeController {
     private final Logger logger = Logger.getLogger("it.unicam.cs.two.pie.tarnas.view.HomeController");
-
     private TranslatorController translatorController;
 
     private IOController ioController;
@@ -96,16 +96,28 @@ public class HomeController {
 
     @FXML
     public Label lblRecognizedFormat;
+    @FXML
+    public CheckBox chkbxSaveAsZIP;
+    @FXML
+    public TextField lblArchiveName;
+    @FXML
+    public Button btnCancelWriteContent;
+    @FXML
+    public Button btnSaveWroteContent;
+    @FXML
+    public TextArea txtAreaWriteContent;
+    @FXML
+    public Button btnWriteContent;
 
     @FXML
     public void initialize() {
-        logger.info("Initializing...");
+        this.logger.info("Initializing...");
         // init controllers
         this.cleanerController = CleanerController.getInstance();
         this.ioController = IOController.getInstance();
         this.translatorController = TranslatorController.getInstance();
         // allow only one character in txtRmLinesContainingPrefix
-        txtRmLinesContainingPrefix.setTextFormatter(new TextFormatter<String>((TextFormatter.Change change) -> {
+        this.txtRmLinesContainingPrefix.setTextFormatter(new TextFormatter<String>((TextFormatter.Change change) -> {
             String newText = change.getControlNewText();
             if (newText.length() > 1) {
                 return null;
@@ -131,12 +143,13 @@ public class HomeController {
         // add event to select ButtonItem for destination format translation
         this.initSelectEventOnButtonItems();
         this.btnTranslateAllLoadedFiles.setDisable(true);
-        logger.info("Initialization done");
+        this.initBtnWriteContent();
+        this.logger.info("Initialization done");
     }
 
     @FXML
     public void handleAddFile() {
-        logger.info("AGGIUNGI FILE button clicked");
+        this.logger.info("AGGIUNGI FILE button clicked");
         try {
             var fileChooser = new FileChooser();
             var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
@@ -146,17 +159,16 @@ public class HomeController {
                 this.setDisablePanes(false);
                 this.chbxMergeLines.setDisable(this.ioController.getRecognizedFormat() != DB && this.ioController.getRecognizedFormat() != DB_NO_SEQUENCE);
             }
-
-            logger.info("File added successfully");
+            this.logger.info("File added successfully");
         } catch (Exception e) {
-            logger.severe(e.getMessage());
+            this.logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
     public void handleAddFolder() {
-        logger.info("AGGIUNGI CARTELLA button clicked");
+        this.logger.info("AGGIUNGI CARTELLA button clicked");
         try {
             var directoryChooser = new DirectoryChooser();
             var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
@@ -168,16 +180,16 @@ public class HomeController {
                     this.addFileToTable(f);
                 this.setDisablePanes(false);
             }
-            logger.info("Folder added successfully");
+            this.logger.info("Folder added successfully");
         } catch (Exception e) {
-            logger.severe(e.getMessage());
+            this.logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
     public void handleClean() {
-        logger.info("Pulisci button clicked");
+        this.logger.info("Pulisci button clicked");
         try {
             var cleanedFiles = this.filesTable.getItems().stream().toList();
             if (this.chbxRmLinesContainingWord.isSelected())
@@ -201,16 +213,16 @@ public class HomeController {
                         .map(f -> this.cleanerController.mergeDBLines(f))
                         .toList();
             this.saveFilesTo(cleanedFiles);
-            logger.info("Cleaned all files successfully");
+            this.logger.info("Cleaned all files successfully");
         } catch (Exception e) {
-            logger.severe(e.getMessage());
+            this.logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
     public void translateAllLoadedFiles() {
-        logger.info("TRADUCI button clicked");
+        this.logger.info("TRADUCI button clicked");
         List<RNAFile> translatedRNAFiles;
         translatedRNAFiles = this.translatorController.translateAllLoadedFiles(this.ioController.getLoadedRNAFiles(), this.selectedFormat);
         try {
@@ -219,16 +231,16 @@ public class HomeController {
                         .map(f -> this.cleanerController.removeHeader(f))
                         .toList();
             this.saveFilesTo(translatedRNAFiles);
-            logger.info("Files translated successfully");
+            this.logger.info("Files translated successfully");
         } catch (IOException e) {
-            logger.severe(e.getMessage());
+            this.logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
     public void resetAll(ActionEvent event) {
-        logger.info("RESET button clicked");
+        this.logger.info("RESET button clicked");
         // Reset all data structures
         this.filesTable.getItems().clear();
         // reset translation and cleaner panes
@@ -238,7 +250,7 @@ public class HomeController {
         //reset recognized format
         this.lblRecognizedFormat.setText("");
         this.lblRecognizedFormat.setVisible(false);
-        logger.info("Reset done");
+        this.logger.info("Reset done");
     }
 
     private Stage getPrimaryStage() {
@@ -255,7 +267,7 @@ public class HomeController {
         return alert.showAndWait();
     }
 
-    private void initSelectEventOnButtonItems() {
+    private void initSelectEventOnButtonItems() { // TODO: fare in modo che quando viene riconosciuto un formato, si vedono solo i formati traducibili nel MenuItem
         this.itmAAS.setId(AAS.toString());
         this.itmAASNS.setId(AAS_NO_SEQUENCE.toString());
         this.itmBPSEQ.setId(BPSEQ.toString());
@@ -286,15 +298,89 @@ public class HomeController {
     }
 
     private void saveFilesTo(List<RNAFile> rnaFiles) throws IOException {
-        this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the files");
+        boolean saveAsZIP = this.chkbxSaveAsZIP.isSelected() && !this.lblArchiveName.getText().isEmpty();
+        String filesOrArchive = saveAsZIP ? this.lblArchiveName.getText() + ".zip" : "files";
+        this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the " + filesOrArchive);
         var directoryChooser = new DirectoryChooser();
         var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
         if (selectedDirectory != null) {
-            this.ioController.saveFilesTo(rnaFiles, selectedDirectory.toPath());
-            this.showAlert(Alert.AlertType.INFORMATION,
-                    "",
-                    "Files saved successfully",
-                    rnaFiles.size() + " files saved in: " + selectedDirectory.getPath());
+            // zip options
+            if (saveAsZIP) {
+                this.ioController.zipFiles(selectedDirectory.toPath(), this.lblArchiveName.getText(), rnaFiles);
+                this.showAlert(Alert.AlertType.INFORMATION,
+                        "",
+                        "Files saved successfully",
+                        rnaFiles.size() + " files saved in: " + selectedDirectory.toPath().resolve(this.lblArchiveName.getText() + ".zip"));
+            } else { // files options
+                this.ioController.saveFilesTo(rnaFiles, selectedDirectory.toPath());
+                this.showAlert(Alert.AlertType.INFORMATION,
+                        "",
+                        "Files saved successfully",
+                        rnaFiles.size() + " files saved in: " + selectedDirectory.getPath());
+            }
+        }
+    }
+
+    /**
+     * Inits btn write content and hides btn cancel, save and text area.
+     */
+    private void initBtnWriteContent() {
+        this.logger.info(this.btnWriteContent.getText() + " visible, other btns are invisible");
+        this.btnCancelWriteContent.setVisible(false);
+        this.btnSaveWroteContent.setVisible(false);
+        this.txtAreaWriteContent.setVisible(false);
+    }
+
+    /**
+     * Action for showing btns cancel, save and text area.
+     */
+    public void handleWriteContent() {
+        this.logger.info(this.btnWriteContent.getText() + " button clicked");
+        this.btnWriteContent.setVisible(false);
+        this.btnCancelWriteContent.setVisible(true);
+        this.btnSaveWroteContent.setVisible(true);
+        this.txtAreaWriteContent.setVisible(true);
+    }
+
+    /**
+     * Action for cancel write file content.
+     */
+    public void handleCancelWriteContent() {
+        this.logger.info(this.btnCancelWriteContent.getText() + " button clicked");
+        this.btnWriteContent.setVisible(true);
+        this.btnCancelWriteContent.setVisible(false);
+        this.btnSaveWroteContent.setVisible(false);
+        this.txtAreaWriteContent.clear();
+        this.txtAreaWriteContent.setVisible(false);
+    }
+
+    /**
+     * Action for saving file content in the TableView.
+     */
+    public void handleSaveWroteContent() throws IOException {
+        this.logger.info(this.btnSaveWroteContent.getText() + " button clicked");
+        String fileName;
+        TextInputDialog nameFileContent = new TextInputDialog("example.bpseq");
+        nameFileContent.setHeaderText("Inserisci il nome del file");
+        this.btnSaveWroteContent.setOnMouseClicked(e -> {
+            nameFileContent.initModality(Modality.APPLICATION_MODAL);
+            nameFileContent.showAndWait();
+        });
+        if (this.txtAreaWriteContent.getText().isEmpty()) {
+            this.showAlert(Alert.AlertType.ERROR, "Error", "", "Il file da salvare non deve essere vuoto");
+            this.logger.severe(this.txtAreaWriteContent.getId() + " is empty");
+        } else {
+            fileName = nameFileContent.getEditor().getText();
+            this.logger.info(fileName + " created");
+            File tmp = new File(Path.of(System.getProperty("user.dir")).resolve(fileName).toUri());
+            this.logger.info("write content on " + fileName);
+            Files.write(tmp.toPath(), this.txtAreaWriteContent.getText().getBytes());
+            var selectedRNAFile = Path.of(tmp.getPath());
+            this.addFileToTable(selectedRNAFile);
+            Files.delete(tmp.toPath());
+            this.logger.info(fileName + " deleted");
+            // clear
+            this.txtAreaWriteContent.clear();
         }
     }
 
