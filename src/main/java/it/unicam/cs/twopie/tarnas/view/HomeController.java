@@ -13,7 +13,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -279,14 +278,14 @@ public class HomeController {
         return (Stage) this.filesTable.getScene().getWindow();
     }
 
-    private Optional<ButtonType> showAlert(Alert.AlertType alertType, String title, String header, String content) {
+    private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         alert.initOwner(this.getPrimaryStage());
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
-        return alert.showAndWait();
+        alert.showAndWait();
     }
 
     private void initSelectEventOnButtonItems() { // TODO: fare in modo che quando viene riconosciuto un formato, si vedono solo i formati traducibili nel MenuItem
