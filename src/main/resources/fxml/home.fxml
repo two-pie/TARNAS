@@ -161,7 +161,7 @@
               <buttons>
                 <Button onAction="#handleAddFile" mnemonicParsing="false" prefHeight="26.0" prefWidth="522.0" text="AGGIUNGI FILE" />
                   <Button onAction="#handleAddFolder" mnemonicParsing="false" text="AGGIUNGI CARTELLA" />
-                  <Button mnemonicParsing="false" text="SCRIVI FILE" />
+                  <Button onAction="#handleWriteFile" mnemonicParsing="false" text="SCRIVI FILE" />
                   <Button onAction="#handleReset" mnemonicParsing="false" text="RESET" />
               </buttons>
             </ButtonBar>

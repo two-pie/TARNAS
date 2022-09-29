@@ -12,6 +12,10 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -29,6 +33,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
+
 
 public class HomeController {
     private final Logger logger = Logger.getLogger("it.unicam.cs.two.pie.tarnas.view.HomeController");
@@ -82,7 +87,6 @@ public class HomeController {
     @FXML
     public CheckBox chbxMergeLines;
 
-
     @FXML
     public CheckBox chbxIncludeHeader;
 
@@ -98,17 +102,6 @@ public class HomeController {
     @FXML
     public TextField lblArchiveName;
 
-    /*@FXML
-    public Button btnCancelWriteContent;
-
-    @FXML
-    public Button btnSaveWroteContent;
-
-    @FXML
-    public TextArea txtAreaWriteContent;
-
-    @FXML
-    public Button btnWriteContent; TODO*/
 
     @FXML
     public void initialize() {
@@ -236,6 +229,52 @@ public class HomeController {
         this.logger.info("Reset done");
     }
 
+    @FXML
+    public void handleWriteFile() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/writeFile.fxml"));
+        Parent root = loader.load();
+        var stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(new Scene(root, 400, 400));;
+        var textArea = (TextArea) loader.getNamespace().get("txtAreaRnaFileContent");
+        var saveButton = (Button) loader.getNamespace().get(("btnSaveWriteFile"));
+        var cancelButton = (Button) loader.getNamespace().get(("btnCancelWriteFile"));
+        saveButton.setOnAction(e -> {
+            textArea.setEditable(false);
+            stage.close();
+        });
+        cancelButton.setOnAction(e -> stage.close());
+        stage.showAndWait();
+        if (!textArea.isEditable()) {
+            if (textArea.getText().isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "", "", "The content of the file cannot be empty");
+            } else {
+                var dialog = new TextInputDialog("example.ct");
+                dialog.setHeaderText("Inserisci il nome del file");
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                String fileName;
+                dialog.showAndWait();
+                if (dialog.getEditor().getText().isEmpty()) {
+                    this.showAlert(Alert.AlertType.ERROR, "Error", "", "Il file da salvare non deve essere vuoto");
+                    this.logger.severe(dialog.getEditor().getId() + " is empty");
+                } else {
+                    fileName = dialog.getEditor().getText();
+                    this.logger.info(fileName + " created");
+                    File tmp = new File(Path.of(System.getProperty("user.dir")).resolve(fileName).toUri());
+                    this.logger.info("write content on " + fileName);
+                    Files.write(tmp.toPath(), textArea.getText().getBytes());
+                    var selectedRNAFile = Path.of(tmp.getPath());
+                    this.addFileToTable(selectedRNAFile);
+                    Files.delete(tmp.toPath());
+                    this.logger.info(fileName + " deleted");
+                    // clear
+                    dialog.getEditor().clear();
+                }
+            }
+        }
+
+    }
+
     private Stage getPrimaryStage() {
         return (Stage) this.filesTable.getScene().getWindow();
     }
@@ -304,70 +343,4 @@ public class HomeController {
         }
     }
 
-    /**
-     * Inits btn write content and hides btn cancel, save and text area.
-     */
-    /*private void initBtnWriteContent() {
-        this.logger.info(this.btnWriteContent.getText() + " visible, other btns are invisible");
-        this.btnCancelWriteContent.setVisible(false);
-        this.btnSaveWroteContent.setVisible(false);
-        this.txtAreaWriteContent.setVisible(false);
-    }*/
-
-    /**
-     * Action for showing btns cancel, save and text area.
-     */
-    /*public void handleWriteContent() {
-        this.logger.info(this.btnWriteContent.getText() + " button clicked");
-        this.btnWriteContent.setVisible(false);
-        this.btnCancelWriteContent.setVisible(true);
-        this.btnSaveWroteContent.setVisible(true);
-        this.txtAreaWriteContent.setVisible(true);
-    }*/
-
-    /**
-     * Action for cancel write file content.
-     */
-   /* public void handleCancelWriteContent() {
-        this.logger.info(this.btnCancelWriteContent.getText() + " button clicked");
-        this.btnWriteContent.setVisible(true);
-        this.btnCancelWriteContent.setVisible(false);
-        this.btnSaveWroteContent.setVisible(false);
-        this.txtAreaWriteContent.clear();
-        this.txtAreaWriteContent.setVisible(false);
-    }*/
-
-    /**
-     * Action for saving file content in the TableView.
-     */
-    /*public void handleSaveWroteContent() {
-        this.logger.info(this.btnSaveWroteContent.getText() + " button clicked");
-        TextInputDialog nameFileContent = new TextInputDialog("example.bpseq");
-        nameFileContent.setHeaderText("Inserisci il nome del file");
-        nameFileContent.initModality(Modality.APPLICATION_MODAL);
-        this.btnSaveWroteContent.setOnMouseClicked(e -> {
-            try {
-                String fileName;
-                nameFileContent.showAndWait();
-                if (this.txtAreaWriteContent.getText().isEmpty()) {
-                    this.showAlert(Alert.AlertType.ERROR, "Error", "", "Il file da salvare non deve essere vuoto");
-                    this.logger.severe(this.txtAreaWriteContent.getId() + " is empty");
-                } else {
-                    fileName = nameFileContent.getEditor().getText();
-                    this.logger.info(fileName + " created");
-                    File tmp = new File(Path.of(System.getProperty("user.dir")).resolve(fileName).toUri());
-                    this.logger.info("write content on " + fileName);
-                    Files.write(tmp.toPath(), this.txtAreaWriteContent.getText().getBytes());
-                    var selectedRNAFile = Path.of(tmp.getPath());
-                    this.addFileToTable(selectedRNAFile);
-                    Files.delete(tmp.toPath());
-                    this.logger.info(fileName + " deleted");
-                    // clear
-                    this.txtAreaWriteContent.clear();
-                }
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-    }*/
 }
