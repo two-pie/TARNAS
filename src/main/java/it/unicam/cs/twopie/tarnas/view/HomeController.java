@@ -18,7 +18,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -45,12 +46,6 @@ public class HomeController {
     private RNAFormat selectedFormat;
 
     @FXML
-    private Pane paneTranslator;
-
-    @FXML
-    private Pane paneCleaner;
-
-    @FXML
     private TableView<RNAFile> filesTable;
 
     @FXML
@@ -67,9 +62,6 @@ public class HomeController {
 
     @FXML
     public MenuButton btnSelectFormatTranslation;
-
-    @FXML
-    public MenuItem itmAAS, itmAASNS, itmBPSEQ, itmCT, itmDB, itmDBNS, itmFASTA; // example: "AAS_NO_SEQUENCE" instead "AAS NO SEQUENCE" for enum recognition
 
     @FXML
     public Button btnTranslate;
@@ -90,27 +82,32 @@ public class HomeController {
     public CheckBox chbxIncludeHeader;
 
     @FXML
-    public TextField txtfRmLinesContainingWord;
+    public TextField textFieldRmLinesContainingWord;
 
     @FXML
-    public TextField txtRmLinesContainingPrefix;
+    public TextField textFieldRmLinesContainingPrefix;
 
     @FXML
-    public CheckBox chkbxSaveAsZIP;
+    public CheckBox chbxSaveAsZIP;
 
     @FXML
-    public TextField lblArchiveName;
+    public TextField textFieldArchiveName;
+
+    @FXML
+    public BorderPane paneTranslationCleaning;
 
 
     @FXML
     public void initialize() {
         this.logger.info("Initializing...");
+        //disable cleaning and translation
+        this.paneTranslationCleaning.setDisable(true);
         // init controllers
         this.cleanerController = CleanerController.getInstance();
         this.ioController = IOController.getInstance();
         this.translatorController = TranslatorController.getInstance();
         // allow only one character in txtRmLinesContainingPrefix
-        this.txtRmLinesContainingPrefix.setTextFormatter(new TextFormatter<String>((TextFormatter.Change change) -> {
+        this.textFieldRmLinesContainingPrefix.setTextFormatter(new TextFormatter<String>((TextFormatter.Change change) -> {
             String newText = change.getControlNewText();
             if (newText.length() > 1) {
                 return null;
@@ -130,9 +127,7 @@ public class HomeController {
         this.deleteColumn.setCellValueFactory(rnaFile -> new ReadOnlyObjectWrapper<>(rnaFile.getValue()));
         // set custom cell
         this.previewColumn.setCellFactory(column -> new LenCell(lenImage));
-        this.deleteColumn.setCellFactory(column -> new DeleteCell(trashImage, this.paneTranslator, this.paneCleaner));
-        // add event to select ButtonItem for destination format translation
-        this.initSelectEventOnButtonItems();
+        this.deleteColumn.setCellFactory(column -> new DeleteCell(trashImage, this.eventTableEmpty()));
         this.logger.info("Initialization done");
     }
 
@@ -175,12 +170,12 @@ public class HomeController {
             if (this.chbxRmLinesContainingWord.isSelected())
                 cleanedFiles = cleanedFiles
                         .parallelStream()
-                        .map(f -> this.cleanerController.removeLinesContaining(f, this.txtfRmLinesContainingWord.getText()))
+                        .map(f -> this.cleanerController.removeLinesContaining(f, this.textFieldRmLinesContainingWord.getText()))
                         .toList();
             if (this.chbxRmLinesContainingPrefix.isSelected())
                 cleanedFiles = cleanedFiles
                         .parallelStream()
-                        .map(f -> this.cleanerController.removeLinesStartingWith(f, this.txtRmLinesContainingPrefix.getText()))
+                        .map(f -> this.cleanerController.removeLinesStartingWith(f, this.textFieldRmLinesContainingPrefix.getText()))
                         .toList();
             if (this.chbxRmBlankLines.isSelected())
                 cleanedFiles = cleanedFiles
@@ -219,12 +214,14 @@ public class HomeController {
     }
 
     @FXML
-    public void handleReset(ActionEvent event) {
+    public void handleReset() {
         this.logger.info("RESET button clicked");
-        // Reset all data structures
+        // reset all data structures
         this.filesTable.getItems().clear();
-        //reset controller files
+        // reset controller files
         this.ioController.clearAllDataStructures();
+        // disable translation and cleaning pane
+        this.tableEmpty();
         this.logger.info("Reset done");
     }
 
@@ -234,7 +231,7 @@ public class HomeController {
         Parent root = loader.load();
         var stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
-        stage.setScene(new Scene(root, 400, 400));;
+        stage.setScene(new Scene(root, 400, 400));
         var textArea = (TextArea) loader.getNamespace().get("txtAreaRnaFileContent");
         var saveButton = (Button) loader.getNamespace().get(("btnSaveWriteFile"));
         var cancelButton = (Button) loader.getNamespace().get(("btnCancelWriteFile"));
@@ -288,30 +285,30 @@ public class HomeController {
         alert.showAndWait();
     }
 
-    private void initSelectEventOnButtonItems() { // TODO: fare in modo che quando viene riconosciuto un formato, si vedono solo i formati traducibili nel MenuItem
-        this.itmAAS.setId(AAS.toString());
-        this.itmAASNS.setId(AAS_NO_SEQUENCE.toString());
-        this.itmBPSEQ.setId(BPSEQ.toString());
-        this.itmCT.setId(CT.toString());
-        this.itmDB.setId(DB.toString());
-        this.itmDBNS.setId(DB_NO_SEQUENCE.toString());
-        this.itmFASTA.setId(FASTA.toString());
-        //EventHandler<ActionEvent> event1 = e -> System.out.println((((MenuItem) e.getSource()).getText() + " selected"));
-        EventHandler<ActionEvent> event1 = e -> {
-            this.selectedFormat = RNAFormat.valueOf((((MenuItem) e.getSource()).getId()));  // set RNAFormat enum
-            //System.out.println("sel: " + selectedFormat);
-            this.btnSelectFormatTranslation.setText(String.valueOf((((MenuItem) e.getSource()).getText()))); // set String to display in MenuItem
-            this.btnTranslate.setDisable(false);  // when format translation is selected, translate btn is enabled
-        };
-        this.btnSelectFormatTranslation.getItems().forEach(f -> f.setOnAction(event1));
-
+    private void initSelectEventOnButtonItems(List<RNAFormat> availableTranslations) {
+        this.btnSelectFormatTranslation.getItems().clear();
+        availableTranslations.forEach(a -> {
+            var item = new MenuItem(a.getName());
+            item.setUserData(a);
+            this.btnSelectFormatTranslation.getItems().add(item);
+            item.setOnAction(e -> {
+                this.selectedFormat = (RNAFormat) ((MenuItem) e.getSource()).getUserData();  // set RNAFormat enum
+                this.btnSelectFormatTranslation.setText((((MenuItem) e.getSource()).getText())); // set String to display in MenuItem
+                this.btnSelectFormatTranslation.setUserData(selectedFormat);
+                this.btnTranslate.setDisable(false);
+            });
+        });
+        this.btnTranslate.setDisable(true);
     }
 
     private void addFileToTable(Path selectedRNAFile) {
         try {
             var rnaFile = this.ioController.loadFile(selectedRNAFile);
             this.filesTable.getItems().add(rnaFile);
+            this.paneTranslationCleaning.setDisable(false);
             this.chbxMergeLines.setDisable(this.ioController.getRecognizedFormat() != DB && this.ioController.getRecognizedFormat() != DB_NO_SEQUENCE);
+            // add event to select ButtonItem for destination format translation
+            this.initSelectEventOnButtonItems(this.translatorController.getAvailableTranslations(rnaFile.getFormat()));
         } catch (Exception e) {
             this.logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
@@ -319,19 +316,19 @@ public class HomeController {
     }
 
     private void saveFilesTo(List<RNAFile> rnaFiles) throws IOException {
-        boolean saveAsZIP = this.chkbxSaveAsZIP.isSelected() && !this.lblArchiveName.getText().isEmpty();
-        String filesOrArchive = saveAsZIP ? this.lblArchiveName.getText() + ".zip" : "files";
+        boolean saveAsZIP = this.chbxSaveAsZIP.isSelected() && !this.textFieldArchiveName.getText().isEmpty();
+        String filesOrArchive = saveAsZIP ? this.textFieldArchiveName.getText() + ".zip" : "files";
         this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the " + filesOrArchive);
         var directoryChooser = new DirectoryChooser();
         var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
         if (selectedDirectory != null) {
             // zip options
             if (saveAsZIP) {
-                this.ioController.zipFiles(selectedDirectory.toPath(), this.lblArchiveName.getText(), rnaFiles);
+                this.ioController.zipFiles(selectedDirectory.toPath(), this.textFieldArchiveName.getText(), rnaFiles);
                 this.showAlert(Alert.AlertType.INFORMATION,
                         "",
                         "Files saved successfully",
-                        rnaFiles.size() + " files saved in: " + selectedDirectory.toPath().resolve(this.lblArchiveName.getText() + ".zip"));
+                        rnaFiles.size() + " files saved in: " + selectedDirectory.toPath().resolve(this.textFieldArchiveName.getText() + ".zip"));
             } else { // files options
                 this.ioController.saveFilesTo(rnaFiles, selectedDirectory.toPath());
                 this.showAlert(Alert.AlertType.INFORMATION,
@@ -340,6 +337,30 @@ public class HomeController {
                         rnaFiles.size() + " files saved in: " + selectedDirectory.getPath());
             }
         }
+    }
+
+    private void tableEmpty() {
+        // reset checkboxes
+        this.chbxMergeLines.setSelected(false);
+        this.chbxRmLinesContainingWord.setSelected(false);
+        this.chbxRmBlankLines.setSelected(false);
+        this.chbxRmLinesContainingPrefix.setSelected(false);
+        this.chbxIncludeHeader.setSelected(false);
+        this.chbxSaveAsZIP.setSelected(false);
+        // reset textAreas
+        this.textFieldArchiveName.setText("");
+        this.textFieldRmLinesContainingWord.setText("");
+        this.textFieldRmLinesContainingPrefix.setText("");
+        // reset menu button
+        this.btnSelectFormatTranslation.setText("Traduci in");
+        // reset translate button
+        this.btnTranslate.setDisable(true);
+        // reset panes
+        this.paneTranslationCleaning.setDisable(true);
+    }
+
+    private EventHandler<? super MouseEvent> eventTableEmpty() {
+        return e -> this.tableEmpty();
     }
 
 }

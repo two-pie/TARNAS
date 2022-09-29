@@ -60,7 +60,7 @@
       </BorderPane>
    </top>
    <center>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <BorderPane fx:id="paneTranslationCleaning" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <right>
             <BorderPane prefHeight="175.0" prefWidth="427.0" BorderPane.alignment="CENTER">
                <top>
@@ -79,22 +79,13 @@
                     </rowConstraints>
                      <children>
                         <CheckBox fx:id="chbxIncludeHeader" mnemonicParsing="false" text="Includi header" />
-                        <CheckBox fx:id="chkbxSaveAsZIP" mnemonicParsing="false" text="salva come zip" GridPane.rowIndex="1" />
-                        <TextField fx:id="lblArchiveName" prefHeight="26.0" prefWidth="0.0" promptText="nome zip" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <CheckBox fx:id="chbxSaveAsZIP" mnemonicParsing="false" text="salva come zip" GridPane.rowIndex="1" />
+                        <TextField fx:id="textFieldArchiveName" prefHeight="26.0" prefWidth="0.0" promptText="nome zip" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin>
                         </TextField>
                         <MenuButton fx:id="btnSelectFormatTranslation" mnemonicParsing="false" text="Traduci in" GridPane.rowIndex="2">
-                          <items>
-                            <MenuItem fx:id="itmBPSEQ" mnemonicParsing="false" text="BPSEQ" />
-                            <MenuItem fx:id="itmCT" mnemonicParsing="false" text="CT" />
-                              <MenuItem fx:id="itmDB" mnemonicParsing="false" text="DOT BRACKET" />
-                              <MenuItem fx:id="itmDBNS" mnemonicParsing="false" text="DOT BRACKET NO SEQUENCE" />
-                              <MenuItem fx:id="itmFASTA" mnemonicParsing="false" text="FASTA" />
-                              <MenuItem fx:id="itmAAS" mnemonicParsing="false" text="AAS" />
-                              <MenuItem fx:id="itmAASNS" mnemonicParsing="false" text="AAS NO SEQUENCE" />
-                          </items>
                         </MenuButton>
                      </children>
                   </GridPane>
@@ -145,8 +136,8 @@
                               <Insets left="5.0" />
                            </GridPane.margin>
                         </CheckBox>
-                        <TextField fx:id="txtfRmLinesContainingWord" promptText="parola" GridPane.columnIndex="1" />
-                        <TextField fx:id="txtRmLinesContainingPrefix" promptText="carattere" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="textFieldRmLinesContainingWord" promptText="parola" GridPane.columnIndex="1" />
+                        <TextField fx:id="textFieldRmLinesContainingPrefix" promptText="carattere" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </center>
@@ -159,10 +150,10 @@
          <bottom>
             <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
               <buttons>
-                <Button onAction="#handleAddFile" mnemonicParsing="false" prefHeight="26.0" prefWidth="522.0" text="AGGIUNGI FILE" />
-                  <Button onAction="#handleAddFolder" mnemonicParsing="false" text="AGGIUNGI CARTELLA" />
-                  <Button onAction="#handleWriteFile" mnemonicParsing="false" text="SCRIVI FILE" />
-                  <Button onAction="#handleReset" mnemonicParsing="false" text="RESET" />
+                <Button mnemonicParsing="false" onAction="#handleAddFile" prefHeight="26.0" prefWidth="522.0" text="AGGIUNGI FILE" />
+                  <Button mnemonicParsing="false" onAction="#handleAddFolder" text="AGGIUNGI CARTELLA" />
+                  <Button mnemonicParsing="false" onAction="#handleWriteFile" text="SCRIVI FILE" />
+                  <Button mnemonicParsing="false" onAction="#handleReset" text="RESET" />
               </buttons>
             </ButtonBar>
          </bottom>
