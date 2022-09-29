@@ -1,6 +1,7 @@
 package it.unicam.cs.twopie.tarnas.controller;
 
 import it.unicam.cs.twopie.tarnas.model.rnafile.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,24 @@ public class TranslatorController {
                 DB, List.of(AAS, AAS_NO_SEQUENCE, BPSEQ, CT, DB_NO_SEQUENCE, FASTA),
                 DB_NO_SEQUENCE, List.of(AAS_NO_SEQUENCE),
                 FASTA, List.of());
+    }
+
+    /**
+     * Return available translations from a {@link RNAFormat}
+     *
+     * @param rnaFormat an {@link RNAFormat}
+     * @return list of {@link RNAFormat}
+     */
+    public List<RNAFormat> getAvailableTranslations(RNAFormat rnaFormat) {
+        return switch (rnaFormat) {
+            case AAS -> List.of(AAS_NO_SEQUENCE, BPSEQ, CT, DB, DB_NO_SEQUENCE, FASTA);
+            case AAS_NO_SEQUENCE -> List.of(DB_NO_SEQUENCE);
+            case BPSEQ -> List.of(AAS, AAS_NO_SEQUENCE, CT, DB, DB_NO_SEQUENCE, FASTA);
+            case CT -> List.of(AAS, AAS_NO_SEQUENCE, BPSEQ, DB, DB_NO_SEQUENCE, FASTA);
+            case DB -> List.of(AAS, AAS_NO_SEQUENCE, BPSEQ, CT, DB_NO_SEQUENCE, FASTA);
+            case DB_NO_SEQUENCE -> List.of(AAS_NO_SEQUENCE);
+            case FASTA -> List.of();
+        };
     }
 
     /**
