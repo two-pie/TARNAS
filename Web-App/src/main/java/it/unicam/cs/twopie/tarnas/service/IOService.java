@@ -31,20 +31,19 @@ import java.util.zip.ZipOutputStream;
 @Service
 public class IOService {
 
-    @Autowired
     private RNAFormat recognizedFormat;
 
     /**
      * Loaded file paths
      */
-    @Autowired
     private final List<RNAFile> loadedRNAFiles;
 
 
     /**
      * Invisible constructor.
      */
-    private IOService() {
+    @Autowired
+    public IOService() {
         this.loadedRNAFiles = new ArrayList<>();
     }
 

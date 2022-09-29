@@ -16,6 +16,11 @@ import java.util.function.Predicate;
 @Service
 public class CleanerService {
 
+    @Autowired
+    public CleanerService(){
+
+    }
+
     /**
      * Merges the lines of the specified {@code rnaFile} with {@link RNAFormat#DB} or {@link RNAFormat#DB_NO_SEQUENCE} format.
      *

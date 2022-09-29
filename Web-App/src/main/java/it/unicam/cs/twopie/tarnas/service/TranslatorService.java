@@ -3,6 +3,7 @@ package it.unicam.cs.twopie.tarnas.service;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFileTranslator;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,7 +39,8 @@ public class TranslatorService {
      * Creates a Translator Controller.
      * It initializes the conversion matrix for translation operations.
      */
-    private TranslatorService() {
+    @Autowired
+    public TranslatorService() {
         conversionMatrix = Map.of(
                 AAS, List.of(AAS_NO_SEQUENCE, BPSEQ, CT, DB, DB_NO_SEQUENCE, FASTA),
                 AAS_NO_SEQUENCE, List.of(DB_NO_SEQUENCE),
