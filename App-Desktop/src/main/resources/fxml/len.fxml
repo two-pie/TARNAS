@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.Pane?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="268.0"
+      prefWidth="505.0" xmlns="http://javafx.com/javafx/1" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <TextArea fx:id="rnaFileContent" editable="false" layoutX="26.0" layoutY="34.0" prefHeight="200.0"
+                  prefWidth="454.0"/>
+    </children>
+</Pane>
