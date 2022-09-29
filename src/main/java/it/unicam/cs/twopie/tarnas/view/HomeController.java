@@ -199,8 +199,8 @@ public class HomeController {
     public void handleTranslate() {
         this.logger.info("TRADUCI button clicked");
         List<RNAFile> translatedRNAFiles;
-        translatedRNAFiles = this.translatorController.translateAllLoadedFiles(this.ioController.getLoadedRNAFiles(), this.selectedFormat);
         try {
+            translatedRNAFiles = this.translatorController.translateAllLoadedFiles(this.ioController.getLoadedRNAFiles(), this.selectedFormat);
             if (!this.chbxIncludeHeader.isSelected())
                 translatedRNAFiles = translatedRNAFiles.parallelStream()
                         .map(f -> this.cleanerController.removeHeader(f))
@@ -316,19 +316,22 @@ public class HomeController {
     }
 
     private void saveFilesTo(List<RNAFile> rnaFiles) throws IOException {
-        boolean saveAsZIP = this.chbxSaveAsZIP.isSelected() && !this.textFieldArchiveName.getText().isEmpty();
-        String filesOrArchive = saveAsZIP ? this.textFieldArchiveName.getText() + ".zip" : "files";
-        this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the " + filesOrArchive);
+        if ((this.chbxSaveAsZIP.isSelected()) && (this.textFieldArchiveName.getText().isEmpty() || this.textFieldArchiveName.getText().isBlank())) {
+            showAlert(Alert.AlertType.ERROR, "", "", "Inserire un nome per lo zip!");
+            return;
+        }
+        this.showAlert(Alert.AlertType.INFORMATION, "", "", "Choose the directory where to save the files");
         var directoryChooser = new DirectoryChooser();
         var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
         if (selectedDirectory != null) {
             // zip options
-            if (saveAsZIP) {
-                this.ioController.zipFiles(selectedDirectory.toPath(), this.textFieldArchiveName.getText(), rnaFiles);
+            if (this.chbxSaveAsZIP.isSelected()) {
+                String folderName = this.textFieldArchiveName.getText();
+                this.ioController.zipFiles(selectedDirectory.toPath(), folderName, rnaFiles);
                 this.showAlert(Alert.AlertType.INFORMATION,
                         "",
                         "Files saved successfully",
-                        rnaFiles.size() + " files saved in: " + selectedDirectory.toPath().resolve(this.textFieldArchiveName.getText() + ".zip"));
+                        rnaFiles.size() + " files saved in: " + selectedDirectory.toPath());
             } else { // files options
                 this.ioController.saveFilesTo(rnaFiles, selectedDirectory.toPath());
                 this.showAlert(Alert.AlertType.INFORMATION,
