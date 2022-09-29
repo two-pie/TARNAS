@@ -96,7 +96,6 @@ class RNAFileTranslatorTest {
         );
     }
 
-    // TODO: chiedere _ sulla grammatica. In caso non lo dobbiamo mettere non testiamo questo dataset
     private static Stream<Arguments> benchmarkDatasetFunctional() {
         return Stream.of(
                 // BPSSeqFiles
