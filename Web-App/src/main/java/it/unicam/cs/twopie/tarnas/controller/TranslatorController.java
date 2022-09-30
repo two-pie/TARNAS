@@ -17,7 +17,7 @@ public class TranslatorController {
     @Autowired
     private TranslatorService translatorService;
 
-    @GetMapping("/translate")
+    @PostMapping("/translate")
     public RNAFile translate(@RequestBody RNAFile rnaFile, @RequestBody RNAFormat dstFormat) {
         var translatedRnaFile = this.translatorService.translateTo(rnaFile, dstFormat);
         if (translatedRnaFile.isPresent())
@@ -26,7 +26,7 @@ public class TranslatorController {
     }
 
     @GetMapping("/available-translations/{dstFormat}")
-    public List<RNAFormat> translate(@PathVariable RNAFormat dstFormat) {
+    public List<RNAFormat> getAvaiableTranslation(@PathVariable RNAFormat dstFormat) {
         return this.translatorService.getAvailableTranslations(dstFormat);
     }
 
