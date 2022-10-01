@@ -17,20 +17,20 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     private StringBuffer sequenceBuffer;
     private StringBuffer edbnsBuffer;
     private List<String> header;
-    private String fileName;
     private List<String> content;
+    private String fileName;
 
     public RNAFileListener() {
 
     }
 
-    public void setFilePath(Path filePath) throws IOException {
-        this.content = Files.readAllLines(filePath);
+    public void setContent(List<String> content, String fileName) throws IOException {
+        this.content = content;
         this.s = new RNASecondaryStructure();
         this.sequenceBuffer = new StringBuffer();
         this.edbnsBuffer = new StringBuffer();
         this.header = new ArrayList<>();
-        this.fileName = String.valueOf(filePath.getFileName());
+        this.fileName = fileName;
     }
 
     public RNAFile getRnaFile() {

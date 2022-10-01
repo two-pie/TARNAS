@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import java.util.List;
 
 public class RNAFileConstructor {
 
@@ -39,8 +39,10 @@ public class RNAFileConstructor {
         return instance;
     }
 
-    public RNAFile construct(Path filePath) throws IOException {
-        CharStream input = CharStreams.fromFileName(String.valueOf(filePath));
+    public RNAFile construct(List<String> content, String fileName) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        content.forEach(s -> sb.append(s).append("\n"));
+        CharStream input = CharStreams.fromString(sb.toString());
         // create a lexer that feeds off of input CharStream
         RNASecondaryStructureLexer lexer = new RNASecondaryStructureLexer(input);
         // create a buffer of tokens pulled from the lexer
@@ -49,7 +51,7 @@ public class RNAFileConstructor {
         RNASecondaryStructureParser structureParser = new RNASecondaryStructureParser(tokens);
         // begin parsing at rna rule
         ParseTree tree = structureParser.rna_format();
-        this.rnaFilelistener.setFilePath(filePath);
+        this.rnaFilelistener.setContent(content, fileName);
         // Walk the tree created during the parse, trigger callbacks
         this.walker.walk(rnaFilelistener, tree);
         return rnaFilelistener.getRnaFile();

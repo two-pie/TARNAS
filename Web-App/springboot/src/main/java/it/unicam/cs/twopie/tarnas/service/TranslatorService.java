@@ -6,7 +6,6 @@ import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +15,7 @@ import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
 
 /**
  * // TODO: javadoc
- * An implementation of Translator Controller that accepts input from the {@link IOService} and converts that
+ * An implementation of Translator Controller that accepts input and converts that
  * input to commands for the Model or View.
  * This Controller takes care translation operations and file loading/saving/deleting and directory loading/saving.
  * In particular, it provides paralleled translation operations when multiple files are loaded, to have better performance.
@@ -52,7 +51,6 @@ public class TranslatorService {
     }
 
     /**
-     *
      * @param rnaFormat
      * @return
      */
@@ -69,7 +67,6 @@ public class TranslatorService {
     }
 
     /**
-     *
      * @param rnaFile
      * @param dstRNAFormat
      * @return
@@ -82,7 +79,6 @@ public class TranslatorService {
     }
 
     /**
-     *
      * @param rnaFile
      * @param rnaFormat
      * @return
