@@ -49,8 +49,8 @@ public class CleanerService {
      * @param prefix  the prefix filter to remove any lines from the header of the {@code rnafile}
      * @return an {@link RNAFile}
      */
-    public RNAFile removeLinesStartingWith(RNAFile rnaFile, String prefix) {
-        var function = this.removeIf(rnaFile.getHeader(), line -> line.startsWith(prefix));
+    public RNAFile removeLinesStartingWith(RNAFile rnaFile, Character prefix) {
+        var function = this.removeIf(rnaFile.getHeader(), line -> line.startsWith(String.valueOf(prefix)));
         return RNAFileCleaner.applyCleanOption(rnaFile, function);
     }
 
@@ -101,7 +101,7 @@ public class CleanerService {
             else if (rnaFile.getFormat().equals(RNAFormat.DB_NO_SEQUENCE))
                 return RNAFileTranslator.translateToDBNoSequence(rnaFile);
             else
-                throw new IllegalArgumentException("Cannot merge lines of " + rnaFile.getFormat() + " format");
+                return null;
         };
     }
 

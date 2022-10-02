@@ -21,27 +21,28 @@ public class TranslatorController {
     @Autowired
     private TranslatorService translatorService;
 
-    @PostMapping("/translate/{fileName}/{dstFormat}")
-    public RNAFile translate(@PathVariable String fileName, @RequestBody Map<String, Object> content, @PathVariable RNAFormat dstFormat) {
-        var translatedRnaFile = this.translatorService.translateTo(getRNAFileOf((String) content.get("content"), fileName), dstFormat);
+    @PostMapping("/translate/{dstFormat}")
+    public RNAFile translate(@PathVariable RNAFormat dstFormat, @RequestBody RNAFile rnaFile) {
+        rnaFile = checkSyntax(rnaFile);
+        var translatedRnaFile = this.translatorService.translateTo(rnaFile, dstFormat);
         if (translatedRnaFile.isPresent())
             return translatedRnaFile.get();
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot translate from " + rnaFile.getFormat().getName() + "to " + dstFormat.getName());
     }
 
-    @GetMapping("/available-translations/{dstFormat}")
-    public List<RNAFormat> getAvaiableTranslation(@PathVariable RNAFormat dstFormat) {
-        return this.translatorService.getAvailableTranslations(dstFormat);
+    @GetMapping("/available-translations")
+    private List<RNAFormat> getAvaiableTranslation(RNAFile rnaFile) {
+        rnaFile = checkSyntax(rnaFile);
+        return this.translatorService.getAvailableTranslations(rnaFile.getFormat());
     }
 
-    public static RNAFile getRNAFileOf(String content, String fileName) {
-        RNAFile rnaFile;
+    @PostMapping("/rnafile-syntax")
+    private RNAFile checkSyntax(RNAFile rnaFile) {
         try {
-            rnaFile = RNAFileConstructor.getInstance().construct(Arrays.asList(content.split("\n")), fileName);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            rnaFile = RNAFileConstructor.getInstance().construct(rnaFile.getContent(), rnaFile.getFileName());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The file has a wrong syntax");
         }
         return rnaFile;
     }
-
 }
