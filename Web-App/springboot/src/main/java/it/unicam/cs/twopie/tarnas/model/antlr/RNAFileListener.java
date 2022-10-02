@@ -24,7 +24,7 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     }
 
-    public void setContent(List<String> content, String fileName) throws IOException {
+    public void setContent(List<String> content, String fileName) {
         this.content = content;
         this.s = new RNASecondaryStructure();
         this.sequenceBuffer = new StringBuffer();
@@ -260,14 +260,12 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
 
     @Override
     public void exitEdbn(RNASecondaryStructureParser.EdbnContext ctx) {
-        // create rnafile object
         this.s.finalise();
-
-        // create body
-        var body = this.content.subList(this.header.size(), this.content.size());
-
-        // create rnafile object with unnecessary empty body
-        this.rnaFile = new RNAFile(this.fileName, this.header, body, this.s, this.s.getSequence() == null ? RNAFormat.DB_NO_SEQUENCE : RNAFormat.DB);
+        // create rnafile object
+        if (this.s.getSequence() == null)
+            this.rnaFile = new RNAFile(this.fileName, this.header, List.of(this.edbnsBuffer.toString()), this.s, RNAFormat.DB_NO_SEQUENCE);
+        else
+            this.rnaFile = new RNAFile(this.fileName, this.header, List.of(this.sequenceBuffer.toString(), this.edbnsBuffer.toString()), this.s, RNAFormat.DB);
     }
     /*
      * Parse an Extended Dot-Bracket Notation string and transform it into a

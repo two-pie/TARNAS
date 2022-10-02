@@ -40,9 +40,7 @@ public class RNAFileConstructor {
     }
 
     public RNAFile construct(List<String> content, String fileName) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        content.forEach(s -> sb.append(s).append("\n"));
-        CharStream input = CharStreams.fromString(sb.toString());
+        CharStream input = CharStreams.fromString(String.join("\n",content));
         // create a lexer that feeds off of input CharStream
         RNASecondaryStructureLexer lexer = new RNASecondaryStructureLexer(input);
         // create a buffer of tokens pulled from the lexer

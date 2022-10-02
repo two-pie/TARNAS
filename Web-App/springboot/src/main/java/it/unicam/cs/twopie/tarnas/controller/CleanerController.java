@@ -20,8 +20,8 @@ public class CleanerController {
     @PostMapping("/merge-db-lines")
     public RNAFile cleanDBmergingLines(@RequestBody RNAFile rnaFile) {
         var cleanedFile = this.cleanerService.mergeDBLines(rnaFile);
-        if (cleanedFile != null)
-            return cleanedFile;
+        if (cleanedFile.isPresent())
+            return cleanedFile.get();
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cannot merge lines of "+rnaFile.getFormat().getName()+" format");
     }
 
@@ -43,6 +43,15 @@ public class CleanerController {
     @PostMapping("/remove-white-spaces")
     public RNAFile removeWhiteSpaces(@RequestBody RNAFile rnaFile) {
         return this.cleanerService.removeWhiteSpaces(rnaFile);
+    }
+
+    private RNAFile checkSyntax(RNAFile rnaFile) {
+        try {
+            rnaFile = RNAFileConstructor.getInstance().construct(rnaFile.getContent(), rnaFile.getFileName());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The file has a wrong syntax");
+        }
+        return rnaFile;
     }
 
 }

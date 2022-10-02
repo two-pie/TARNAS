@@ -13,22 +13,22 @@ export class CleanService {
   constructor(private http: HttpClient) { }
 
   public mergeLines(rnaFile: RNAFile): Observable<RNAFile> {
-    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/merge-db-lines`, { withCredentials: false })
+    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/merge-db-lines`, rnaFile, { withCredentials: false })
   }
 
   public removeHeader(rnaFile: RNAFile): Observable<RNAFile> {
-    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-header`, { withCredentials: false })
+    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-header`, rnaFile, { withCredentials: false })
   }
 
-  public removeLinesStartingWith(rnaFile: RNAFile,character:string): Observable<RNAFile> {
-    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-lines-start-with/${character[0]}`, { withCredentials: false })
+  public removeLinesStartingWith(rnaFile: RNAFile, character: string): Observable<RNAFile> {
+    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-lines-start-with/${character[0]}`, rnaFile, { withCredentials: false })
   }
 
-  public removeLinesContaining(rnaFile: RNAFile,word:string): Observable<RNAFile> {
-    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-lines-contains/${word}`, { withCredentials: false })
+  public removeLinesContaining(rnaFile: RNAFile, word: string): Observable<RNAFile> {
+    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-lines-contains/${word}`, rnaFile, { withCredentials: false })
   }
 
   public removeWhiteSpaces(rnaFile: RNAFile): Observable<RNAFile> {
-    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-white-spaces`, { withCredentials: false })
+    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-white-spaces`, rnaFile, { withCredentials: false })
   }
 }

@@ -2,13 +2,16 @@ package it.unicam.cs.twopie.tarnas.service;
 
 import it.unicam.cs.twopie.tarnas.model.cleaner.RNAFileCleaner;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
+import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFileConstructor;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFileTranslator;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -28,8 +31,13 @@ public class CleanerService {
      * @return an {@link RNAFile}
      * @throws IllegalArgumentException if the format is not {@link RNAFormat#DB} or {@link RNAFormat#DB_NO_SEQUENCE}
      */
-    public RNAFile mergeDBLines(RNAFile rnaFile) {
-        return RNAFileCleaner.applyCleanOption(rnaFile, this.mergeDBLines());
+    public Optional<RNAFile> mergeDBLines(RNAFile rnaFile) {
+        try{
+            return Optional.of(RNAFileConstructor.getInstance().construct(rnaFile.getContent(), rnaFile.getFileName()));
+        }
+        catch (IOException e){
+            return Optional.empty();
+        }
     }
 
     /**
