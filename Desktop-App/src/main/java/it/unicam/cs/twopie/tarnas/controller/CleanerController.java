@@ -2,6 +2,7 @@ package it.unicam.cs.twopie.tarnas.controller;
 
 import it.unicam.cs.twopie.tarnas.model.cleaner.RNAFileCleaner;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
+import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFileConstructor;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFileTranslator;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat;
 
@@ -46,8 +47,8 @@ public class CleanerController {
      * @param rnaFile an {@link RNAFile} from which to remove the header.
      * @return an {@link RNAFile}
      */
-    public RNAFile removeHeader(RNAFile rnaFile){
-        return new RNAFile(rnaFile.getFileName(),new ArrayList<>(),rnaFile.getBody(),rnaFile.getStructure(),rnaFile.getFormat());
+    public RNAFile removeHeader(RNAFile rnaFile) {
+        return new RNAFile(rnaFile.getFileName(), new ArrayList<>(), rnaFile.getBody(), rnaFile.getStructure(), rnaFile.getFormat());
     }
 
     /**
@@ -103,13 +104,11 @@ public class CleanerController {
     }
 
     private Function<RNAFile, RNAFile> mergeDBLines() {
+        // the file is already read with the line merged, here it is only checked whether the format is DB or DB NO SEQUENCE
         return rnaFile -> {
-            if (rnaFile.getFormat().equals(RNAFormat.DB))
-                return RNAFileTranslator.translateToDB(rnaFile);
-            else if (rnaFile.getFormat().equals(RNAFormat.DB_NO_SEQUENCE))
-                return RNAFileTranslator.translateToDBNoSequence(rnaFile);
-            else
+            if (rnaFile.getFormat() != RNAFormat.DB && rnaFile.getFormat() != RNAFormat.DB_NO_SEQUENCE)
                 throw new IllegalArgumentException("Cannot merge lines of " + rnaFile.getFormat() + " format");
+            return rnaFile;
         };
     }
 
