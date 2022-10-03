@@ -1,2 +1,207 @@
-<button (click)="getAvailableTranslations()" mat-raised-button color="primary">Available Translations</button>
-<button (click)="translate()" mat-raised-button color="primary">Translate</button>
+<div class="container">
+  <div class="row">
+    <table class="table" data-show-refresh="true">
+      <thead>
+        <tr>
+          <th scope="col">Nome File</th>
+          <th scope="col">Formato</th>
+          <th scope="col">Visualizza</th>
+          <th scope="col">Elimina</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let f of rnaFile">
+          <td>{{f.fileName}}</td>
+          <td>{{f.format}}</td>
+          <td>{{f.fileName}}</td>
+          <td><button class="btn btn-lg" type="button"
+            (click)="preview()">Preview</button>
+          </td>
+          <td><button class="btn btn-lg btn-outline-danger" type="button"
+            (click)="delete()">Rimuovi</button>
+          </td>
+
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <div class="col-sm">
+      <label for="rnaFile">Carica un file:</label>
+      <br>
+      <input type="file" id="rnaFile" name="nam" (change)="loadFile($event)">
+
+    </div>
+    <div class="col-sm">
+      <button type="button" class="btn btn-primary">Scrivi File</button>
+    </div>
+  </div>
+  <br>
+  <br>
+  <div class="row">
+    <div class="col-sm">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox">
+        <label class="form-check-label" for="exampleRadios1">
+          Linee che contengono
+        </label>
+      </div>
+    </div>
+    <div class="col-sm">
+      <input class="form-control" type="text" placeholder="parola">
+    </div>
+    <div class="col-sm">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox">
+        <label class="form-check-label">
+          Includi header
+        </label>
+      </div>
+    </div>
+    <div class="col-sm">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox">
+        <label class="form-check-label">
+          Linee col prefisso
+        </label>
+      </div>
+    </div>
+    <div class="col-sm">
+      <input class="form-control" type="text" placeholder="carattere">
+    </div>
+    <div class="col-sm">
+      <div class="form-check">
+      </div>
+    </div>
+    <div class="col-sm">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox">
+        <label class="form-check-label">
+          Righe vuote
+        </label>
+      </div>
+    </div>
+    <div class="col-sm">
+    </div>
+    <div class="col-sm">
+    </div>
+    <div class="col-sm">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox">
+        <label class="form-check-label">
+          Accorpa righe (solo formati DB)
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm">
+      <button type="button" class="btn btn-primary">Pulisci</button>
+    </div>
+    <div class="col-sm">
+    </div>
+    <div class="col-sm">
+      <button type="button" class="btn btn-primary">Traduci</button>
+    </div>
+    <div class="col-sm">
+    </div>
+
+  </div>
+
+
+  <!--
+  <div class="row">
+    <div class="col-sm">
+      <div class="row">
+        <div class="col-sm">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1"
+              checked>
+            <label class="form-check-label" for="exampleRadios1">
+              Linee che contengono
+            </label>
+          </div>
+        </div>
+        <div class="col-sm">
+          <input class="form-control" type="text" placeholder="parola">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1"
+              checked>
+            <label class="form-check-label" for="exampleRadios1">
+              Linee col prefisso
+            </label>
+          </div>
+        </div>
+        <div class="col-sm">
+          <input class="form-control" type="text" placeholder="carattere">
+        </div>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3">
+        <label class="form-check-label" for="exampleRadios3">
+          Righe vuote
+        </label>
+      </div>
+
+      <div class="form-check disabled">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3" disabled>
+        <label class="form-check-label" for="exampleRadios3">
+          Accorpa righe (solo formati DB)
+        </label>
+      </div>
+
+      <button type="button" class="btn btn-primary">Pulisci</button>
+    </div>
+
+    <div class="col-sm">
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+        <label class="form-check-label" for="exampleRadios1">
+          Includi header
+        </label>
+      </div>
+
+
+      <div class="row">
+        <div class="col-sm">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1"
+              checked>
+            <label class="form-check-label" for="exampleRadios1">
+              Salva come zip
+            </label>
+          </div>
+        </div>
+        <div class="col-sm">
+          <input class="form-control" type="text" placeholder="nome cartella">
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary">Traduci</button>
+    </div>
+  </div>
+</div>
+-->

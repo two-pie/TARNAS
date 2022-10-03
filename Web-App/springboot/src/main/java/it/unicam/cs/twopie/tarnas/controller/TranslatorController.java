@@ -31,13 +31,13 @@ public class TranslatorController {
     }
 
     @GetMapping("/available-translations")
-    private List<RNAFormat> getAvaiableTranslation(RNAFile rnaFile) {
+    public List<RNAFormat> getAvaiableTranslation(RNAFile rnaFile) {
         rnaFile = checkSyntax(rnaFile);
         return this.translatorService.getAvailableTranslations(rnaFile.getFormat());
     }
 
     @PostMapping("/rnafile-syntax")
-    private RNAFile checkSyntax(RNAFile rnaFile) {
+    public RNAFile checkSyntax(@RequestBody RNAFile rnaFile) {
         try {
             rnaFile = RNAFileConstructor.getInstance().construct(rnaFile.getContent(), rnaFile.getFileName());
         } catch (Exception e) {

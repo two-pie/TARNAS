@@ -21,4 +21,8 @@ export class TranslateService {
   public translate(rnaFile:RNAFile,dstFormat:RNAFormat){
     return this.http.post<RNAFile>(`${this.apiServerUrl}/translation/translate/${dstFormat}`,rnaFile, {withCredentials:false})
   }
+
+  public checkSyntax(rnaFile:RNAFile){
+    return this.http.post<RNAFile>(`${this.apiServerUrl}/translation/rnafile-syntax`,rnaFile, {withCredentials:false})
+  }
 }
