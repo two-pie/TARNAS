@@ -220,9 +220,14 @@ public class RNAFileTranslator {
         String[] finalLine = {""};
         for (var line : header) {
             var isNotComment = !line.startsWith("#");
-            if (destinationFormat != BPSEQ && destinationFormat != CT && isNotComment)
-                newHeader.add(finalLine[0] = "#" + line);
-            else if (destinationFormat.equals(BPSEQ) || destinationFormat.equals(CT)) {
+            if (destinationFormat != BPSEQ && destinationFormat != CT ) {
+                if (isNotComment) {
+                    newHeader.add(finalLine[0] = "#" + line);
+                } else {
+                    newHeader.add(line);
+                }
+            }
+            else {
                 var BPSEQLines = List.of("Filename", "Organism", "Accession", "Citation");
                 BPSEQLines.forEach(bpl -> {
                     if (finalLine[0].startsWith("#" + bpl))
