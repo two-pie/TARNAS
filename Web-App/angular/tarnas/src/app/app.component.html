@@ -1,5 +1,13 @@
-<div class="container">
+<div class="container" id="cont">
   <div class="row">
+    <div class="col-sm"></div>
+    <div class="col-sm">
+      <img src="assets/img/tarnas-center-logo.png" class="img-fluid" alt="Responsive image">
+    </div>
+    <div class="col-sm"></div>
+  </div>
+
+  <div class=" row" [hidden]="!isFileLoaded()">
     <table class="table" data-show-refresh="true">
       <thead>
         <tr>
@@ -10,198 +18,203 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let f of rnaFile">
+        <tr *ngFor="let f of rnaFiles">
           <td>{{f.fileName}}</td>
           <td>{{f.format}}</td>
-          <td>{{f.fileName}}</td>
-          <td><button class="btn btn-lg" type="button"
-            (click)="preview()">Preview</button>
-          </td>
-          <td><button class="btn btn-lg btn-outline-danger" type="button"
-            (click)="delete()">Rimuovi</button>
-          </td>
+          <td>
+            <input type="image" src="assets/img/len.png" (click)="preview()" height="30px" width="30px" />
 
-      </tr>
+          </td>
+          <td>
+            <input type="image" src="assets/img/trash.png" (click)="reset()" height="30px" width="30px" />
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="row">
-    <div class="col-sm">
-      <label for="rnaFile">Carica un file:</label>
-      <br>
-      <input type="file" id="rnaFile" name="nam" (change)="loadFile($event)">
-
+  <div class="row" style="margin-top: 5%;" [hidden]="isFileLoaded()">
+    <div class="col-sm "></div>
+    <div class="col-sm d-flex justify-content-center">
+      <button style="border-radius: 8px; background-color: #e0ffff;font-family:'Courier New', Courier, monospace"
+        type="button" (click)="fileInput.click()">
+        <span>Carica File</span>
+        <input #fileInput type="file" (change)="loadFile($event)" style="display:none;" />
+      </button>
     </div>
-    <div class="col-sm">
-      <button type="button" class="btn btn-primary">Scrivi File</button>
-    </div>
-  </div>
-  <br>
-  <br>
-  <div class="row">
-    <div class="col-sm">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox">
-        <label class="form-check-label" for="exampleRadios1">
-          Linee che contengono
-        </label>
-      </div>
-    </div>
-    <div class="col-sm">
-      <input class="form-control" type="text" placeholder="parola">
-    </div>
-    <div class="col-sm">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox">
-        <label class="form-check-label">
-          Includi header
-        </label>
-      </div>
-    </div>
-    <div class="col-sm">
-    </div>
+    <div class="col-sm "></div>
   </div>
 
   <div class="row">
-    <div class="col-sm">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox">
-        <label class="form-check-label">
-          Linee col prefisso
-        </label>
-      </div>
-    </div>
-    <div class="col-sm">
-      <input class="form-control" type="text" placeholder="carattere">
-    </div>
-    <div class="col-sm">
-      <div class="form-check">
-      </div>
-    </div>
-    <div class="col-sm">
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-sm">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox">
-        <label class="form-check-label">
-          Righe vuote
-        </label>
-      </div>
-    </div>
-    <div class="col-sm">
-    </div>
-    <div class="col-sm">
-    </div>
-    <div class="col-sm">
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-sm">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox">
-        <label class="form-check-label">
-          Accorpa righe (solo formati DB)
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-sm">
-      <button type="button" class="btn btn-primary">Pulisci</button>
-    </div>
-    <div class="col-sm">
-    </div>
-    <div class="col-sm">
-      <button type="button" class="btn btn-primary">Traduci</button>
-    </div>
-    <div class="col-sm">
-    </div>
-
-  </div>
-
-
-  <!--
-  <div class="row">
-    <div class="col-sm">
-      <div class="row">
-        <div class="col-sm">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1"
-              checked>
-            <label class="form-check-label" for="exampleRadios1">
-              Linee che contengono
-            </label>
+    <div class="col-sm" [hidden]="!canClean()">
+      <!--start formClean-->
+      <form id="formClean" [formGroup]="formClean" (ngSubmit)="clean()">
+        <div class="form-floating mb-3">
+          <div class="row ">
+            <div class="col-sm d-flex justify-content-center">
+              <b>Opzioni di Pulitura</b>
+            </div>
           </div>
         </div>
-        <div class="col-sm">
-          <input class="form-control" type="text" placeholder="parola">
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="col-sm">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1"
-              checked>
-            <label class="form-check-label" for="exampleRadios1">
-              Linee col prefisso
-            </label>
+        <div class="form-floating mb-3">
+          <div class="row" style="margin-top: 50px;">
+            <div class="col-sm">
+              <div class="form-check">
+                <input formControlName="checkboxRemoveLinesContaining" class="form-check-input" type="checkbox">
+                <label class="form-check-label">
+                  Linee che contengono
+                </label>
+              </div>
+            </div>
+            <div class="col-sm">
+              <input formControlName="inputRemoveLinesContaining" class="form-control" type="text" placeholder="parola">
+            </div>
           </div>
         </div>
-        <div class="col-sm">
-          <input class="form-control" type="text" placeholder="carattere">
+
+        <div class="form-floating mb-3">
+          <div class="row">
+            <div class="col-sm">
+              <div class="form-check">
+                <input formControlName="checkboxRemoveLinesStartingWithPrefix" class="form-check-input" type="checkbox">
+                <label class="form-check-label">
+                  Linee col prefisso
+                </label>
+              </div>
+            </div>
+            <div class="col-sm">
+              <input formControlName="inputRemoveLinesStartingWithPrefix" class="form-control" type="text"
+                placeholder="carattere">
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3">
-        <label class="form-check-label" for="exampleRadios3">
-          Righe vuote
-        </label>
-      </div>
+        <div class="form-floating mb-3">
+          <div class="row">
+            <div class="col-sm">
+              <div class="form-check">
+                <input formControlName="checkboxRemoveBlankLines" class="form-check-input" type="checkbox">
+                <label class="form-check-label">
+                  Righe vuote
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <div class="form-check disabled">
-        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option3" disabled>
-        <label class="form-check-label" for="exampleRadios3">
-          Accorpa righe (solo formati DB)
-        </label>
-      </div>
+        <div class="form-floating mb-3">
+          <div class="row">
+            <div class="col-sm">
+              <div class="form-check">
+                <input formControlName="checkboxMergeLines" class="form-check-input" type="checkbox">
+                <label class="form-check-label">
+                  Accorpa righe (solo formati DB)
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <button type="button" class="btn btn-primary">Pulisci</button>
+        <div class="form-floating mb-3">
+          <div class="row">
+            <div class="col-sm d-flex justify-content-center">
+              <button class="btn btn-success" type="submit">Pulisci</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- end formClean-->
     </div>
 
-    <div class="col-sm">
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-        <label class="form-check-label" for="exampleRadios1">
-          Includi header
-        </label>
-      </div>
+    <div class="col-sm" [hidden]="!canTranslate()">
+      <div class="col d-flex justify-content-center">
+        <!-- start formTranslate-->
+        <form id="formTranslate" [formGroup]="formTranslate" (ngSubmit)="translate()">
 
-
-      <div class="row">
-        <div class="col-sm">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1"
-              checked>
-            <label class="form-check-label" for="exampleRadios1">
-              Salva come zip
-            </label>
+          <div class="form-floating mb-3">
+            <div class="row ">
+              <div class="col-sm d-flex justify-content-center">
+                <b>Opzioni di Traduzione</b>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="col-sm">
-          <input class="form-control" type="text" placeholder="nome cartella">
-        </div>
-      </div>
 
-      <button type="button" class="btn btn-primary">Traduci</button>
+          <div class="form-floating mb-3">
+            <div class="row" style="margin-top: 50px;">
+              <div class="col-sm">
+                <div class="form-check">
+                  <input formControlName="checkboxIncludeHeader" class="form-check-input" type="checkbox">
+                  <label class="form-check-label">
+                    Includi header
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm" style="visibility: hidden;">
+                <input class="form-control" type="text" placeholder="parola">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-floating mb-3">
+            <div class="row">
+              <div class="col-sm">
+                <select class="form-select" aria-label="Default select example" formControlName="selectFormat">
+                  <option *ngFor="let a of availableFormats" [ngValue]="a">{{a}}</option>
+                </select>
+              </div>
+              <div class="col-sm" style="visibility: hidden;">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox">
+                  <label class="form-check-label">
+                    Linee col prefisso
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-floating mb-3" style="visibility: hidden;">
+            <div class="row">
+              <div class="col-sm">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox">
+                  <label class="form-check-label">
+                    Righe vuote
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-floating mb-3" style="visibility: hidden;">
+            <div class="row">
+              <div class="col-sm">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox">
+                  <label class="form-check-label">
+                    Accorpa righe (solo formati DB)
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-floating mb-3">
+            <div class="row">
+              <div class="col-sm d-flex justify-content-center">
+                <button class="btn btn-success" type="submit" [disabled]="!isFileLoaded()">Traduci</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <!-- end formTranslate-->
+
+      </div>
     </div>
   </div>
 </div>
--->
+<script>
+  var a = alert("ok")
+  
+  </script>

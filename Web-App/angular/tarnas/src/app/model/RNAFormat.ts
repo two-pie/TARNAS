@@ -5,5 +5,6 @@ export enum RNAFormat {
     DB_NO_SEQUENCE = "DB_NO_SEQUENCE",
     BPSEQ = "BPSEQ",
     CT = "CT",
-    FASTA = "FASTA"
+    FASTA = "FASTA",
+    NO_AVAILABLE_FORMAT = "NO_AVAILABLE_FORMAT"
 }

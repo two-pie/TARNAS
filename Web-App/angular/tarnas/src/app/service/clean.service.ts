@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { RNAFile } from '../model/RNAFile';
 import { Observable } from 'rxjs';
 
@@ -21,11 +21,15 @@ export class CleanService {
   }
 
   public removeLinesStartingWith(rnaFile: RNAFile, character: string): Observable<RNAFile> {
-    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-lines-start-with/${character[0]}`, rnaFile, { withCredentials: false })
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("character",character[0]);
+    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-lines-start-with`, rnaFile, {params:queryParams, withCredentials: false })
   }
 
   public removeLinesContaining(rnaFile: RNAFile, word: string): Observable<RNAFile> {
-    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-lines-contains/${word}`, rnaFile, { withCredentials: false })
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("word",word);
+    return this.http.post<RNAFile>(`${this.apiServerUrl}/clean/remove-lines-contains`, rnaFile, {params:queryParams, withCredentials: false})
   }
 
   public removeWhiteSpaces(rnaFile: RNAFile): Observable<RNAFile> {

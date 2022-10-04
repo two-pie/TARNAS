@@ -1,0 +1,18 @@
+#formClean, #formTranslate {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    padding: 2rem;
+    border-radius: 3%;
+    border-width: 2px;
+    border-style: solid;
+ }
+
+ :host {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    height: 100%;
+}
+

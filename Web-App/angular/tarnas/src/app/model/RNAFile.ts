@@ -1,7 +1,7 @@
 import { RNAFormat } from "./RNAFormat"
 
 export interface RNAFile {
-    fileName?: string;
+    fileName: string;
     format?: RNAFormat;
-    content?: string[];
+    content: string[];
 }
