@@ -1,6 +1,6 @@
 package it.unicam.cs.twopie.tarnas.view;
 
-import it.unicam.cs.twopie.App;
+import it.unicam.cs.twopie.Main;
 import it.unicam.cs.twopie.tarnas.controller.CleanerController;
 import it.unicam.cs.twopie.tarnas.controller.IOController;
 import it.unicam.cs.twopie.tarnas.controller.TranslatorController;
@@ -9,7 +9,6 @@ import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat;
 import it.unicam.cs.twopie.tarnas.view.utils.DeleteCell;
 import it.unicam.cs.twopie.tarnas.view.utils.LenCell;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -96,9 +97,8 @@ public class HomeController {
     @FXML
     public BorderPane paneTranslationCleaning;
 
-
     @FXML
-    public void initialize() {
+    public void initialize() throws URISyntaxException {
         this.logger.info("Initializing...");
         //disable cleaning and translation
         this.paneTranslationCleaning.setDisable(true);
@@ -116,10 +116,11 @@ public class HomeController {
             }
         }));
         // load trash image
-        var trashImage = new Image(Objects.requireNonNull(App.class.getResource("/img/trash.png")).toExternalForm(), 18, 18, false, false);
-        var lenImage = new Image(Objects.requireNonNull(App.class.getResource("/img/lens-icon.jpeg")).toExternalForm(), 18, 18, false, false);
+        var trashImage = new Image(Objects.requireNonNull(Main.class.getResource("/img/trash.png")).toExternalForm(), 18, 18, false, false);
+        var lenImage = new Image(Objects.requireNonNull(Main.class.getResource("/img/lens-icon.jpeg")).toExternalForm(), 18, 18, false, false);
         //change table label
         this.filesTable.setPlaceholder(new Label("No loaded files"));
+        this.filesTable.setId("fileTables");
         // set column values
         this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
         this.formatColumn.setCellValueFactory(new PropertyValueFactory<>("format"));

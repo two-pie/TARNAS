@@ -1,13 +1,9 @@
 package it.unicam.cs.twopie.tarnas.view.utils;
 
-import it.unicam.cs.twopie.App;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;

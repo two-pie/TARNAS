@@ -12,151 +12,180 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="574.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.cs.twopie.tarnas.view.HomeController">
-   <top>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <top>
-            <MenuBar BorderPane.alignment="CENTER">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-         </top>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="574.0" prefWidth="905.0" stylesheets="@../css/home.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.cs.twopie.tarnas.view.HomeController">
+    <top>
+        <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <top>
+                <MenuBar BorderPane.alignment="CENTER">
+                    <menus>
+                        <Menu mnemonicParsing="false" text="File">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Close" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Edit">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Delete" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="About" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+            </top>
+            <bottom>
+                <TableView fx:id="filesTable" prefHeight="256.0" prefWidth="917.0" BorderPane.alignment="CENTER">
+                    <columns>
+                        <TableColumn fx:id="nameColumn" prefWidth="235.99997556209564" styleClass="title" text="Nome File" />
+                        <TableColumn fx:id="formatColumn" prefWidth="144.79998779296875" text="Formato" />
+                        <TableColumn fx:id="previewColumn" minWidth="0.0" prefWidth="220.666748046875" text="Preview" />
+                        <TableColumn fx:id="deleteColumn" maxWidth="1.7976931348623157E308" prefWidth="306.66668701171875" text="Rimuovi" />
+                    </columns>
+                    <BorderPane.margin>
+                        <Insets left="50.0" right="50.0" top="10.0" />
+                    </BorderPane.margin>
+                </TableView>
+            </bottom>
          <center>
-            <Label text="TARNAS" BorderPane.alignment="CENTER" />
-         </center>
-         <bottom>
-            <TableView fx:id="filesTable" prefHeight="386.0" prefWidth="897.0" BorderPane.alignment="CENTER">
-              <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="235.99997556209564" text="Nome File" />
-                <TableColumn fx:id="formatColumn" prefWidth="144.79998779296875" text="Formato" />
-                  <TableColumn fx:id="previewColumn" minWidth="0.0" prefWidth="188.79995727539062" text="Preview" />
-                  <TableColumn fx:id="deleteColumn" prefWidth="336.800048828125" text="Rimuovi" />
-              </columns>
+            <ImageView fitHeight="107.0" fitWidth="153.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+               <image>
+                  <Image url="@../img/tarnas-center-logo.png" />
+               </image>
                <BorderPane.margin>
-                  <Insets left="5.0" right="5.0" />
+                  <Insets top="10.0" />
                </BorderPane.margin>
-            </TableView>
-         </bottom>
-      </BorderPane>
-   </top>
-   <center>
-      <BorderPane fx:id="paneTranslationCleaning" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <right>
-            <BorderPane prefHeight="175.0" prefWidth="427.0" BorderPane.alignment="CENTER">
-               <top>
-                  <Label text="TRADUZIONE" BorderPane.alignment="CENTER" />
-               </top>
-               <center>
-                  <GridPane prefHeight="158.0" prefWidth="566.0" BorderPane.alignment="CENTER">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="68.39999618530274" minHeight="2.0000045537948594" prefHeight="31.600010299682616" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="86.79999544620514" minHeight="10.0" prefHeight="33.599999999999994" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="62.400000000000006" minHeight="10.0" prefHeight="62.400000000000006" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <CheckBox fx:id="chbxIncludeHeader" mnemonicParsing="false" text="Includi header" />
-                        <CheckBox fx:id="chbxSaveAsZIP" mnemonicParsing="false" text="salva come zip" GridPane.rowIndex="1" />
-                        <TextField fx:id="textFieldArchiveName" prefHeight="26.0" prefWidth="0.0" promptText="nome zip" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            </ImageView>
+         </center>
+        </BorderPane>
+    </top>
+    <center>
+        <BorderPane fx:id="paneTranslationCleaning" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <right>
+                <BorderPane prefHeight="175.0" prefWidth="427.0" BorderPane.alignment="CENTER">
+                    <center>
+                        <GridPane maxHeight="120.0" maxWidth="500.0" minHeight="120.0" minWidth="285.0" prefHeight="120.0" prefWidth="285.0" BorderPane.alignment="CENTER">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="68.39999618530274" minHeight="2.0000045537948594" prefHeight="31.600010299682616" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="86.79999544620514" minHeight="10.0" prefHeight="33.599999999999994" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="62.400000000000006" minHeight="10.0" prefHeight="62.400000000000006" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <CheckBox fx:id="chbxIncludeHeader" mnemonicParsing="false" text="Includi header" />
+                                <CheckBox fx:id="chbxSaveAsZIP" mnemonicParsing="false" text="salva come zip" GridPane.rowIndex="1" />
+                                <TextField fx:id="textFieldArchiveName" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" promptText="nome zip" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <GridPane.margin>
+                                        <Insets right="10.0" />
+                                    </GridPane.margin>
+                                </TextField>
+                                <MenuButton fx:id="btnSelectFormatTranslation" mnemonicParsing="false" text="Traduci in" GridPane.rowIndex="2">
+                                </MenuButton>
+                              <Button fx:id="btnTranslate" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleTranslate" prefWidth="100.0" text="TRADUCI">
                            <GridPane.margin>
-                              <Insets right="10.0" />
+                              <Insets left="80.0" top="240.0" />
                            </GridPane.margin>
-                        </TextField>
-                        <MenuButton fx:id="btnSelectFormatTranslation" mnemonicParsing="false" text="Traduci in" GridPane.rowIndex="2">
-                        </MenuButton>
-                     </children>
-                  </GridPane>
-               </center>
-               <bottom>
-                  <Button fx:id="btnTranslate" mnemonicParsing="false" onAction="#handleTranslate" text="TRADUCI" BorderPane.alignment="CENTER" />
-               </bottom>
-            </BorderPane>
-         </right>
-         <left>
-            <BorderPane prefHeight="131.0" prefWidth="471.0" BorderPane.alignment="CENTER">
-               <top>
-                  <Label text="PULITURA" BorderPane.alignment="CENTER" />
-               </top>
-               <bottom>
-                  <Button mnemonicParsing="false" onAction="#handleClean" text="PULISCI" BorderPane.alignment="CENTER" />
-               </bottom>
-               <center>
-                  <GridPane BorderPane.alignment="CENTER">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <CheckBox fx:id="chbxRmLinesContainingWord" mnemonicParsing="false" text="Righe di “intestazione” che contengono">
+                        </Button>
+                              <Label maxWidth="200.0" minWidth="200.0" prefWidth="200.0" styleClass="textOptions" text="OPZIONI DI TRADUZIONE">
                            <GridPane.margin>
-                              <Insets left="5.0" />
+                              <Insets bottom="50.0" left="50.0" />
                            </GridPane.margin>
-                        </CheckBox>
-                        <CheckBox fx:id="chbxRmLinesContainingPrefix" mnemonicParsing="false" text="commenti: righe che iniziano con" GridPane.rowIndex="1">
+                        </Label>
+                            </children>
+                     <BorderPane.margin>
+                        <Insets left="100.0" />
+                     </BorderPane.margin>
+                        </GridPane>
+                    </center>
+                </BorderPane>
+            </right>
+            <left>
+                <BorderPane prefHeight="131.0" prefWidth="471.0" BorderPane.alignment="CENTER">
+                    <center>
+                        <GridPane maxHeight="120.0" maxWidth="500.0" minHeight="120.0" minWidth="500.0" prefHeight="120.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="372.0000203450521" minWidth="10.0" prefWidth="340.66670735677087" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="258.6666564941406" minWidth="10.0" prefWidth="149.33329264322913" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <CheckBox fx:id="chbxRmLinesContainingWord" mnemonicParsing="false" text="Righe di “intestazione” che contengono">
+                                    <GridPane.margin>
+                                        <Insets left="5.0" />
+                                    </GridPane.margin>
+                                </CheckBox>
+                                <CheckBox fx:id="chbxRmLinesContainingPrefix" mnemonicParsing="false" text="Commenti: righe che iniziano con" GridPane.rowIndex="1">
+                                    <GridPane.margin>
+                                        <Insets left="5.0" />
+                                    </GridPane.margin>
+                                </CheckBox>
+                                <CheckBox fx:id="chbxRmBlankLines" mnemonicParsing="false" text="Righe vuote (anche con spazi, tab ecc)" GridPane.rowIndex="2">
+                                    <GridPane.margin>
+                                        <Insets left="5.0" />
+                                    </GridPane.margin>
+                                </CheckBox>
+                                <CheckBox fx:id="chbxMergeLines" mnemonicParsing="false" text="Accorpa le righe (DB/DB NO SEQUENCE)" GridPane.rowIndex="3">
+                                    <GridPane.margin>
+                                        <Insets left="5.0" />
+                                    </GridPane.margin>
+                                </CheckBox>
+                                <TextField fx:id="textFieldRmLinesContainingWord" promptText="parola" GridPane.columnIndex="1" />
+                                <TextField fx:id="textFieldRmLinesContainingPrefix" maxWidth="90.0" minWidth="90.0" prefHeight="25.0" prefWidth="90.0" promptText="carattere" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
-                              <Insets left="5.0" />
-                           </GridPane.margin>
-                        </CheckBox>
-                        <CheckBox fx:id="chbxRmBlankLines" mnemonicParsing="false" text="righe vuote (anche con spazi, tab ecc)" GridPane.rowIndex="2">
+                              <Insets right="170.0" />
+                           </GridPane.margin></TextField>
+                              <Button maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleClean" prefWidth="100.0" text="PULISCI">
                            <GridPane.margin>
-                              <Insets left="5.0" />
+                              <Insets left="190.0" top="240.0" />
                            </GridPane.margin>
-                        </CheckBox>
-                        <CheckBox fx:id="chbxMergeLines" mnemonicParsing="false" text="accorpa le righe (DB/DB NO SEQUENCE)" GridPane.rowIndex="3">
+                        </Button>
+                              <Label minWidth="200.0" styleClass="textOptions" text="OPZIONI DI PULITURA">
                            <GridPane.margin>
-                              <Insets left="5.0" />
+                              <Insets bottom="50.0" left="180.0" />
                            </GridPane.margin>
-                        </CheckBox>
-                        <TextField fx:id="textFieldRmLinesContainingWord" promptText="parola" GridPane.columnIndex="1" />
-                        <TextField fx:id="textFieldRmLinesContainingPrefix" promptText="carattere" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                     </children>
-                  </GridPane>
-               </center>
-            </BorderPane>
-         </left>
-      </BorderPane>
-   </center>
-   <bottom>
-      <BorderPane prefHeight="46.0" prefWidth="906.0" BorderPane.alignment="CENTER">
-         <bottom>
-            <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-              <buttons>
-                <Button mnemonicParsing="false" onAction="#handleAddFile" prefHeight="26.0" prefWidth="522.0" text="AGGIUNGI FILE" />
-                  <Button mnemonicParsing="false" onAction="#handleAddFolder" text="AGGIUNGI CARTELLA" />
-                  <Button mnemonicParsing="false" onAction="#handleWriteFile" text="SCRIVI FILE" />
-                  <Button mnemonicParsing="false" onAction="#handleReset" text="RESET" />
-              </buttons>
-            </ButtonBar>
-         </bottom>
-      </BorderPane>
-   </bottom>
+                        </Label>
+                            </children>
+                     <BorderPane.margin>
+                        <Insets left="50.0" />
+                     </BorderPane.margin>
+                        </GridPane>
+                    </center>
+                </BorderPane>
+            </left>
+        </BorderPane>
+    </center>
+    <bottom>
+        <BorderPane prefHeight="46.0" prefWidth="906.0" BorderPane.alignment="CENTER">
+            <bottom>
+                <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <buttons>
+                        <Button mnemonicParsing="false" onAction="#handleAddFile" prefHeight="26.0" prefWidth="522.0" text="AGGIUNGI FILE" />
+                        <Button mnemonicParsing="false" onAction="#handleAddFolder" text="AGGIUNGI CARTELLA" />
+                        <Button mnemonicParsing="false" onAction="#handleWriteFile" text="SCRIVI FILE" />
+                        <Button mnemonicParsing="false" onAction="#handleReset" text="RESET" />
+                    </buttons>
+               <BorderPane.margin>
+                  <Insets left="35.0" right="50.0" />
+               </BorderPane.margin>
+                </ButtonBar>
+            </bottom>
+        </BorderPane>
+    </bottom>
 </BorderPane>
