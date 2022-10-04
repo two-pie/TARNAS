@@ -30,13 +30,13 @@ public class CleanerController {
         return this.cleanerService.removeHeader(rnaFile);
     }
 
-    @PostMapping("/remove-lines-start-with/{prefix}")
-    public RNAFile removeLinesStartingWith(@PathVariable Character prefix, @RequestBody RNAFile rnaFile) {
-        return this.cleanerService.removeLinesStartingWith(rnaFile, prefix);
+    @PostMapping("/remove-lines-start-with")
+    public RNAFile removeLinesStartingWith(@RequestParam Character character, @RequestBody RNAFile rnaFile) {
+        return this.cleanerService.removeLinesStartingWith(rnaFile, character);
     }
 
-    @PostMapping("/remove-lines-contains/{word}")
-    public RNAFile removeLinesContaining(@PathVariable String word, @RequestBody RNAFile rnaFile) {
+    @PostMapping("/remove-lines-contains")
+    public RNAFile removeLinesContaining(@RequestParam String word, @RequestBody RNAFile rnaFile) {
         return this.cleanerService.removeLinesContaining(rnaFile, word);
     }
 
@@ -44,14 +44,4 @@ public class CleanerController {
     public RNAFile removeWhiteSpaces(@RequestBody RNAFile rnaFile) {
         return this.cleanerService.removeWhiteSpaces(rnaFile);
     }
-
-    private RNAFile checkSyntax(RNAFile rnaFile) {
-        try {
-            rnaFile = RNAFileConstructor.getInstance().construct(rnaFile.getContent(), rnaFile.getFileName());
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The file has a wrong syntax");
-        }
-        return rnaFile;
-    }
-
 }

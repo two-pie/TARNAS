@@ -30,10 +30,9 @@ public class TranslatorController {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot translate from " + rnaFile.getFormat().getName() + "to " + dstFormat.getName());
     }
 
-    @GetMapping("/available-translations")
-    public List<RNAFormat> getAvaiableTranslation(RNAFile rnaFile) {
-        rnaFile = checkSyntax(rnaFile);
-        return this.translatorService.getAvailableTranslations(rnaFile.getFormat());
+    @GetMapping("/available-translations/{dstFormat}")
+    public List<RNAFormat> getAvailableTranslation(@PathVariable RNAFormat dstFormat) {
+        return this.translatorService.getAvailableTranslations(dstFormat);
     }
 
     @PostMapping("/rnafile-syntax")
