@@ -33,13 +33,12 @@
     </table>
   </div>
 
-  <div class="row" style="margin-top: 5%;" [hidden]="isFileLoaded()">
+  <div id="rowLoadFile" class="row" [hidden]="isFileLoaded()">
     <div class="col-sm "></div>
     <div class="col-sm d-flex justify-content-center">
-      <button style="border-radius: 8px; background-color: #e0ffff;font-family:'Courier New', Courier, monospace"
-        type="button" (click)="fileInput.click()">
+      <button id="btnFileInput" type="button" (click)="fileInput.click()">
         <span>Carica File</span>
-        <input #fileInput type="file" (change)="loadFile($event)" style="display:none;" />
+        <input id="inputFile" #fileInput type="file" (change)="loadFile($event)" />
       </button>
     </div>
     <div class="col-sm "></div>
@@ -58,7 +57,7 @@
         </div>
 
         <div class="form-floating mb-3">
-          <div class="row" style="margin-top: 50px;">
+          <div id="rowRemoveLinesContaining" class="row">
             <div class="col-sm">
               <div class="form-check">
                 <input formControlName="checkboxRemoveLinesContaining" class="form-check-input" type="checkbox">
@@ -141,7 +140,7 @@
           </div>
 
           <div class="form-floating mb-3">
-            <div class="row" style="margin-top: 50px;">
+            <div id="rowIncludeHeader" class="row">
               <div class="col-sm">
                 <div class="form-check">
                   <input formControlName="checkboxIncludeHeader" class="form-check-input" type="checkbox">
@@ -150,7 +149,7 @@
                   </label>
                 </div>
               </div>
-              <div class="col-sm" style="visibility: hidden;">
+              <div class="col-sm hidden">
                 <input class="form-control" type="text" placeholder="parola">
               </div>
             </div>
@@ -163,7 +162,7 @@
                   <option *ngFor="let a of availableFormats" [ngValue]="a">{{a}}</option>
                 </select>
               </div>
-              <div class="col-sm" style="visibility: hidden;">
+              <div class="col-sm hidden">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox">
                   <label class="form-check-label">
@@ -174,7 +173,7 @@
             </div>
           </div>
 
-          <div class="form-floating mb-3" style="visibility: hidden;">
+          <div class="form-floating mb-3 hidden">
             <div class="row">
               <div class="col-sm">
                 <div class="form-check">
@@ -187,7 +186,7 @@
             </div>
           </div>
 
-          <div class="form-floating mb-3" style="visibility: hidden;">
+          <div class="form-floating mb-3 hidden">
             <div class="row">
               <div class="col-sm">
                 <div class="form-check">
@@ -216,5 +215,5 @@
 </div>
 <script>
   var a = alert("ok")
-  
-  </script>
+
+</script>

@@ -16,3 +16,27 @@
     height: 100%;
 }
 
+#btnFileInput{
+    border-radius: 8px; 
+    background-color: #e0ffff;
+    font-family:'Courier New', Courier, monospace
+}
+
+#inputFile{
+    display:none;
+}
+
+#rowRemoveLinesContaining{
+    margin-top: 50px;
+}
+
+#rowIncludeHeader{
+    margin-top: 50px;
+}
+.hidden{
+    visibility: hidden;
+}
+
+#rowLoadFile{
+    margin-top: 5%;
+}
