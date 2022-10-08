@@ -119,7 +119,7 @@ public class HomeController {
         var trashImage = new Image(Objects.requireNonNull(Main.class.getResource("/img/trash.png")).toExternalForm(), 18, 18, false, false);
         var lenImage = new Image(Objects.requireNonNull(Main.class.getResource("/img/lens-icon.jpeg")).toExternalForm(), 18, 18, false, false);
         //change table label
-        this.filesTable.setPlaceholder(new Label("No loaded files"));
+        this.filesTable.setPlaceholder(new Label("Nessun file caricato"));
         this.filesTable.setId("fileTables");
         // set column values
         this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));

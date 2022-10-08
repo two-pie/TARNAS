@@ -28,7 +28,6 @@ import java.util.zip.ZipOutputStream;
  */
 public class IOController {
 
-
     private RNAFormat recognizedFormat;
 
     private static IOController instance;
