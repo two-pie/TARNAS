@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { RNAFile } from './model/RNAFile';
-import { RNAFormat } from './model/RNAFormat';
-import { CleanService } from './service/clean.service';
-import { TranslateService } from './service/translate.service';
+import { RNAFile } from '../model/RNAFile';
+import { RNAFormat } from '../model/RNAFormat';
+import { CleanService } from '../service/clean.service';
+import { TranslateService } from '../service/translate.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 

@@ -201,6 +201,8 @@ public class RNAFileTranslator {
      */
     private static List<String> createCTBody(RNASecondaryStructure rnaSecondaryStructure) {
         var body = new ArrayList<String>();
+        // add energy line to ct body
+        body.add(rnaSecondaryStructure.getSize()+" dG = 0.00 [ initially 0.0 ]");
         var rnaSequence = rnaSecondaryStructure.getSequence();
         var p = rnaSecondaryStructure.getP();
         for (int i = 1; i <= rnaSecondaryStructure.getSize(); i++) {
