@@ -44,7 +44,7 @@
                 </MenuBar>
             </top>
             <bottom>
-                <TableView fx:id="filesTable" prefHeight="256.0" prefWidth="917.0" BorderPane.alignment="CENTER">
+                <TableView fx:id="filesTable" maxWidth="700.0" minWidth="700.0" prefHeight="256.0" prefWidth="700.0" BorderPane.alignment="CENTER">
                     <columns>
                         <TableColumn fx:id="nameColumn" prefWidth="235.99997556209564" styleClass="title" text="Nome File" />
                         <TableColumn fx:id="formatColumn" prefWidth="144.79998779296875" text="Formato" />
