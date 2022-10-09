@@ -46,10 +46,10 @@
             <bottom>
                 <TableView fx:id="filesTable" maxWidth="700.0" minWidth="700.0" prefHeight="256.0" prefWidth="700.0" BorderPane.alignment="CENTER">
                     <columns>
-                        <TableColumn fx:id="nameColumn" prefWidth="235.99997556209564" styleClass="title" text="Nome File" />
-                        <TableColumn fx:id="formatColumn" prefWidth="144.79998779296875" text="Formato" />
+                        <TableColumn fx:id="nameColumn" prefWidth="235.99997556209564" styleClass="title" text="File Name" />
+                        <TableColumn fx:id="formatColumn" prefWidth="144.79998779296875" text="Format" />
                         <TableColumn fx:id="previewColumn" minWidth="0.0" prefWidth="220.666748046875" text="Preview" />
-                        <TableColumn fx:id="deleteColumn" maxWidth="1.7976931348623157E308" prefWidth="306.66668701171875" text="Rimuovi" />
+                        <TableColumn fx:id="deleteColumn" maxWidth="1.7976931348623157E308" prefWidth="306.66668701171875" text="Remove" />
                     </columns>
                     <BorderPane.margin>
                         <Insets left="50.0" right="50.0" top="10.0" />
@@ -84,21 +84,21 @@
                                 <RowConstraints maxHeight="62.400000000000006" minHeight="10.0" prefHeight="62.400000000000006" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <CheckBox fx:id="chbxIncludeHeader" mnemonicParsing="false" text="Includi header" />
-                                <CheckBox fx:id="chbxSaveAsZIP" mnemonicParsing="false" text="salva come zip" GridPane.rowIndex="1" />
-                                <TextField fx:id="textFieldArchiveName" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" promptText="nome zip" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                <CheckBox fx:id="chbxIncludeHeader" mnemonicParsing="false" text="include header" />
+                                <CheckBox fx:id="chbxSaveAsZIP" mnemonicParsing="false" text="save as zip" GridPane.rowIndex="1" />
+                                <TextField fx:id="textFieldArchiveName" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" promptText="zip name" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                     <GridPane.margin>
                                         <Insets right="10.0" />
                                     </GridPane.margin>
                                 </TextField>
-                                <MenuButton fx:id="btnSelectFormatTranslation" mnemonicParsing="false" text="Traduci in" GridPane.rowIndex="2">
+                                <MenuButton fx:id="btnSelectFormatTranslation" mnemonicParsing="false" text="Translate to" GridPane.rowIndex="2">
                                 </MenuButton>
-                              <Button fx:id="btnTranslate" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleTranslate" prefWidth="100.0" text="TRADUCI">
+                              <Button fx:id="btnTranslate" maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleTranslate" prefWidth="100.0" text="TRANSLATE">
                            <GridPane.margin>
                               <Insets left="80.0" top="240.0" />
                            </GridPane.margin>
                         </Button>
-                              <Label maxWidth="200.0" minWidth="200.0" prefWidth="200.0" styleClass="textOptions" text="OPZIONI DI TRADUZIONE">
+                              <Label maxWidth="200.0" minWidth="200.0" prefWidth="200.0" styleClass="textOptions" text="TRANSLATION OPTIONS">
                            <GridPane.margin>
                               <Insets bottom="50.0" left="50.0" />
                            </GridPane.margin>
@@ -126,37 +126,37 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <CheckBox fx:id="chbxRmLinesContainingWord" mnemonicParsing="false" text="Righe di “intestazione” che contengono">
+                                <CheckBox fx:id="chbxRmLinesContainingWord" mnemonicParsing="false" text="header lines containing">
                                     <GridPane.margin>
                                         <Insets left="5.0" />
                                     </GridPane.margin>
                                 </CheckBox>
-                                <CheckBox fx:id="chbxRmLinesContainingPrefix" mnemonicParsing="false" text="Commenti: righe che iniziano con" GridPane.rowIndex="1">
+                                <CheckBox fx:id="chbxRmLinesContainingPrefix" mnemonicParsing="false" text="header lines starting with" GridPane.rowIndex="1">
                                     <GridPane.margin>
                                         <Insets left="5.0" />
                                     </GridPane.margin>
                                 </CheckBox>
-                                <CheckBox fx:id="chbxRmBlankLines" mnemonicParsing="false" text="Righe vuote (anche con spazi, tab ecc)" GridPane.rowIndex="2">
+                                <CheckBox fx:id="chbxRmBlankLines" mnemonicParsing="false" text="empty or blank lines" GridPane.rowIndex="2">
                                     <GridPane.margin>
                                         <Insets left="5.0" />
                                     </GridPane.margin>
                                 </CheckBox>
-                                <CheckBox fx:id="chbxMergeLines" mnemonicParsing="false" text="Accorpa le righe (DB/DB NO SEQUENCE)" GridPane.rowIndex="3">
+                                <CheckBox fx:id="chbxMergeLines" mnemonicParsing="false" text="merge lines (DB or DB NO SEQUENCE)" GridPane.rowIndex="3">
                                     <GridPane.margin>
                                         <Insets left="5.0" />
                                     </GridPane.margin>
                                 </CheckBox>
-                                <TextField fx:id="textFieldRmLinesContainingWord" promptText="parola" GridPane.columnIndex="1" />
-                                <TextField fx:id="textFieldRmLinesContainingPrefix" maxWidth="90.0" minWidth="90.0" prefHeight="25.0" prefWidth="90.0" promptText="carattere" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                <TextField fx:id="textFieldRmLinesContainingWord" promptText="word" GridPane.columnIndex="1" />
+                                <TextField fx:id="textFieldRmLinesContainingPrefix" maxWidth="90.0" minWidth="90.0" prefHeight="25.0" prefWidth="90.0" promptText="character" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets right="170.0" />
                            </GridPane.margin></TextField>
-                              <Button maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleClean" prefWidth="100.0" text="PULISCI">
+                              <Button maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleClean" prefWidth="100.0" text="CLEAN">
                            <GridPane.margin>
                               <Insets left="190.0" top="240.0" />
                            </GridPane.margin>
                         </Button>
-                              <Label minWidth="200.0" styleClass="textOptions" text="OPZIONI DI PULITURA">
+                              <Label minWidth="200.0" styleClass="textOptions" text="CLEANING OPTIONS">
                            <GridPane.margin>
                               <Insets bottom="50.0" left="180.0" />
                            </GridPane.margin>
@@ -176,9 +176,9 @@
             <bottom>
                 <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <buttons>
-                        <Button mnemonicParsing="false" onAction="#handleAddFile" prefHeight="26.0" prefWidth="522.0" text="AGGIUNGI FILE" />
-                        <Button mnemonicParsing="false" onAction="#handleAddFolder" text="AGGIUNGI CARTELLA" />
-                        <Button mnemonicParsing="false" onAction="#handleWriteFile" text="SCRIVI FILE" />
+                        <Button mnemonicParsing="false" onAction="#handleAddFile" prefHeight="26.0" prefWidth="522.0" text="ADD FILE" />
+                        <Button mnemonicParsing="false" onAction="#handleAddFolder" text="ADD FOLDER" />
+                        <Button mnemonicParsing="false" onAction="#handleWriteFile" text="WRITE FILE" />
                         <Button mnemonicParsing="false" onAction="#handleReset" text="RESET" />
                     </buttons>
                <BorderPane.margin>

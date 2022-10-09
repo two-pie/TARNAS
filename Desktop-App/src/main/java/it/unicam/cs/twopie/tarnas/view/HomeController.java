@@ -119,7 +119,7 @@ public class HomeController {
         var trashImage = new Image(Objects.requireNonNull(Main.class.getResource("/img/trash.png")).toExternalForm(), 18, 18, false, false);
         var lenImage = new Image(Objects.requireNonNull(Main.class.getResource("/img/lens-icon.jpeg")).toExternalForm(), 18, 18, false, false);
         //change table label
-        this.filesTable.setPlaceholder(new Label("Nessun file caricato"));
+        this.filesTable.setPlaceholder(new Label("No files loaded"));
         this.filesTable.setId("fileTables");
         // set column values
         this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
@@ -134,7 +134,7 @@ public class HomeController {
 
     @FXML
     public void handleAddFile() {
-        this.logger.info("AGGIUNGI FILE button clicked");
+        this.logger.info("ADD FILE button clicked");
         var fileChooser = new FileChooser();
         var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
         if (selectedFile != null) {
@@ -146,7 +146,7 @@ public class HomeController {
 
     @FXML
     public void handleAddFolder() {
-        this.logger.info("AGGIUNGI CARTELLA button clicked");
+        this.logger.info("ADD FOLDER button clicked");
         var directoryChooser = new DirectoryChooser();
         var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
         if (selectedDirectory != null) {
@@ -165,7 +165,7 @@ public class HomeController {
 
     @FXML
     public void handleClean() {
-        this.logger.info("Pulisci button clicked");
+        this.logger.info("CLEAN button clicked");
         try {
             var cleanedFiles = this.filesTable.getItems().stream().toList();
             if (this.chbxRmLinesContainingWord.isSelected())
@@ -198,7 +198,7 @@ public class HomeController {
 
     @FXML
     public void handleTranslate() {
-        this.logger.info("TRADUCI button clicked");
+        this.logger.info("TRANSLATE button clicked");
         List<RNAFile> translatedRNAFiles;
         try {
             translatedRNAFiles = this.translatorController.translateAllLoadedFiles(this.ioController.getLoadedRNAFiles(), this.selectedFormat);
@@ -207,7 +207,6 @@ public class HomeController {
                         .map(f -> this.cleanerController.removeHeader(f))
                         .toList();
             this.saveFilesTo(translatedRNAFiles);
-            this.logger.info("Files translated successfully");
         } catch (IOException e) {
             this.logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
@@ -247,12 +246,12 @@ public class HomeController {
                 showAlert(Alert.AlertType.ERROR, "", "", "The content of the file cannot be empty");
             } else {
                 var dialog = new TextInputDialog("example.ct");
-                dialog.setHeaderText("Inserisci il nome del file");
+                dialog.setHeaderText("Digit the file name");
                 dialog.initModality(Modality.APPLICATION_MODAL);
                 String fileName;
                 dialog.showAndWait();
                 if (dialog.getEditor().getText().isEmpty()) {
-                    this.showAlert(Alert.AlertType.ERROR, "Error", "", "Il file da salvare non deve essere vuoto");
+                    this.showAlert(Alert.AlertType.ERROR, "Error", "", "The file cannot be empty");
                     this.logger.severe(dialog.getEditor().getId() + " is empty");
                 } else {
                     fileName = dialog.getEditor().getText();
@@ -328,18 +327,24 @@ public class HomeController {
             // zip options
             if (this.chbxSaveAsZIP.isSelected()) {
                 String folderName = this.textFieldArchiveName.getText();
-                this.ioController.zipFiles(selectedDirectory.toPath(), folderName, rnaFiles);
+                var zipPath = this.ioController.zipFiles(selectedDirectory.toPath(), folderName, rnaFiles);
                 this.showAlert(Alert.AlertType.INFORMATION,
                         "",
                         "Files saved successfully",
-                        rnaFiles.size() + " files saved in: " + selectedDirectory.toPath());
+                        rnaFiles.size()+" files saved in: " + zipPath);
+                this.logger.info(rnaFiles.size()+" files saved in: " + zipPath);
             } else { // files options
                 this.ioController.saveFilesTo(rnaFiles, selectedDirectory.toPath());
                 this.showAlert(Alert.AlertType.INFORMATION,
                         "",
                         "Files saved successfully",
                         rnaFiles.size() + " files saved in: " + selectedDirectory.getPath());
+                this.logger.info(rnaFiles.size() + " files saved in: " + selectedDirectory.getPath());
             }
+
+        }
+        else{
+            this.logger.info("no files saved");
         }
     }
 
@@ -356,7 +361,7 @@ public class HomeController {
         this.textFieldRmLinesContainingWord.setText("");
         this.textFieldRmLinesContainingPrefix.setText("");
         // reset menu button
-        this.btnSelectFormatTranslation.setText("Traduci in");
+        this.btnSelectFormatTranslation.setText("Translate to");
         // reset translate button
         this.btnTranslate.setDisable(true);
         // reset panes

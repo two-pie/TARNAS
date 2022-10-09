@@ -112,7 +112,7 @@ public class RNAFileTranslator {
         var secondaryStructureWithoutSequence = new RNASecondaryStructure();
         secondaryStructureWithoutSequence.setSize(rnaFile.getStructure().getSize());
         secondaryStructureWithoutSequence.setBonds(rnaFile.getStructure().getBonds());
-        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, body,secondaryStructureWithoutSequence , RNAFormat.AAS_NO_SEQUENCE);
+        return new RNAFile(getFileNameWithDstExtension(rnaFile.getFileName(), "aas"), header, body, secondaryStructureWithoutSequence, RNAFormat.AAS_NO_SEQUENCE);
     }
 
     /**
@@ -202,7 +202,7 @@ public class RNAFileTranslator {
     private static List<String> createCTBody(RNASecondaryStructure rnaSecondaryStructure) {
         var body = new ArrayList<String>();
         // add energy line to ct body
-        body.add(rnaSecondaryStructure.getSize()+" dG = 0.00 [ initially 0.0 ]");
+        body.add(rnaSecondaryStructure.getSize() + " dG = 0.00 [ initially 0.0 ]");
         var rnaSequence = rnaSecondaryStructure.getSequence();
         var p = rnaSecondaryStructure.getP();
         for (int i = 1; i <= rnaSecondaryStructure.getSize(); i++) {
@@ -222,22 +222,22 @@ public class RNAFileTranslator {
      */
     private static List<String> createHeader(List<String> header, RNAFormat destinationFormat) {
         var newHeader = new ArrayList<String>();
-        String[] finalLine = {""};
         for (var line : header) {
             var isNotComment = !line.startsWith("#");
-            if (destinationFormat != BPSEQ && destinationFormat != CT ) {
-                if (isNotComment) {
-                    newHeader.add(finalLine[0] = "#" + line);
-                } else {
-                    newHeader.add(line);
+            if (isNotComment) {
+                // add '#' if necessary
+                if (destinationFormat != BPSEQ && destinationFormat != CT) {
+                    newHeader.add("#" + line);
+                }
+                // does not modify the header if the destination format is bpseq or ct
+                else {
+                    newHeader.addAll(header);
+                    break;
                 }
             }
+            // is already a comment, nothing needs to be done
             else {
-                var BPSEQLines = List.of("Filename", "Organism", "Accession", "Citation");
-                BPSEQLines.forEach(bpl -> {
-                    if (finalLine[0].startsWith("#" + bpl))
-                        newHeader.add(finalLine[0].substring(1));
-                });
+                newHeader.add(line);
             }
         }
         return newHeader;
