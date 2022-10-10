@@ -98,8 +98,13 @@ public class HomeController {
     public BorderPane paneTranslationCleaning;
 
     @FXML
-    public void initialize() throws URISyntaxException {
+    public void initialize(){
         this.logger.info("Initializing...");
+        // remove sorting
+        this.nameColumn.setSortable(false);
+        this.formatColumn.setSortable(false);
+        this.deleteColumn.setSortable(false);
+        this.previewColumn.setSortable(false);
         //disable cleaning and translation
         this.paneTranslationCleaning.setDisable(true);
         // init controllers
@@ -231,7 +236,7 @@ public class HomeController {
         Parent root = loader.load();
         var stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
-        stage.setScene(new Scene(root, 400, 400));
+        stage.setScene(new Scene(root, 700, 400));
         var textArea = (TextArea) loader.getNamespace().get("txtAreaRnaFileContent");
         var saveButton = (Button) loader.getNamespace().get(("btnSaveWriteFile"));
         var cancelButton = (Button) loader.getNamespace().get(("btnCancelWriteFile"));

@@ -44,12 +44,12 @@
                 </MenuBar>
             </top>
             <bottom>
-                <TableView fx:id="filesTable" maxWidth="700.0" minWidth="700.0" prefHeight="256.0" prefWidth="700.0" BorderPane.alignment="CENTER">
+                <TableView fx:id="filesTable" maxWidth="1100.0" minWidth="1100.0" prefHeight="256.0" prefWidth="1100.0" BorderPane.alignment="CENTER">
                     <columns>
-                        <TableColumn fx:id="nameColumn" prefWidth="235.99997556209564" styleClass="title" text="File Name" />
-                        <TableColumn fx:id="formatColumn" prefWidth="144.79998779296875" text="Format" />
-                        <TableColumn fx:id="previewColumn" minWidth="0.0" prefWidth="220.666748046875" text="Preview" />
-                        <TableColumn fx:id="deleteColumn" maxWidth="1.7976931348623157E308" prefWidth="306.66668701171875" text="Remove" />
+                        <TableColumn fx:id="nameColumn" maxWidth="275.0" minWidth="275.0" prefWidth="275.0" styleClass="title" text="File Name" />
+                        <TableColumn fx:id="formatColumn" maxWidth="275.0" minWidth="275.0" prefWidth="275.0" text="Format" />
+                        <TableColumn fx:id="deleteColumn" maxWidth="275.0" minWidth="275.0" prefWidth="275.0" text="Remove" />
+                        <TableColumn fx:id="previewColumn" maxWidth="275.0" minWidth="275.0" prefWidth="275.0" text="Preview" />
                     </columns>
                     <BorderPane.margin>
                         <Insets left="50.0" right="50.0" top="10.0" />

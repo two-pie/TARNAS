@@ -1,5 +1,6 @@
 package it.unicam.cs.twopie.tarnas.view.utils;
 
+import it.unicam.cs.twopie.App;
 import it.unicam.cs.twopie.tarnas.model.rnafile.RNAFile;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,6 +12,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class LenCell extends TableCell<RNAFile, RNAFile> {
 
@@ -35,12 +37,13 @@ public class LenCell extends TableCell<RNAFile, RNAFile> {
                 var stage = new Stage();
                 var textArea = (TextArea) loader.getNamespace().get("rnaFileContent");
                 stage.initModality(Modality.WINDOW_MODAL);
+                stage.getIcons().add(new Image(String.valueOf(App.class.getResource("/img/tarnas-icon.png").toURI())));
                 stage.setTitle("Preview");
                 stage.setScene(new Scene(root, 600, 300));
                 rnaFile.getContent().forEach(l -> textArea.appendText(l + "\n"));
                 textArea.setScrollTop(Double.MAX_VALUE);
                 stage.showAndWait();
-            } catch (IOException e) {
+            } catch (IOException | URISyntaxException e) {
                 e.printStackTrace();
             }
         });

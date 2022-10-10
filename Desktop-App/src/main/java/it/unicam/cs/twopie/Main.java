@@ -23,10 +23,9 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/fxml/home.fxml")));
         stage.setTitle("TARNAS");
         stage.getIcons().add(new Image(String.valueOf(App.class.getResource("/img/tarnas-icon.png").toURI())));
-        stage.setMaximized(true);
         stage.setScene(new Scene(root));
-        stage.setMinWidth(1100);
-        stage.setMinHeight(650);
+        stage.setMinWidth(1200);
+        stage.setMinHeight(700);
         stage.show();
     }
 

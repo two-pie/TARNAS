@@ -12,14 +12,14 @@
    <bottom>
       <BorderPane prefHeight="72.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <left>
-            <Button fx:id="btnCancelWriteFile" mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Cancella" BorderPane.alignment="CENTER">
+            <Button fx:id="btnCancelWriteFile" mnemonicParsing="false" prefHeight="26.0" prefWidth="158.0" text="Delete" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets left="10.0" />
                </BorderPane.margin>
             </Button>
          </left>
          <right>
-            <Button mnemonicParsing="false" fx:id="btnSaveWriteFile" prefHeight="26.0" prefWidth="170.0" text="Salva" BorderPane.alignment="CENTER">
+            <Button mnemonicParsing="false" fx:id="btnSaveWriteFile" prefHeight="26.0" prefWidth="170.0" text="Save" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets right="10.0" />
                </BorderPane.margin>
