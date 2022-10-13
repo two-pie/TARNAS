@@ -43,10 +43,11 @@ class RNAFileTranslatorTest {
                                     this.getFileNameWithoutExtension(f.getFileName()) + expectedExtension.get(i);
                             if (Files.exists(Paths.get(tmp))) {
                                 RNAFile expected = RNAFileConstructor.getInstance().construct(Paths.get(tmp));
-                                if (toTranslate.getHeader().isEmpty() || expected.getHeader().isEmpty()) {
+                                // header can not be the same in all files...
+                                //if (toTranslate.getHeader().isEmpty() || expected.getHeader().isEmpty()) {
                                     toTranslate = new RNAFile(toTranslate.getFileName(), new ArrayList<>(), toTranslate.getBody(), toTranslate.getStructure(), toTranslate.getFormat());
                                     expected = new RNAFile(expected.getFileName(), new ArrayList<>(), expected.getBody(), expected.getStructure(), expected.getFormat());
-                                }
+                                //}
                                 switch (rnaFormat.get(i)) {
                                     case AAS -> this.translateToAAS(toTranslate, expected);
                                     case AAS_NO_SEQUENCE -> this.translateToAASNoSequence(toTranslate, expected);
