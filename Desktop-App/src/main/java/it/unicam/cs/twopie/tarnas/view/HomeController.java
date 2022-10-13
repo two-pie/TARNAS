@@ -98,7 +98,7 @@ public class HomeController {
     public BorderPane paneTranslationCleaning;
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         this.logger.info("Initializing...");
         // remove sorting
         this.nameColumn.setSortable(false);
@@ -336,8 +336,8 @@ public class HomeController {
                 this.showAlert(Alert.AlertType.INFORMATION,
                         "",
                         "Files saved successfully",
-                        rnaFiles.size()+" files saved in: " + zipPath);
-                this.logger.info(rnaFiles.size()+" files saved in: " + zipPath);
+                        rnaFiles.size() + " files saved in: " + zipPath);
+                this.logger.info(rnaFiles.size() + " files saved in: " + zipPath);
             } else { // files options
                 this.ioController.saveFilesTo(rnaFiles, selectedDirectory.toPath());
                 this.showAlert(Alert.AlertType.INFORMATION,
@@ -347,30 +347,31 @@ public class HomeController {
                 this.logger.info(rnaFiles.size() + " files saved in: " + selectedDirectory.getPath());
             }
 
-        }
-        else{
+        } else {
             this.logger.info("no files saved");
         }
     }
 
     private void tableEmpty() {
-        // reset checkboxes
-        this.chbxMergeLines.setSelected(false);
-        this.chbxRmLinesContainingWord.setSelected(false);
-        this.chbxRmBlankLines.setSelected(false);
-        this.chbxRmLinesContainingPrefix.setSelected(false);
-        this.chbxIncludeHeader.setSelected(false);
-        this.chbxSaveAsZIP.setSelected(false);
-        // reset textAreas
-        this.textFieldArchiveName.setText("");
-        this.textFieldRmLinesContainingWord.setText("");
-        this.textFieldRmLinesContainingPrefix.setText("");
-        // reset menu button
-        this.btnSelectFormatTranslation.setText("Translate to");
-        // reset translate button
-        this.btnTranslate.setDisable(true);
-        // reset panes
-        this.paneTranslationCleaning.setDisable(true);
+        if (this.filesTable.getItems().isEmpty()) {
+            // reset checkboxes
+            this.chbxMergeLines.setSelected(false);
+            this.chbxRmLinesContainingWord.setSelected(false);
+            this.chbxRmBlankLines.setSelected(false);
+            this.chbxRmLinesContainingPrefix.setSelected(false);
+            this.chbxIncludeHeader.setSelected(false);
+            this.chbxSaveAsZIP.setSelected(false);
+            // reset textAreas
+            this.textFieldArchiveName.setText("");
+            this.textFieldRmLinesContainingWord.setText("");
+            this.textFieldRmLinesContainingPrefix.setText("");
+            // reset menu button
+            this.btnSelectFormatTranslation.setText("Translate to");
+            // reset translate button
+            this.btnTranslate.setDisable(true);
+            // reset panes
+            this.paneTranslationCleaning.setDisable(true);
+        }
     }
 
     private EventHandler<? super MouseEvent> eventTableEmpty() {
