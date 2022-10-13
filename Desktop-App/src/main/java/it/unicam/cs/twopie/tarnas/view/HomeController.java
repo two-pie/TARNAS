@@ -37,7 +37,7 @@ import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
 
 
 public class HomeController {
-    private final Logger logger = Logger.getLogger("it.unicam.cs.two.pie.tarnas.view.HomeController");
+    public static final Logger logger = Logger.getLogger("it.unicam.cs.two.pie.tarnas.view.HomeController");
     private TranslatorController translatorController;
 
     private IOController ioController;
@@ -99,7 +99,7 @@ public class HomeController {
 
     @FXML
     public void initialize() {
-        this.logger.info("Initializing...");
+        logger.info("Initializing...");
         // remove sorting
         this.nameColumn.setSortable(false);
         this.formatColumn.setSortable(false);
@@ -134,24 +134,25 @@ public class HomeController {
         // set custom cell
         this.previewColumn.setCellFactory(column -> new LenCell(lenImage));
         this.deleteColumn.setCellFactory(column -> new DeleteCell(trashImage, this.eventTableEmpty()));
-        this.logger.info("Initialization done");
+        logger.info("Initialization done");
     }
 
     @FXML
     public void handleAddFile() {
-        this.logger.info("ADD FILE button clicked");
+        logger.info("ADD FILE button clicked");
         var fileChooser = new FileChooser();
         var selectedFile = fileChooser.showOpenDialog(this.getPrimaryStage());
         if (selectedFile != null) {
             var selectedRNAFile = Path.of(selectedFile.getPath());
             this.addFileToTable(selectedRNAFile);
+            logger.info("File added successfully");
         }
-        this.logger.info("File added successfully");
+        logger.info("Cancel button clicked");
     }
 
     @FXML
     public void handleAddFolder() {
-        this.logger.info("ADD FOLDER button clicked");
+        logger.info("ADD FOLDER button clicked");
         var directoryChooser = new DirectoryChooser();
         var selectedDirectory = directoryChooser.showDialog(this.getPrimaryStage());
         if (selectedDirectory != null) {
@@ -161,16 +162,17 @@ public class HomeController {
                         .toList();
                 files.forEach(this::addFileToTable);
             } catch (Exception e) {
-                this.logger.severe(e.getMessage());
+                logger.severe(e.getMessage());
                 this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
             }
+            logger.info("Folder added successfully");
         }
-        this.logger.info("Folder added successfully");
+        logger.info("Cancel button clicked");
     }
 
     @FXML
     public void handleClean() {
-        this.logger.info("CLEAN button clicked");
+        logger.info("CLEAN button clicked");
         try {
             var cleanedFiles = this.filesTable.getItems().stream().toList();
             if (this.chbxRmLinesContainingWord.isSelected())
@@ -194,16 +196,16 @@ public class HomeController {
                         .map(f -> this.cleanerController.mergeDBLines(f))
                         .toList();
             this.saveFilesTo(cleanedFiles);
-            this.logger.info("Cleaned all files successfully");
+            logger.info("Cleaned all files successfully");
         } catch (Exception e) {
-            this.logger.severe(e.getMessage());
+            logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
     public void handleTranslate() {
-        this.logger.info("TRANSLATE button clicked");
+        logger.info("TRANSLATE button clicked");
         List<RNAFile> translatedRNAFiles;
         try {
             translatedRNAFiles = this.translatorController.translateAllLoadedFiles(this.ioController.getLoadedRNAFiles(), this.selectedFormat);
@@ -213,21 +215,21 @@ public class HomeController {
                         .toList();
             this.saveFilesTo(translatedRNAFiles);
         } catch (IOException e) {
-            this.logger.severe(e.getMessage());
+            logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
 
     @FXML
     public void handleReset() {
-        this.logger.info("RESET button clicked");
+        logger.info("RESET button clicked");
         // reset all data structures
         this.filesTable.getItems().clear();
         // reset controller files
         this.ioController.clearAllDataStructures();
         // disable translation and cleaning pane
         this.tableEmpty();
-        this.logger.info("Reset done");
+        logger.info("Reset done");
     }
 
     @FXML
@@ -244,12 +246,15 @@ public class HomeController {
             textArea.setEditable(false);
             stage.close();
         });
-        cancelButton.setOnAction(e -> stage.close());
+        cancelButton.setOnAction(e -> {
+            logger.info(cancelButton.getText() + " button clicked");
+            stage.close();
+        });
         stage.showAndWait();
         if (!textArea.isEditable()) {
-            if (textArea.getText().isEmpty()) {
+            if (textArea.getText().isEmpty())
                 showAlert(Alert.AlertType.ERROR, "", "", "The content of the file cannot be empty");
-            } else {
+            else {
                 var dialog = new TextInputDialog("example.ct");
                 dialog.setHeaderText("Digit the file name");
                 dialog.initModality(Modality.APPLICATION_MODAL);
@@ -257,17 +262,17 @@ public class HomeController {
                 dialog.showAndWait();
                 if (dialog.getEditor().getText().isEmpty()) {
                     this.showAlert(Alert.AlertType.ERROR, "Error", "", "The file cannot be empty");
-                    this.logger.severe(dialog.getEditor().getId() + " is empty");
+                    logger.severe(dialog.getEditor().getId() + " is empty");
                 } else {
                     fileName = dialog.getEditor().getText();
-                    this.logger.info(fileName + " created");
+                    logger.info(fileName + " created");
                     File tmp = new File(Path.of(System.getProperty("user.dir")).resolve(fileName).toUri());
-                    this.logger.info("write content on " + fileName);
+                    logger.info("write content on " + fileName);
                     Files.write(tmp.toPath(), textArea.getText().getBytes());
                     var selectedRNAFile = Path.of(tmp.getPath());
                     this.addFileToTable(selectedRNAFile);
                     Files.delete(tmp.toPath());
-                    this.logger.info(fileName + " deleted");
+                    logger.info(fileName + " deleted");
                     // clear
                     dialog.getEditor().clear();
                 }
@@ -315,7 +320,7 @@ public class HomeController {
             // add event to select ButtonItem for destination format translation
             this.initSelectEventOnButtonItems(this.translatorController.getAvailableTranslations(rnaFile.getFormat()));
         } catch (Exception e) {
-            this.logger.severe(e.getMessage());
+            logger.severe(e.getMessage());
             this.showAlert(Alert.AlertType.ERROR, "Error", "", e.getMessage());
         }
     }
@@ -337,18 +342,18 @@ public class HomeController {
                         "",
                         "Files saved successfully",
                         rnaFiles.size() + " files saved in: " + zipPath);
-                this.logger.info(rnaFiles.size() + " files saved in: " + zipPath);
+                logger.info(rnaFiles.size() + " files saved in: " + zipPath);
             } else { // files options
                 this.ioController.saveFilesTo(rnaFiles, selectedDirectory.toPath());
                 this.showAlert(Alert.AlertType.INFORMATION,
                         "",
                         "Files saved successfully",
                         rnaFiles.size() + " files saved in: " + selectedDirectory.getPath());
-                this.logger.info(rnaFiles.size() + " files saved in: " + selectedDirectory.getPath());
+                logger.info(rnaFiles.size() + " files saved in: " + selectedDirectory.getPath());
             }
 
         } else {
-            this.logger.info("no files saved");
+            logger.info("no files saved");
         }
     }
 
