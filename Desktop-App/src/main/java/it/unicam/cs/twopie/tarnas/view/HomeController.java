@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 
 import static it.unicam.cs.twopie.tarnas.model.rnafile.RNAFormat.*;
 
-
+// TODO: check file with same name
 public class HomeController {
     public static final Logger logger = Logger.getLogger("it.unicam.cs.two.pie.tarnas.view.HomeController");
     private TranslatorController translatorController;

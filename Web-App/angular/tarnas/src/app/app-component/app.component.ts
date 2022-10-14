@@ -5,6 +5,7 @@ import { CleanService } from '../service/clean.service';
 import { TranslateService } from '../service/translate.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
+import { FileSaverService } from 'ngx-filesaver';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,7 @@ export class AppComponent implements OnInit {
   private _formClean: FormGroup
   private _formTranslate: FormGroup
 
-  constructor(private translateService: TranslateService, private cleanService: CleanService, private formBuilder: FormBuilder) {
+  constructor(private translateService: TranslateService, private cleanService: CleanService, private formBuilder: FormBuilder, private _FileSaverService: FileSaverService) {
     this._rnaFiles = new Array()
     this._availableFormats = new Array()
     this._formClean = this.formBuilder.group({
@@ -47,7 +48,11 @@ export class AppComponent implements OnInit {
       .translate(this._rnaFiles.at(0)!, this.formTranslate.get('selectFormat')?.value)
       .subscribe(f => {
         if (this.formTranslate.get('checkboxIncludeHeader')?.value == false) {
-          this.cleanService.removeHeader(f).subscribe(f => console.log(f))
+          this.cleanService.removeHeader(f).subscribe(f => {
+            let contentWithSlash:string[] = new Array();
+            contentWithSlash.push(f.content.join("\n")); 
+            window.saveAs(new Blob(contentWithSlash),f.fileName)
+            })
         }
       })
   }

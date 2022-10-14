@@ -20,19 +20,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RNAFileTranslatorTest {
 
-    private static Path archaea90110AllType, datasetFunctional, moleculesPseudoknotfree, aspralign;
+    private static Path archaea90110AllType, datasetFunctional, benchmark5S16S23S, aspralign;
     private final static String fs = File.separator;
 
     @BeforeAll
     static void initializePath() throws URISyntaxException {
         archaea90110AllType = Paths.get(Objects.requireNonNull(RNAFileTranslatorTest.class.getResource("/datasets/Archaea-90-110-allType")).toURI());
         datasetFunctional = Paths.get(Objects.requireNonNull(RNAFileTranslatorTest.class.getResource("/datasets/DatasetFunctional")).toURI());
-        moleculesPseudoknotfree = Paths.get(Objects.requireNonNull(RNAFileTranslatorTest.class.getResource("/datasets/Molecules-pseudoknotfree")).toURI());
+        benchmark5S16S23S = Paths.get(Objects.requireNonNull(RNAFileTranslatorTest.class.getResource("/datasets/Benchmark-5S-16S-23S")).toURI());
         aspralign = Paths.get(Objects.requireNonNull(RNAFileTranslatorTest.class.getResource("/datasets/aspralignTest")).toURI());
     }
 
     @ParameterizedTest
-    @MethodSource({"benchmarkArchaea90110AllTypeFormatFolders", "benchmarkDatasetFunctional", "moleculesPseudoknotfreeArchaea", "moleculesPseudoknotfreeBacteria", "moleculesPseudoknotfreeEukaryota", "benchmarkAspralign"})
+    @MethodSource({"benchmarkArchaea90110AllTypeFormatFolders", "benchmarkDatasetFunctional", "moleculesPseudoknotfreeArchaea5S", "moleculesPseudoknotfreeBacteria5S", "moleculesPseudoknotfreeEukaryota5S", "moleculesArchaea16S", "moleculesBacteria16S", "moleculesEukaryota16S", "moleculesArchaea23S", "moleculesBacteria23S", "moleculesEukaryota23S", "benchmarkAspralign"})
     public void translateFormatToAll(Path srcDataset, String srcFolder, List<String> expectedFolder, List<String> expectedExtension, List<RNAFormat> rnaFormat) throws IOException {
         Files.walk(Paths.get(srcFolder)).parallel().filter(Files::isRegularFile).forEach(
                 f -> {
@@ -44,10 +44,13 @@ class RNAFileTranslatorTest {
                             if (Files.exists(Paths.get(tmp))) {
                                 RNAFile expected = RNAFileConstructor.getInstance().construct(Paths.get(tmp));
                                 // header can not be the same in all files...
-                                //if (toTranslate.getHeader().isEmpty() || expected.getHeader().isEmpty()) {
-                                    toTranslate = new RNAFile(toTranslate.getFileName(), new ArrayList<>(), toTranslate.getBody(), toTranslate.getStructure(), toTranslate.getFormat());
-                                    expected = new RNAFile(expected.getFileName(), new ArrayList<>(), expected.getBody(), expected.getStructure(), expected.getFormat());
-                                //}
+                                toTranslate = new RNAFile(toTranslate.getFileName(), new ArrayList<>(), toTranslate.getBody(), toTranslate.getStructure(), toTranslate.getFormat());
+                                expected = new RNAFile(expected.getFileName(), new ArrayList<>(), expected.getBody(), expected.getStructure(), expected.getFormat());
+                                // with pseudoktnots comparing only weakbonds
+                                if (toTranslate.getStructure().isPseudoknotted() || expected.getStructure().isPseudoknotted()) {
+                                    toTranslate = new RNAFile(toTranslate.getFileName(), new ArrayList<>(), new ArrayList<>(), toTranslate.getStructure(), toTranslate.getFormat());
+                                    expected = new RNAFile(expected.getFileName(), new ArrayList<>(), new ArrayList<>(), expected.getStructure(), expected.getFormat());
+                                }
                                 switch (rnaFormat.get(i)) {
                                     case AAS -> this.translateToAAS(toTranslate, expected);
                                     case AAS_NO_SEQUENCE -> this.translateToAASNoSequence(toTranslate, expected);
@@ -126,42 +129,75 @@ class RNAFileTranslatorTest {
         );
     }
 
-    // TODO: chiedere benchmark 16S e 23S
-    private static Stream<Arguments> benchmarkMoleculesPseudoknotfree(String domain) {
+    private static Stream<Arguments> benchmarkMoleculesPseudoknotfree(String domain, String sClass) {
         return Stream.of(
-                // bpseq 5S domain
-                Arguments.of(moleculesPseudoknotfree, moleculesPseudoknotfree + fs + "bpseq" + fs + domain + fs + "5S",
-                        List.of(fs + "ct" + fs + domain + fs + "5S" + fs, fs + "ct-nH" + fs + domain + fs + "5S" + fs, fs + "db" + fs + domain + fs + "5S" + fs),
-                        List.of(".ct", ".ct", ".db"),
-                        List.of(RNAFormat.CT, RNAFormat.CT, RNAFormat.DB)),
-                // ct 5S domain
-                Arguments.of(moleculesPseudoknotfree, moleculesPseudoknotfree + fs + "ct" + fs + domain + fs + "5S",
-                        List.of(fs + "bpseq" + fs + domain + fs + "5S" + fs, fs + "db" + fs + domain + fs + "5S" + fs),
-                        List.of(".bpseq", ".db"),
-                        List.of(RNAFormat.BPSEQ, RNAFormat.DB)),
-                // ct-nH 5S domain
-                Arguments.of(moleculesPseudoknotfree, moleculesPseudoknotfree + fs + "ct-nH" + fs + domain + fs + "5S",
-                        List.of(fs + "bpseq" + fs + domain + fs + "5S" + fs, fs + "db" + fs + domain + fs + "5S" + fs),
-                        List.of(".bpseq", ".db"),
-                        List.of(RNAFormat.BPSEQ, RNAFormat.DB)),
-                // db 5S domain
-                Arguments.of(moleculesPseudoknotfree, moleculesPseudoknotfree + fs + "db" + fs + domain + fs + "5S",
-                        List.of(fs + "bpseq" + fs + domain + fs + "5S" + fs, fs + "ct" + fs + domain + fs + "5S" + fs, fs + "ct-nH" + fs + domain + fs + "5S" + fs),
-                        List.of(".bpseq", ".ct", ".ct"),
-                        List.of(RNAFormat.BPSEQ, RNAFormat.CT, RNAFormat.CT))
+                // bpseq domain
+                Arguments.of(benchmark5S16S23S, benchmark5S16S23S + fs + "bpseq" + fs + domain + fs + sClass,
+                        List.of(fs + "ct" + fs + domain + fs + sClass + fs, fs + "ct-nH" + fs + domain + fs + sClass + fs, fs + "db" + fs + domain + fs + sClass + fs, fs + "db-nH" + fs + domain + fs + sClass + fs),
+                        List.of(".ct", ".ct", ".db", ".db"),
+                        List.of(RNAFormat.CT, RNAFormat.CT, RNAFormat.DB, RNAFormat.DB)),
+                // bpseq-nH domain
+                Arguments.of(benchmark5S16S23S, benchmark5S16S23S + fs + "bpseq-nH" + fs + domain + fs + sClass,
+                        List.of(fs + "ct" + fs + domain + fs + sClass + fs, fs + "ct-nH" + fs + domain + fs + sClass + fs, fs + "db" + fs + domain + fs + sClass + fs, fs + "db-nH" + fs + domain + fs + sClass + fs),
+                        List.of(".ct", ".ct", ".db", ".db"),
+                        List.of(RNAFormat.CT, RNAFormat.CT, RNAFormat.DB, RNAFormat.DB)),
+                // ct domain
+                Arguments.of(benchmark5S16S23S, benchmark5S16S23S + fs + "ct" + fs + domain + fs + sClass,
+                        List.of(fs + "bpseq" + fs + domain + fs + sClass + fs, fs + "bpseq-nH" + fs + domain + fs + sClass + fs, fs + "db" + fs + domain + fs + sClass + fs, fs + "db-nH" + fs + domain + fs + sClass + fs),
+                        List.of(".bpseq", ".bpseq", ".db", ".db"),
+                        List.of(RNAFormat.BPSEQ, RNAFormat.BPSEQ, RNAFormat.DB, RNAFormat.DB)),
+                // ct-nH domain
+                Arguments.of(benchmark5S16S23S, benchmark5S16S23S + fs + "ct-nH" + fs + domain + fs + sClass,
+                        List.of(fs + "bpseq" + fs + domain + fs + sClass + fs, fs + "bpseq-nH" + fs + domain + fs + sClass + fs, fs + "db" + fs + domain + fs + sClass + fs, fs + "db-nH" + fs + domain + fs + sClass + fs),
+                        List.of(".bpseq", ".bpseq", ".db", ".db"),
+                        List.of(RNAFormat.BPSEQ, RNAFormat.BPSEQ, RNAFormat.DB, RNAFormat.DB)),
+                // db domain
+                Arguments.of(benchmark5S16S23S, benchmark5S16S23S + fs + "db" + fs + domain + fs + sClass,
+                        List.of(fs + "bpseq" + fs + domain + fs + sClass + fs, fs + "bpseq-nH" + fs + domain + fs + sClass + fs, fs + "ct" + fs + domain + fs + sClass + fs, fs + "ct-nH" + fs + domain + fs + sClass + fs),
+                        List.of(".bpseq", ".bpseq", ".ct", ".ct"),
+                        List.of(RNAFormat.BPSEQ, RNAFormat.BPSEQ, RNAFormat.CT, RNAFormat.CT)),
+                // db-nH domain
+                Arguments.of(benchmark5S16S23S, benchmark5S16S23S + fs + "db-nH" + fs + domain + fs + sClass,
+                        List.of(fs + "bpseq" + fs + domain + fs + sClass + fs, fs + "bpseq-nH" + fs + domain + fs + sClass + fs, fs + "ct" + fs + domain + fs + sClass + fs, fs + "ct-nH" + fs + domain + fs + sClass + fs),
+                        List.of(".bpseq", ".bpseq", ".ct", ".ct"),
+                        List.of(RNAFormat.BPSEQ, RNAFormat.BPSEQ, RNAFormat.CT, RNAFormat.CT))
         );
     }
 
-    private static Stream<Arguments> moleculesPseudoknotfreeArchaea() {
-        return benchmarkMoleculesPseudoknotfree("Archaea");
+    private static Stream<Arguments> moleculesPseudoknotfreeArchaea5S() {
+        return benchmarkMoleculesPseudoknotfree("Archaea", "5S");
     }
 
-    private static Stream<Arguments> moleculesPseudoknotfreeBacteria() {
-        return benchmarkMoleculesPseudoknotfree("Bacteria");
+    private static Stream<Arguments> moleculesPseudoknotfreeBacteria5S() {
+        return benchmarkMoleculesPseudoknotfree("Bacteria", "5S");
     }
 
-    private static Stream<Arguments> moleculesPseudoknotfreeEukaryota() {
-        return benchmarkMoleculesPseudoknotfree("Eukaryota");
+    private static Stream<Arguments> moleculesPseudoknotfreeEukaryota5S() {
+        return benchmarkMoleculesPseudoknotfree("Eukaryota", "5S");
+    }
+
+    private static Stream<Arguments> moleculesArchaea16S() {
+        return benchmarkMoleculesPseudoknotfree("Archaea", "16S");
+    }
+
+    private static Stream<Arguments> moleculesBacteria16S() {
+        return benchmarkMoleculesPseudoknotfree("Bacteria", "16S");
+    }
+
+    private static Stream<Arguments> moleculesEukaryota16S() {
+        return benchmarkMoleculesPseudoknotfree("Eukaryota", "16S");
+    }
+
+    private static Stream<Arguments> moleculesArchaea23S() {
+        return benchmarkMoleculesPseudoknotfree("Archaea", "23S");
+    }
+
+    private static Stream<Arguments> moleculesBacteria23S() {
+        return benchmarkMoleculesPseudoknotfree("Bacteria", "23S");
+    }
+
+    private static Stream<Arguments> moleculesEukaryota23S() {
+        return benchmarkMoleculesPseudoknotfree("Eukaryota", "23S");
     }
 
     private static Stream<Arguments> benchmarkAspralign() {
