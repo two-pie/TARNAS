@@ -126,31 +126,22 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <CheckBox fx:id="chbxRmLinesContainingWord" mnemonicParsing="false" text="header lines containing">
+                                <CheckBox fx:id="chbxRmLinesContainingWord" mnemonicParsing="false" text="lines containing">
                                     <GridPane.margin>
                                         <Insets left="5.0" />
                                     </GridPane.margin>
                                 </CheckBox>
-                                <CheckBox fx:id="chbxRmLinesContainingPrefix" mnemonicParsing="false" text="header lines starting with" GridPane.rowIndex="1">
+                                <CheckBox fx:id="chbxRmBlankLines" mnemonicParsing="false" text="empty lines" GridPane.rowIndex="1">
                                     <GridPane.margin>
                                         <Insets left="5.0" />
                                     </GridPane.margin>
                                 </CheckBox>
-                                <CheckBox fx:id="chbxRmBlankLines" mnemonicParsing="false" text="empty or blank lines" GridPane.rowIndex="2">
-                                    <GridPane.margin>
-                                        <Insets left="5.0" />
-                                    </GridPane.margin>
-                                </CheckBox>
-                                <CheckBox fx:id="chbxMergeLines" mnemonicParsing="false" text="merge lines (DB or DB NO SEQUENCE)" GridPane.rowIndex="3">
+                                <CheckBox fx:id="chbxMergeLines" mnemonicParsing="false" text="merge lines (DB or DB NO SEQUENCE)" GridPane.rowIndex="2">
                                     <GridPane.margin>
                                         <Insets left="5.0" />
                                     </GridPane.margin>
                                 </CheckBox>
                                 <TextField fx:id="textFieldRmLinesContainingWord" promptText="word" GridPane.columnIndex="1" />
-                                <TextField fx:id="textFieldRmLinesContainingPrefix" maxWidth="90.0" minWidth="90.0" prefHeight="25.0" prefWidth="90.0" promptText="character" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets right="170.0" />
-                           </GridPane.margin></TextField>
                               <Button maxWidth="100.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleClean" prefWidth="100.0" text="CLEAN">
                            <GridPane.margin>
                               <Insets left="190.0" top="240.0" />
@@ -178,7 +169,7 @@
                     <buttons>
                         <Button mnemonicParsing="false" onAction="#handleAddFile" prefHeight="26.0" prefWidth="522.0" text="ADD FILE" />
                         <Button mnemonicParsing="false" onAction="#handleAddFolder" text="ADD FOLDER" />
-                        <Button mnemonicParsing="false" onAction="#handleWriteFile" text="WRITE FILE" />
+                        <Button mnemonicParsing="false" onAction="#handleWriteFile" text="EDIT FILE" />
                         <Button mnemonicParsing="false" onAction="#handleReset" text="RESET" />
                     </buttons>
                <BorderPane.margin>

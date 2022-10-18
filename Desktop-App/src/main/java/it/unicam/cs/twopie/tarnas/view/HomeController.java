@@ -71,9 +71,6 @@ public class HomeController {
     public CheckBox chbxRmLinesContainingWord;
 
     @FXML
-    public CheckBox chbxRmLinesContainingPrefix;
-
-    @FXML
     public CheckBox chbxRmBlankLines;
 
     @FXML
@@ -84,9 +81,6 @@ public class HomeController {
 
     @FXML
     public TextField textFieldRmLinesContainingWord;
-
-    @FXML
-    public TextField textFieldRmLinesContainingPrefix;
 
     @FXML
     public CheckBox chbxSaveAsZIP;
@@ -111,15 +105,6 @@ public class HomeController {
         this.cleanerController = CleanerController.getInstance();
         this.ioController = IOController.getInstance();
         this.translatorController = TranslatorController.getInstance();
-        // allow only one character in txtRmLinesContainingPrefix
-        this.textFieldRmLinesContainingPrefix.setTextFormatter(new TextFormatter<String>((TextFormatter.Change change) -> {
-            String newText = change.getControlNewText();
-            if (newText.length() > 1) {
-                return null;
-            } else {
-                return change;
-            }
-        }));
         // load trash image
         var trashImage = new Image(Objects.requireNonNull(Main.class.getResource("/img/trash.png")).toExternalForm(), 18, 18, false, false);
         var lenImage = new Image(Objects.requireNonNull(Main.class.getResource("/img/lens-icon.jpeg")).toExternalForm(), 18, 18, false, false);
@@ -179,11 +164,6 @@ public class HomeController {
                 cleanedFiles = cleanedFiles
                         .parallelStream()
                         .map(f -> this.cleanerController.removeLinesContaining(f, this.textFieldRmLinesContainingWord.getText()))
-                        .toList();
-            if (this.chbxRmLinesContainingPrefix.isSelected())
-                cleanedFiles = cleanedFiles
-                        .parallelStream()
-                        .map(f -> this.cleanerController.removeLinesStartingWith(f, this.textFieldRmLinesContainingPrefix.getText()))
                         .toList();
             if (this.chbxRmBlankLines.isSelected())
                 cleanedFiles = cleanedFiles
@@ -363,13 +343,11 @@ public class HomeController {
             this.chbxMergeLines.setSelected(false);
             this.chbxRmLinesContainingWord.setSelected(false);
             this.chbxRmBlankLines.setSelected(false);
-            this.chbxRmLinesContainingPrefix.setSelected(false);
             this.chbxIncludeHeader.setSelected(false);
             this.chbxSaveAsZIP.setSelected(false);
             // reset textAreas
             this.textFieldArchiveName.setText("");
             this.textFieldRmLinesContainingWord.setText("");
-            this.textFieldRmLinesContainingPrefix.setText("");
             // reset menu button
             this.btnSelectFormatTranslation.setText("Translate to");
             // reset translate button
