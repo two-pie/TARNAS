@@ -54,6 +54,11 @@ export class AppComponent implements OnInit {
             window.saveAs(new Blob(contentWithSlash),f.fileName)
             })
         }
+        else{
+          let contentWithSlash:string[] = new Array();
+          contentWithSlash.push(f.content.join("\n")); 
+          window.saveAs(new Blob(contentWithSlash),f.fileName)
+        }
       })
   }
 
