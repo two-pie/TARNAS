@@ -80,6 +80,9 @@ public class HomeController {
     public CheckBox chbxIncludeHeader;
 
     @FXML
+    public CheckBox chbxRmAllComments;
+
+    @FXML
     public TextField textFieldRmLinesContainingWord;
 
     @FXML
@@ -160,6 +163,16 @@ public class HomeController {
         logger.info("CLEAN button clicked");
         try {
             var cleanedFiles = this.filesTable.getItems().stream().toList();
+            if (this.chbxRmAllComments.isSelected()) {
+                cleanedFiles = cleanedFiles
+                        .parallelStream()
+                        .map(f -> this.cleanerController.removeLinesStartingWith(f, "#"))
+                        .toList();
+                cleanedFiles = cleanedFiles
+                        .parallelStream()
+                        .map(f -> this.cleanerController.removeLinesStartingWith(f, ">"))
+                        .toList();
+            }
             if (this.chbxRmLinesContainingWord.isSelected())
                 cleanedFiles = cleanedFiles
                         .parallelStream()
@@ -345,6 +358,7 @@ public class HomeController {
             this.chbxRmBlankLines.setSelected(false);
             this.chbxIncludeHeader.setSelected(false);
             this.chbxSaveAsZIP.setSelected(false);
+            this.chbxRmAllComments.setSelected(false);
             // reset textAreas
             this.textFieldArchiveName.setText("");
             this.textFieldRmLinesContainingWord.setText("");
