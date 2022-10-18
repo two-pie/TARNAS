@@ -77,23 +77,6 @@
           <div class="row">
             <div class="col-sm">
               <div class="form-check">
-                <input formControlName="checkboxRemoveLinesStartingWithPrefix" class="form-check-input" type="checkbox">
-                <label class="form-check-label">
-                  Lines starting with
-                </label>
-              </div>
-            </div>
-            <div class="col-sm">
-              <input formControlName="inputRemoveLinesStartingWithPrefix" class="form-control" type="text"
-                placeholder="character">
-            </div>
-          </div>
-        </div>
-
-        <div class="form-floating mb-3">
-          <div class="row">
-            <div class="col-sm">
-              <div class="form-check">
                 <input formControlName="checkboxRemoveBlankLines" class="form-check-input" type="checkbox">
                 <label class="form-check-label">
                   Blank lines
@@ -112,6 +95,24 @@
                   Merge lines (DB format only)
                 </label>
               </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="form-floating mb-3 hidden">
+          <div class="row">
+            <div class="col-sm">
+              <div class="form-check">
+                <input formControlName="checkboxRemoveLinesStartingWithPrefix" class="form-check-input" type="checkbox">
+                <label class="form-check-label">
+                  Lines starting with
+                </label>
+              </div>
+            </div>
+            <div class="col-sm">
+              <input formControlName="inputRemoveLinesStartingWithPrefix" class="form-control" type="text"
+                placeholder="character">
             </div>
           </div>
         </div>

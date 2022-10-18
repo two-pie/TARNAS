@@ -49,15 +49,11 @@ export class AppComponent implements OnInit {
       .subscribe(f => {
         if (this.formTranslate.get('checkboxIncludeHeader')?.value == false) {
           this.cleanService.removeHeader(f).subscribe(f => {
-            let contentWithSlash:string[] = new Array();
-            contentWithSlash.push(f.content.join("\n")); 
-            window.saveAs(new Blob(contentWithSlash),f.fileName)
+            this.saveFile(f)
             })
         }
         else{
-          let contentWithSlash:string[] = new Array();
-          contentWithSlash.push(f.content.join("\n")); 
-          window.saveAs(new Blob(contentWithSlash),f.fileName)
+          this.saveFile(f)
         }
       })
   }
@@ -100,7 +96,8 @@ export class AppComponent implements OnInit {
     if (this._formClean.get('checkboxMergeLines')?.value == true) {
       rnaFile = await firstValueFrom(this.cleanService.mergeLines(rnaFile!))
     }
-    console.log(rnaFile)//TODO
+    // save the file
+    this.saveFile(rnaFile!)
   }
 
   public enableTranslate() {
@@ -160,8 +157,14 @@ export class AppComponent implements OnInit {
     document.body.scrollTop = document.body.scrollHeight;
     document.documentElement.scrollTop = document.documentElement.scrollHeight;
   }
-  private addFileToTable(rnaFile: RNAFile) {
 
+  private saveFile(rnaFile:RNAFile){
+    let contentWithSlash:string[] = new Array();
+    contentWithSlash.push(rnaFile.content.join("\n")); 
+    window.saveAs(new Blob(contentWithSlash),rnaFile.fileName)
+  }
+
+  private addFileToTable(rnaFile: RNAFile) {
     if (this.rnaFiles.length > 0) {
       this.reset()
     }
