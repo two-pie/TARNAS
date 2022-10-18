@@ -18,10 +18,14 @@ export class AppComponent implements OnInit {
   private _availableFormats: RNAFormat[]
   private _formClean: FormGroup
   private _formTranslate: FormGroup
+  private _isEditEnable: boolean
+  textAreaFile: string
 
   constructor(private translateService: TranslateService, private cleanService: CleanService, private formBuilder: FormBuilder, private _FileSaverService: FileSaverService) {
+    this.textAreaFile = ""
     this._rnaFiles = new Array()
     this._availableFormats = new Array()
+    this._isEditEnable = false
     this._formClean = this.formBuilder.group({
       checkboxRemoveLinesContaining: [false],
       inputRemoveLinesContaining: [""],
@@ -38,6 +42,22 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void { }
 
+  public editClicked() {
+    this._isEditEnable = !this.isEditEnable
+  }
+
+  public LoadEditedFile() {
+    let contentSplitted: string[] = this.textAreaFile.split("\n").map(l => l.trim())
+    this.translateService.checkSyntax({ fileName: "rnafile", content: contentSplitted }).subscribe
+      (r => {
+        this.addFileToTable(r)
+        this.formTranslate.get('checkboxIncludeHeader')?.enable()
+        this.formTranslate.get('selectFormat')?.enable()
+        this._isEditEnable = false
+        this.textAreaFile = ""
+      });
+
+  }
 
   getAvailableTranslations() {
     this.translateService.getAvailableTranslations(RNAFormat.DB).subscribe(f => console.log(f))
@@ -50,9 +70,9 @@ export class AppComponent implements OnInit {
         if (this.formTranslate.get('checkboxIncludeHeader')?.value == false) {
           this.cleanService.removeHeader(f).subscribe(f => {
             this.saveFile(f)
-            })
+          })
         }
-        else{
+        else {
           this.saveFile(f)
         }
       })
@@ -152,16 +172,20 @@ export class AppComponent implements OnInit {
     return this._availableFormats
   }
 
+  get isEditEnable() {
+    return this._isEditEnable
+  }
+
 
   private scrollToBottom() {
     document.body.scrollTop = document.body.scrollHeight;
     document.documentElement.scrollTop = document.documentElement.scrollHeight;
   }
 
-  private saveFile(rnaFile:RNAFile){
-    let contentWithSlash:string[] = new Array();
-    contentWithSlash.push(rnaFile.content.join("\n")); 
-    window.saveAs(new Blob(contentWithSlash),rnaFile.fileName)
+  private saveFile(rnaFile: RNAFile) {
+    let contentWithSlash: string[] = new Array();
+    contentWithSlash.push(rnaFile.content.join("\n"));
+    window.saveAs(new Blob(contentWithSlash), rnaFile.fileName)
   }
 
   private addFileToTable(rnaFile: RNAFile) {

@@ -35,14 +35,35 @@
   </div>
 
   <div id="rowLoadFile" class="row" [hidden]="isFileLoaded()">
-    <div class="col-sm "></div>
-    <div class="col-sm d-flex justify-content-center">
+    <div class="col-sm"></div>
+    <div class="col-sm d-flex justify-content-end">
       <button id="btnFileInput" type="button" (click)="fileInput.click()">
         <span>Load File</span>
         <input id="inputFile" #fileInput type="file" (change)="loadFile($event)" />
       </button>
     </div>
-    <div class="col-sm "></div>
+    <div class="col-sm d-flex justify-content-start">
+      <button id="btnEditFile" type="button" (click)="editClicked()">Edit File</button>
+    </div>
+    <div class="col-sm"></div>
+  </div>
+
+  <div class="row" [hidden]="!isEditEnable">
+    <div class="col-sm"></div>
+    <div class="col-sm"></div>
+    <div class="col-sm">
+      <textarea [(ngModel)]="textAreaFile" id="textAreaEditFile" class="form-control" rows="3"></textarea>
+    </div>
+    <div class="col-sm"></div>
+  </div>
+
+  <div class="row" [hidden]="!isEditEnable">
+    <div class="col-sm"></div>
+    <div class="col-sm"></div>
+    <div class="col-sm">
+      <button id="btnEditFile" type="button" (click)="LoadEditedFile()">Save</button>
+    </div>
+    <div class="col-sm"></div>
   </div>
 
   <div class="row">
@@ -99,7 +120,7 @@
           </div>
         </div>
 
-        
+
         <div class="form-floating mb-3 hidden">
           <div class="row">
             <div class="col-sm">
@@ -215,12 +236,12 @@
     </div>
   </div>
   <div class="row">
-      <div class="col-sm "></div>
-      <div class="col-sm d-flex justify-content-center">
-        <button id="btnFileInput" [hidden]="!isFileLoaded()" type="button" (click)="reset()">
-          <span>Home</span>
-        </button>
-      </div>
-      <div class="col-sm "></div>
+    <div class="col-sm "></div>
+    <div class="col-sm d-flex justify-content-center">
+      <button id="btnFileInput" [hidden]="!isFileLoaded()" type="button" (click)="reset()">
+        <span>Home</span>
+      </button>
+    </div>
+    <div class="col-sm "></div>
   </div>
 </div>
