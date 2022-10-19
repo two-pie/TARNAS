@@ -7,7 +7,6 @@ import it.unicam.cs.twopie.tarnas.model.rnafile.RNAInputFileParserException;
  * bond in a secondary structure.
  *
  * @author Luca Tesei, Piero Hierro, Piermichele Rosati
- *
  */
 public class WeakBond implements Comparable<WeakBond> {
 
@@ -18,12 +17,10 @@ public class WeakBond implements Comparable<WeakBond> {
      * Construct a pair of indexes representing the weak bond.
      *
      * @param left  left index (starting with 1)
-     *
      * @param right right index (starting with 1)
-     *
      * @throws RNAInputFileParserException if the left position is less than 1 or if
-     *                                  the left position is greater than or equal
-     *                                  to the right position.
+     *                                     the left position is greater than or equal
+     *                                     to the right position.
      */
     public WeakBond(int left, int right) throws RNAInputFileParserException {
         // index checks
@@ -65,11 +62,7 @@ public class WeakBond implements Comparable<WeakBond> {
             throw new NullPointerException("Passed Weak Bond was null");
         if (this.equals(wb))
             throw new IllegalArgumentException("Passed Weak Bond was equal to this one");
-        if (wb.left < this.left && this.left < wb.right)
-            return true;
-        if (this.left < wb.left && wb.left < this.right)
-            return true;
-        return false;
+        return wb.left < this.left && wb.right < this.right || this.left < wb.left && this.right < wb.right;
     }
 
     /*

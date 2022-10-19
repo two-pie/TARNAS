@@ -32,25 +32,21 @@ class RNAFileTranslatorTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"benchmarkArchaea90110AllTypeFormatFolders", "benchmarkDatasetFunctional", "moleculesPseudoknotfreeArchaea5S", "moleculesPseudoknotfreeBacteria5S", "moleculesPseudoknotfreeEukaryota5S", "moleculesArchaea16S", "moleculesBacteria16S", "moleculesEukaryota16S", "moleculesArchaea23S", "moleculesBacteria23S", "moleculesEukaryota23S", "benchmarkAspralign"})
+    @MethodSource({/*"benchmarkArchaea90110AllTypeFormatFolders", "benchmarkDatasetFunctional",*/ "moleculesPseudoknotfreeArchaea5S", "moleculesPseudoknotfreeBacteria5S", "moleculesPseudoknotfreeEukaryota5S", "moleculesArchaea16S", "moleculesBacteria16S", "moleculesEukaryota16S", "moleculesArchaea23S", "moleculesBacteria23S", "moleculesEukaryota23S", "benchmarkAspralign"})
     public void translateFormatToAll(Path srcDataset, String srcFolder, List<String> expectedFolder, List<String> expectedExtension, List<RNAFormat> rnaFormat) throws IOException {
         Files.walk(Paths.get(srcFolder)).parallel().filter(Files::isRegularFile).forEach(
                 f -> {
                     try {
                         RNAFile toTranslate = RNAFileConstructor.getInstance().construct(f);
+                        toTranslate = new RNAFile(toTranslate.getFileName(), new ArrayList<>(), toTranslate.getBody(), toTranslate.getStructure(), toTranslate.getFormat());
                         for (int i = 0; i < expectedFolder.size(); i++) {
                             String tmp = srcDataset.toString() + expectedFolder.get(i) +
                                     this.getFileNameWithoutExtension(f.getFileName()) + expectedExtension.get(i);
-                            if (Files.exists(Paths.get(tmp))) {
-                                RNAFile expected = RNAFileConstructor.getInstance().construct(Paths.get(tmp));
+                            Path tmpPath = Paths.get(tmp);
+                            if (Files.exists(tmpPath)) {
+                                RNAFile expected = RNAFileConstructor.getInstance().construct(tmpPath);
                                 // header can not be the same in all files...
-                                toTranslate = new RNAFile(toTranslate.getFileName(), new ArrayList<>(), toTranslate.getBody(), toTranslate.getStructure(), toTranslate.getFormat());
                                 expected = new RNAFile(expected.getFileName(), new ArrayList<>(), expected.getBody(), expected.getStructure(), expected.getFormat());
-                                // with pseudoktnots comparing only weakbonds
-                                if (toTranslate.getStructure().isPseudoknotted() || expected.getStructure().isPseudoknotted()) {
-                                    toTranslate = new RNAFile(toTranslate.getFileName(), new ArrayList<>(), new ArrayList<>(), toTranslate.getStructure(), toTranslate.getFormat());
-                                    expected = new RNAFile(expected.getFileName(), new ArrayList<>(), new ArrayList<>(), expected.getStructure(), expected.getFormat());
-                                }
                                 switch (rnaFormat.get(i)) {
                                     case AAS -> this.translateToAAS(toTranslate, expected);
                                     case AAS_NO_SEQUENCE -> this.translateToAASNoSequence(toTranslate, expected);
@@ -227,54 +223,57 @@ class RNAFileTranslatorTest {
 
 
     private void translateToDB(RNAFile rnaFile, RNAFile expectedRNAFile) throws IOException {
-        //System.out.println("INSIDE\nr: " + rnaFile + "\nt: " + expectedRNAFile);
         var fRNAFile = RNAFileTranslator.translateToDB(rnaFile);
-        //System.out.println("translated: " + fRNAFile);
-        //var fExpectedRNAFile = RNAFileTranslator.translateToDB(expectedRNAFile);
-        //System.out.println("\ntranslated: " + fExpectedRNAFile);
-        assertEquals(expectedRNAFile, fRNAFile);
+        var fExpectedRNAFile = RNAFileTranslator.translateToDB(expectedRNAFile);
+        this.removeBodyIfPseudoknotted(fRNAFile,fExpectedRNAFile);
     }
 
 
     private void translateToDBNoSequence(RNAFile rnaFile, RNAFile expectedRNAFile) throws IOException {
         var fRNAFile = RNAFileTranslator.translateToDBNoSequence(rnaFile);
         var fExpectedRNAFile = RNAFileTranslator.translateToDBNoSequence(expectedRNAFile);
-        assertEquals(fExpectedRNAFile, fRNAFile);
+        this.removeBodyIfPseudoknotted(fRNAFile,fExpectedRNAFile);
     }
 
     private void translateToBPSEQ(RNAFile rnaFile, RNAFile expectedRNAFile) throws IOException {
         var fRNAFile = RNAFileTranslator.translateToBPSEQ(rnaFile);
         var fExpectedRNAFile = RNAFileTranslator.translateToBPSEQ(expectedRNAFile);
-        assertEquals(fExpectedRNAFile, fRNAFile);
+        this.removeBodyIfPseudoknotted(fRNAFile,fExpectedRNAFile);
     }
 
     private void translateToCT(RNAFile rnaFile, RNAFile expectedRNAFile) throws IOException {
-        //System.out.println("actual: " + rnaFile.getFileName());
-        //System.out.println("expected: " + expectedRNAFile.getFileName());
         var fRNAFile = RNAFileTranslator.translateToCT(rnaFile);
         var fExpectedRNAFile = RNAFileTranslator.translateToCT(expectedRNAFile);
-        assertEquals(fExpectedRNAFile, fRNAFile);
+        this.removeBodyIfPseudoknotted(fRNAFile,fExpectedRNAFile);
 
     }
 
     private void translateToAAS(RNAFile rnaFile, RNAFile expectedRNAFile) throws IOException {
         var fRNAFile = RNAFileTranslator.translateToAAS(rnaFile);
         var fExpectedRNAFile = RNAFileTranslator.translateToAAS(expectedRNAFile);
-        assertEquals(fExpectedRNAFile, fRNAFile);
+        this.removeBodyIfPseudoknotted(fRNAFile,fExpectedRNAFile);
 
     }
 
     private void translateToAASNoSequence(RNAFile rnaFile, RNAFile expectedRNAFile) throws IOException {
         var fRNAFile = RNAFileTranslator.translateToAASNoSequence(rnaFile);
         var fExpectedRNAFile = RNAFileTranslator.translateToAASNoSequence(expectedRNAFile);
-        assertEquals(fExpectedRNAFile, fRNAFile);
+        this.removeBodyIfPseudoknotted(fRNAFile,fExpectedRNAFile);
     }
 
     private void translateToFASTA(RNAFile rnaFile, RNAFile expectedRNAFile) throws IOException {
         var fRNAFile = RNAFileTranslator.translateToFASTA(rnaFile);
         var fExpectedRNAFile = RNAFileTranslator.translateToFASTA(expectedRNAFile);
-        assertEquals(fExpectedRNAFile, fRNAFile);
+        this.removeBodyIfPseudoknotted(fRNAFile,fExpectedRNAFile);
+    }
 
+    private void removeBodyIfPseudoknotted(RNAFile toTranslate, RNAFile expected){
+        // with pseudoktnots comparing only weakbonds
+        if (toTranslate.getStructure().isPseudoknotted() && expected.getStructure().isPseudoknotted()) {
+            toTranslate = new RNAFile(toTranslate.getFileName(), new ArrayList<>(), new ArrayList<>(), toTranslate.getStructure(), toTranslate.getFormat());
+            expected = new RNAFile(expected.getFileName(), new ArrayList<>(), new ArrayList<>(), expected.getStructure(), expected.getFormat());
+        }
+        assertEquals(toTranslate, expected);
     }
 
     private String getFileNameWithoutExtension(Path filePath) {
