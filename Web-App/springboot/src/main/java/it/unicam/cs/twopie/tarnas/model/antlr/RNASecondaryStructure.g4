@@ -52,23 +52,18 @@ edbn_structure:
 	| EDBN # edbnStructureEnd
 ;
 
-
 sequence:
     NUCLEOTIDE sequence # sequenceContinue
     | NUCLEOTIDE # sequenceEnd
 ;
 
 bonds:
-	bond ';' bonds #bondsContinue
-	| bond # bondsEnd
-;
-
-bond:
-	'(' INDEX ',' INDEX ')'
+	BOND SEP? bonds #bondsContinue
+	| # bondsEnd
 ;
 
 ct_structure:
-     ct_line ct_structure # ctSeq
+    ct_line ct_structure # ctSeq
 	| ct_line # ctLast
 ;
 
@@ -98,7 +93,6 @@ bpseq_line:
 	| INDEX NUCLEOTIDE INDEX # bpseqLineBond
 ;
 
-
 // Lexer tokens
 INDEX:
     [1-9] [0-9]*
@@ -106,6 +100,14 @@ INDEX:
 
 ZERO_INDEX:
     '0'
+;
+
+SEP:
+    ',' | ';'
+;
+
+BOND:
+    '(' INDEX SEP INDEX ')'
 ;
 
 BPSEQCTLINES:
@@ -121,9 +123,7 @@ LINECT:
 	) .*? '\r'? '\n'
 ;
 
-fragment
-NONEWLINE
-:
+fragment NONEWLINE:
 	~( '\r' | '\n' )
 ;
 
@@ -131,17 +131,14 @@ fragment IUPAC_CODE:
 	[ACGUacguTtRrYysSWwKkMmBbDdHhVvNn-]
 ;
 
-NUCLEOTIDE
-:
+NUCLEOTIDE:
 	(
 		IUPAC_CODE
 		| NON_STANDARD_CODE
 	)+
 ;
 
-fragment
-NON_STANDARD_CODE
-:
+fragment NON_STANDARD_CODE:
 	'"'
 	| '?'
 	| ']'
@@ -175,34 +172,26 @@ EDBN:
 	EDBN_CODE+
 ;
 
-LINE1BPSEQCT
-:
+LINE1BPSEQCT:
 	'Filename' .*? '\r'? '\n'
 ;
 
-LINE2BPSEQCT
-:
+LINE2BPSEQCT:
 	'Organism' .*? '\r'? '\n'
 ;
 
-LINE3BPSEQCT
-:
+LINE3BPSEQCT:
 	'Accession' .*? '\r'? '\n'
 ;
 
-LINE4BPSEQCT
-:
+LINE4BPSEQCT:
 	'Citation' .*? '\r'? '\n'
 ;
 
-COMMENT
-:
+COMMENT:
 	('#' | '>') .*? '\r'? '\n'
 ;
 
-WS
-:
+WS:
 	[ \t\r\n]+ -> skip
 ; // skip spaces, tabs, newlines
-
-

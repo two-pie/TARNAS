@@ -6,9 +6,6 @@ import it.unicam.cs.twopie.tarnas.model.rnafile.RNAInputFileParserException;
 import it.unicam.cs.twopie.tarnas.model.rnastructure.RNASecondaryStructure;
 import it.unicam.cs.twopie.tarnas.model.rnastructure.WeakBond;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 public class RNAFileListener extends RNASecondaryStructureBaseListener {
@@ -17,8 +14,8 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     private StringBuffer sequenceBuffer;
     private StringBuffer edbnsBuffer;
     private List<String> header;
-    private List<String> content;
     private String fileName;
+    private List<String> content;
 
     public RNAFileListener() {
 
@@ -151,17 +148,17 @@ public class RNAFileListener extends RNASecondaryStructureBaseListener {
     @Override
     public void enterBondsContinue(RNASecondaryStructureParser.BondsContinueContext ctx) {
         // take the bond and add it to the structure
-        int left = Integer.parseInt(ctx.bond().INDEX(0).getText());
-        int right = Integer.parseInt(ctx.bond().INDEX(1).getText());
+        var indexes = this.getBondTokens(ctx.BOND().getText());
+        int left = Integer.parseInt(indexes.get(0));
+        int right = Integer.parseInt(indexes.get(1));
         this.s.addBond(new WeakBond(left, right));
     }
 
-    @Override
-    public void enterBondsEnd(RNASecondaryStructureParser.BondsEndContext ctx) {
-        // take the bond and add it to the structure
-        int left = Integer.parseInt(ctx.bond().INDEX(0).getText());
-        int right = Integer.parseInt(ctx.bond().INDEX(1).getText());
-        this.s.addBond(new WeakBond(left, right));
+    private List<String> getBondTokens(String bondTokenText) {
+        var separator = bondTokenText.contains(",") ? ',' : ';';
+        var left = bondTokenText.substring(bondTokenText.indexOf('(') + 1, bondTokenText.lastIndexOf(separator));
+        var right = bondTokenText.substring(bondTokenText.indexOf(separator) + 1, bondTokenText.lastIndexOf(')'));
+        return List.of(left, right);
     }
 
     @Override
