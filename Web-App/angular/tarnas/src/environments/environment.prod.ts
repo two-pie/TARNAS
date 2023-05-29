@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: '//localhost:8080'
+  apiBaseUrl: '//bdslab.unicam.it:8080'
 };
