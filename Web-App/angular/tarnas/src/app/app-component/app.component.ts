@@ -88,7 +88,6 @@ export class AppComponent implements OnInit {
     let target = event.target as HTMLInputElement
     let files = target.files as FileList
     if (files.length > 0) {
-      console.log('entered')
       let file = files.item(0)
       let content: string = "";
       await file?.text().then(c => content = c);
