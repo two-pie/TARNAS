@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   private _isEditEnable: boolean
   textAreaFile: string
 
+
   constructor(private translateService: TranslateService, private cleanService: CleanService, private formBuilder: FormBuilder, private _FileSaverService: FileSaverService) {
     this.textAreaFile = ""
     this._rnaFiles = new Array()
@@ -49,14 +50,17 @@ export class AppComponent implements OnInit {
   public LoadEditedFile() {
     let contentSplitted: string[] = this.textAreaFile.split("\n").map(l => l.trim())
     this.translateService.checkSyntax({ fileName: "rnafile", content: contentSplitted }).subscribe
-      (r => {
+      ({next: r => {
         this.addFileToTable(r)
         this.formTranslate.get('checkboxIncludeHeader')?.enable()
         this.formTranslate.get('selectFormat')?.enable()
         this._isEditEnable = false
         this.textAreaFile = ""
-      });
-
+      },
+      error: () => {
+        this.reset()
+        alert('Wrong syntax error!')}}
+    );
   }
 
   getAvailableTranslations() {
@@ -79,26 +83,31 @@ export class AppComponent implements OnInit {
   }
 
   async loadFile(event: Event) {
+    this._isEditEnable = false
+    this.textAreaFile = ""
     let target = event.target as HTMLInputElement
     let files = target.files as FileList
     if (files.length > 0) {
+      console.log('entered')
       let file = files.item(0)
       let content: string = "";
       await file?.text().then(c => content = c);
       let contentSplitted: string[] = content.split("\n").map(l => l.trim())
       this.translateService.checkSyntax({ fileName: file!.name, content: contentSplitted }).subscribe
-        (r => {
+        ({next: r => {
           this.addFileToTable(r)
           this.formTranslate.get('checkboxIncludeHeader')?.enable()
           this.formTranslate.get('selectFormat')?.enable()
-        });
+        },
+        error: () => alert('Wrong syntax error!')}
+      );
+      target.value = ""
     }
   }
 
   public preview() {
     alert(this._rnaFiles.at(0)?.content.join("\n"))
   }
-
 
   public async clean() {
     let rnaFile = this._rnaFiles.at(0)
@@ -144,6 +153,7 @@ export class AppComponent implements OnInit {
   }
 
   public reset() {
+
     this._rnaFiles = new Array()
     this._availableFormats = new Array()
     this._formClean.get('inputRemoveLinesContaining')?.setValue("")
@@ -210,4 +220,5 @@ export class AppComponent implements OnInit {
       this.scrollToBottom()
     })
   }
+
 }
